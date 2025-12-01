@@ -13,7 +13,11 @@ const Header: React.FC = () => {
   const location = useLocation();
   const [settings, setSettings] = useAtom(settingsAtom);
 
-  const navigation = [{ name: "Home", href: "/" }];
+  const navigation = [
+    { name: "Home", href: "/" },
+    { name: "Swap", href: "/swap" },
+    { name: "Liquidity", href: "/liquidity" },
+  ];
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -23,12 +27,21 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-background border-border sticky top-0 z-50 border-b">
+    <header className="glass-effect border-border sticky top-0 z-50 border-b backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="transition-opacity hover:opacity-80">
-            <motion.img whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} src={"/qubic.svg"} alt="logo" />
+          <Link to="/" className="transition-opacity hover:opacity-80 flex items-center gap-3">
+            <motion.img 
+              whileHover={{ scale: 1.05, rotate: 5 }} 
+              transition={{ duration: 0.2 }} 
+              src={"/qubic.svg"} 
+              alt="logo" 
+              className="w-10 h-10"
+            />
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent hidden sm:block">
+              QSwap
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

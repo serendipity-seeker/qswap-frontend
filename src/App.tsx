@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "@/layouts";
 import Error404 from "@/pages/error404";
 import Home from "@/pages/home";
+import Swap from "@/pages/swap";
+import Liquidity from "@/pages/liquidity";
 import { useQubicConnect } from "@/components/composed/wallet-connect/QubicConnectContext";
 import { useContext, useEffect } from "react";
 import { useAtom } from "jotai";
@@ -18,6 +20,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/swap",
+        element: <Swap />,
+      },
+      {
+        path: "/liquidity",
+        element: <Liquidity />,
       },
     ],
   },
