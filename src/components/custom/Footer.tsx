@@ -1,16 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import {
-  Twitter,
-  Github,
-  Send,
-  Heart,
-  ArrowUpRight,
-  Zap,
-  Shield,
-  TrendingUp,
-} from "lucide-react";
+import { Twitter, Github, Send, ArrowUpRight, Zap, Shield, TrendingUp } from "lucide-react";
 
 const Footer: React.FC = () => {
   const socialLinks = [
@@ -32,35 +23,27 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="relative mt-20 border-t border-primary-40/10 overflow-hidden">
+    <footer className="border-primary-40/10 relative mt-20 overflow-hidden border-t">
       {/* Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -bottom-48 -left-48 w-96 h-96 bg-primary-40/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-48 -right-48 w-96 h-96 bg-primary-60/5 rounded-full blur-3xl" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="bg-primary-40/5 absolute -bottom-48 -left-48 h-96 w-96 rounded-full blur-3xl" />
+        <div className="bg-primary-60/5 absolute -right-48 -bottom-48 h-96 w-96 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center mb-6 group w-fit">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-                className="relative"
-              >
-                <img 
-                  src="/logo-text.svg" 
-                  alt="QSwap" 
-                  className="h-12 sm:h-14 relative z-10" 
-                />
+            <Link to="/" className="group mb-6 flex w-fit items-center">
+              <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="relative">
+                <img src="/logo-text.svg" alt="QSwap" className="relative z-10 h-12 sm:h-14" />
               </motion.div>
             </Link>
 
             <p className="text-muted-foreground mb-6 max-w-md">
-              The next generation decentralized exchange built on Qubic. Trade tokens with
-              lightning speed and the best rates in DeFi.
+              The next generation decentralized exchange built on Qubic. Trade tokens with lightning speed and the best
+              rates in DeFi.
             </p>
 
             {/* Features */}
@@ -74,9 +57,9 @@ const Footer: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary-40/10 to-primary-60/10 border border-primary-40/20"
+                    className="from-primary-40/10 to-primary-60/10 border-primary-40/20 flex items-center gap-2 rounded-xl border bg-gradient-to-r px-4 py-2"
                   >
-                    <Icon className="w-4 h-4 text-primary-40" />
+                    <Icon className="text-primary-40 h-4 w-4" />
                     <span className="text-sm font-medium">{feature.text}</span>
                   </motion.div>
                 );
@@ -86,7 +69,7 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold mb-4 bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent">
+            <h3 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-lg font-bold text-transparent">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -100,10 +83,10 @@ const Footer: React.FC = () => {
                 >
                   <Link
                     to={link.href}
-                    className="text-muted-foreground hover:text-primary-40 transition-colors flex items-center gap-2 group w-fit"
+                    className="text-muted-foreground hover:text-primary-40 group flex w-fit items-center gap-2 transition-colors"
                   >
                     <span>{link.name}</span>
-                    <ArrowUpRight className="w-4 h-4 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all" />
+                    <ArrowUpRight className="h-4 w-4 -translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100" />
                   </Link>
                 </motion.li>
               ))}
@@ -112,7 +95,7 @@ const Footer: React.FC = () => {
 
           {/* Community */}
           <div>
-            <h3 className="text-lg font-bold mb-4 bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent">
+            <h3 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-lg font-bold text-transparent">
               Community
             </h3>
             <div className="space-y-4">
@@ -127,10 +110,10 @@ const Footer: React.FC = () => {
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ x: 5 }}
-                    className={`flex items-center gap-3 text-muted-foreground transition-colors ${social.color} group`}
+                    className={`text-muted-foreground flex items-center gap-3 transition-colors ${social.color} group`}
                   >
-                    <div className="p-2 rounded-lg bg-muted/50 group-hover:bg-muted transition-colors">
-                      <Icon className="w-5 h-5" />
+                    <div className="bg-muted/50 group-hover:bg-muted rounded-lg p-2 transition-colors">
+                      <Icon className="h-5 w-5" />
                     </div>
                     <span className="font-medium">{social.name}</span>
                   </motion.a>
@@ -141,40 +124,26 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Divider with Gradient */}
-        <div className="relative h-px mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-40/50 to-transparent" />
+        <div className="relative mb-8 h-px">
+          <div className="via-primary-40/50 absolute inset-0 bg-gradient-to-r from-transparent to-transparent" />
         </div>
 
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-sm text-muted-foreground text-center md:text-left"
+            className="text-muted-foreground text-center text-sm md:text-left"
           >
-            © 2025 QSwap. All rights reserved. Built with{" "}
-            <motion.span
-              animate={{
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                repeatDelay: 1,
-              }}
-              className="inline-block"
-            >
-              <Heart className="w-4 h-4 inline text-error-40 fill-current" />
-            </motion.span>{" "}
-            by Qraffle Team
+            © 2025 QSwap. All rights reserved.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="flex items-center gap-6 text-sm text-muted-foreground"
+            className="text-muted-foreground flex items-center gap-6 text-sm"
           >
             <a href="#" className="hover:text-primary-40 transition-colors">
               Privacy Policy
@@ -195,10 +164,10 @@ const Footer: React.FC = () => {
           viewport={{ once: true }}
           className="mt-8 flex justify-center"
         >
-          <div className="px-6 py-3 rounded-full bg-gradient-to-r from-primary-40/10 to-primary-60/10 border border-primary-40/20">
-            <p className="text-sm font-medium text-center">
+          <div className="from-primary-40/10 to-primary-60/10 border-primary-40/20 rounded-full border bg-gradient-to-r px-6 py-3">
+            <p className="text-center text-sm font-medium">
               <span className="text-muted-foreground">Powered by</span>{" "}
-              <span className="bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent font-bold">
+              <span className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text font-bold text-transparent">
                 Qubic Network
               </span>
             </p>
@@ -210,4 +179,3 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
-

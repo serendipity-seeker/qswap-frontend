@@ -105,14 +105,6 @@ QSwap features a **completely custom component library** with unique styling:
 - Your liquidity positions
 - Liquidity pool statistics
 
-### Components Showcase (`/components`) 🌟
-- **NEW!** Interactive demo of all custom components
-- Button variants and sizes
-- Input states (error, success, validation)
-- Modal examples
-- Loader demonstrations
-- Color palette showcase
-
 ## 🔧 Tech Stack
 
 - **React 19** - UI framework
@@ -133,18 +125,3 @@ This is a **mock UI implementation** without real smart contract integration. Pe
 - Prototyping
 
 To integrate with real smart contracts, replace mock data with API calls and connect swap/liquidity functions.
-
-## 📖 Documentation
-
-- **[QSWAP_UI_GUIDE.md](./QSWAP_UI_GUIDE.md)** - Overall UI implementation guide
-- **[CUSTOM_COMPONENTS_GUIDE.md](./CUSTOM_COMPONENTS_GUIDE.md)** - 🌟 Custom components API & usage
-- **[CUSTOM_COMPONENTS_SUMMARY.md](./CUSTOM_COMPONENTS_SUMMARY.md)** - Components implementation summary
-- **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - Complete project summary
-
-## 🤝 Contributing
-
-Built for the QSwap project by the Qraffle Team.
-
-## 📄 License
-
-Private - QSwap Project
