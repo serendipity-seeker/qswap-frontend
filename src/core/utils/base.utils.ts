@@ -127,4 +127,3 @@ export function getCssVariableAsRgb(variableName: string): string {
   const rgbValue = convertHslToHex(hslValue);
   return rgbValue;
 }
-

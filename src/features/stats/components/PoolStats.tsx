@@ -52,65 +52,63 @@ const mockPools: Pool[] = [
 
 const PoolStats: React.FC = () => {
   return (
-    <div className="glass-effect rounded-3xl p-6 shadow-2xl">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Top Pools</h2>
-        <div className="text-sm text-muted-foreground">24h Statistics</div>
+    <div className="glass-effect rounded-2xl p-4 shadow-2xl sm:p-5 md:rounded-3xl md:p-6">
+      <div className="mb-4 flex items-center justify-between md:mb-6">
+        <h2 className="text-xl font-bold sm:text-2xl">Top Pools</h2>
+        <div className="text-muted-foreground text-xs sm:text-sm">24h Statistics</div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2 md:space-y-3">
         {mockPools.map((pool, index) => (
           <motion.div
             key={pool.pairName}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-muted/30 hover:bg-muted/50 rounded-xl p-4 transition-all cursor-pointer group"
+            className="bg-muted/30 hover:bg-muted/50 group cursor-pointer rounded-xl p-3 transition-all md:p-4"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               {/* Pool Info */}
-              <div className="flex items-center gap-3 flex-1">
-                <div className="flex items-center -space-x-2">
+              <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+                <div className="flex flex-shrink-0 items-center -space-x-2">
                   <img
                     src={pool.iconA}
                     alt={pool.tokenA}
-                    className="w-10 h-10 rounded-full border-2 border-background"
+                    className="border-background h-8 w-8 rounded-full border-2 sm:h-10 sm:w-10"
                   />
                   <img
                     src={pool.iconB}
                     alt={pool.tokenB}
-                    className="w-10 h-10 rounded-full border-2 border-background"
+                    className="border-background h-8 w-8 rounded-full border-2 sm:h-10 sm:w-10"
                   />
                 </div>
-                <div>
-                  <div className="font-bold text-lg">{pool.pairName}</div>
-                  <div className="text-sm text-muted-foreground">
-                    TVL: {pool.tvl}
-                  </div>
+                <div className="min-w-0">
+                  <div className="truncate text-base font-bold sm:text-lg">{pool.pairName}</div>
+                  <div className="text-muted-foreground text-xs sm:text-sm">TVL: {pool.tvl}</div>
                 </div>
               </div>
 
               {/* Stats */}
-              <div className="flex items-center gap-6">
-                <div className="text-right">
-                  <div className="text-xs text-muted-foreground mb-1">Volume 24h</div>
-                  <div className="font-medium">{pool.volume24h}</div>
+              <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:flex-nowrap sm:gap-4 md:gap-6">
+                <div className="flex-1 text-left sm:flex-initial sm:text-right">
+                  <div className="text-muted-foreground mb-1 text-[10px] sm:text-xs">Volume 24h</div>
+                  <div className="text-sm font-medium sm:text-base">{pool.volume24h}</div>
                 </div>
-                <div className="text-right">
-                  <div className="text-xs text-muted-foreground mb-1">APY</div>
-                  <div className="font-bold text-success-40">{pool.apy}</div>
+                <div className="flex-1 text-left sm:flex-initial sm:text-right">
+                  <div className="text-muted-foreground mb-1 text-[10px] sm:text-xs">APY</div>
+                  <div className="text-success-40 text-sm font-bold sm:text-base">{pool.apy}</div>
                 </div>
-                <div className="text-right">
-                  <div className="text-xs text-muted-foreground mb-1">24h</div>
+                <div className="flex-1 text-left sm:flex-initial sm:text-right">
+                  <div className="text-muted-foreground mb-1 text-[10px] sm:text-xs">24h</div>
                   <div
-                    className={`font-bold flex items-center gap-1 ${
+                    className={`flex items-center gap-1 text-sm font-bold sm:text-base ${
                       pool.priceChange >= 0 ? "text-success-40" : "text-error-40"
                     }`}
                   >
                     {pool.priceChange >= 0 ? (
-                      <TrendingUp className="w-4 h-4" />
+                      <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
                     ) : (
-                      <TrendingDown className="w-4 h-4" />
+                      <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4" />
                     )}
                     {Math.abs(pool.priceChange)}%
                   </div>
@@ -125,4 +123,3 @@ const PoolStats: React.FC = () => {
 };
 
 export default PoolStats;
-

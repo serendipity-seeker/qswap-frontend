@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Button, Input, Modal, AppLoader } from "@/shared/components/custom";
-import { 
-  Heart, 
-  Trash2, 
-  Check, 
-  Mail, 
-  Lock, 
-  Search,
-  Download,
-  Share2 
-} from "lucide-react";
+import { Heart, Trash2, Check, Mail, Lock, Search, Download, Share2 } from "lucide-react";
 
 const ComponentsShowcase: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,30 +10,20 @@ const ComponentsShowcase: React.FC = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen px-4 pt-24 pb-12">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl font-black bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent mb-4">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-center">
+          <h1 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-5xl font-black text-transparent">
             Components Showcase
           </h1>
-          <p className="text-xl text-muted-foreground">
-            Explore our custom-designed components
-          </p>
+          <p className="text-muted-foreground text-xl">Explore our custom-designed components</p>
         </motion.div>
 
         {/* Buttons Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-16"
-        >
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-16">
           <div className="glass-effect rounded-3xl p-8">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-3xl font-bold">
               <span className="text-4xl">🔘</span>
               Buttons
             </h2>
@@ -50,62 +31,66 @@ const ComponentsShowcase: React.FC = () => {
             {/* Variants */}
             <div className="space-y-8">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Variants</h3>
+                <h3 className="text-muted-foreground mb-4 text-lg font-semibold">Variants</h3>
                 <div className="flex flex-wrap gap-4">
                   <Button variant="primary">Primary</Button>
                   <Button variant="secondary">Secondary</Button>
                   <Button variant="outline">Outline</Button>
                   <Button variant="ghost">Ghost</Button>
-                  <Button variant="danger" icon={<Trash2 className="w-5 h-5" />}>
+                  <Button variant="danger" icon={<Trash2 className="h-5 w-5" />}>
                     Delete
                   </Button>
-                  <Button variant="success" icon={<Check className="w-5 h-5" />}>
+                  <Button variant="success" icon={<Check className="h-5 w-5" />}>
                     Confirm
                   </Button>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Sizes</h3>
+                <h3 className="text-muted-foreground mb-4 text-lg font-semibold">Sizes</h3>
                 <div className="flex flex-wrap items-center gap-4">
-                  <Button variant="primary" size="sm">Small</Button>
-                  <Button variant="primary" size="md">Medium</Button>
-                  <Button variant="primary" size="lg">Large</Button>
-                  <Button variant="primary" size="xl">Extra Large</Button>
+                  <Button variant="primary" size="sm">
+                    Small
+                  </Button>
+                  <Button variant="primary" size="md">
+                    Medium
+                  </Button>
+                  <Button variant="primary" size="lg">
+                    Large
+                  </Button>
+                  <Button variant="primary" size="xl">
+                    Extra Large
+                  </Button>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-muted-foreground">With Icons</h3>
+                <h3 className="text-muted-foreground mb-4 text-lg font-semibold">With Icons</h3>
                 <div className="flex flex-wrap gap-4">
-                  <Button 
-                    variant="primary" 
-                    icon={<Download className="w-5 h-5" />}
-                  >
+                  <Button variant="primary" icon={<Download className="h-5 w-5" />}>
                     Download
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    icon={<Share2 className="w-5 h-5" />}
-                    iconPosition="right"
-                  >
+                  <Button variant="outline" icon={<Share2 className="h-5 w-5" />} iconPosition="right">
                     Share
                   </Button>
-                  <Button 
-                    variant="success" 
-                    icon={<Heart className="w-5 h-5" />}
-                  >
+                  <Button variant="success" icon={<Heart className="h-5 w-5" />}>
                     Like
                   </Button>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-muted-foreground">States</h3>
+                <h3 className="text-muted-foreground mb-4 text-lg font-semibold">States</h3>
                 <div className="flex flex-wrap gap-4">
-                  <Button variant="primary" loading>Loading...</Button>
-                  <Button variant="primary" disabled>Disabled</Button>
-                  <Button variant="primary" fullWidth>Full Width</Button>
+                  <Button variant="primary" loading>
+                    Loading...
+                  </Button>
+                  <Button variant="primary" disabled>
+                    Disabled
+                  </Button>
+                  <Button variant="primary" fullWidth>
+                    Full Width
+                  </Button>
                 </div>
               </div>
             </div>
@@ -120,18 +105,18 @@ const ComponentsShowcase: React.FC = () => {
           className="mb-16"
         >
           <div className="glass-effect rounded-3xl p-8">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-3xl font-bold">
               <span className="text-4xl">📝</span>
               Inputs
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid gap-6 md:grid-cols-2">
               {/* Default Variant */}
               <Input
                 label="Email Address"
                 type="email"
                 placeholder="Enter your email"
-                leftIcon={<Mail className="w-5 h-5" />}
+                leftIcon={<Mail className="h-5 w-5" />}
                 hint="We'll never share your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +128,7 @@ const ComponentsShowcase: React.FC = () => {
                 type="password"
                 placeholder="Enter your password"
                 variant="filled"
-                leftIcon={<Lock className="w-5 h-5" />}
+                leftIcon={<Lock className="h-5 w-5" />}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -153,29 +138,17 @@ const ComponentsShowcase: React.FC = () => {
                 label="Search"
                 variant="outline"
                 placeholder="Search tokens..."
-                leftIcon={<Search className="w-5 h-5" />}
+                leftIcon={<Search className="h-5 w-5" />}
               />
 
               {/* With Error */}
-              <Input
-                label="Username"
-                placeholder="Choose a username"
-                error="Username is already taken"
-              />
+              <Input label="Username" placeholder="Choose a username" error="Username is already taken" />
 
               {/* With Success */}
-              <Input
-                label="Referral Code"
-                placeholder="Enter code"
-                success="Valid referral code!"
-              />
+              <Input label="Referral Code" placeholder="Enter code" success="Valid referral code!" />
 
               {/* Full Width */}
-              <Input
-                label="Description"
-                placeholder="Tell us about yourself"
-                fullWidth
-              />
+              <Input label="Description" placeholder="Tell us about yourself" fullWidth />
             </div>
           </div>
         </motion.section>
@@ -188,7 +161,7 @@ const ComponentsShowcase: React.FC = () => {
           className="mb-16"
         >
           <div className="glass-effect rounded-3xl p-8">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-3xl font-bold">
               <span className="text-4xl">🪟</span>
               Modals
             </h2>
@@ -205,7 +178,7 @@ const ComponentsShowcase: React.FC = () => {
               title="Example Modal"
               size="md"
               footer={
-                <div className="flex gap-4 justify-end">
+                <div className="flex justify-end gap-4">
                   <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
                     Cancel
                   </Button>
@@ -219,15 +192,8 @@ const ComponentsShowcase: React.FC = () => {
                 <p className="text-muted-foreground">
                   This is an example modal with custom styling, backdrop blur, and smooth animations.
                 </p>
-                <Input
-                  label="Name"
-                  placeholder="Enter your name"
-                />
-                <Input
-                  label="Email"
-                  type="email"
-                  placeholder="Enter your email"
-                />
+                <Input label="Name" placeholder="Enter your name" />
+                <Input label="Email" type="email" placeholder="Enter your email" />
               </div>
             </Modal>
           </div>
@@ -241,14 +207,14 @@ const ComponentsShowcase: React.FC = () => {
           className="mb-16"
         >
           <div className="glass-effect rounded-3xl p-8">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-3xl font-bold">
               <span className="text-4xl">⏳</span>
               Loaders
             </h2>
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Sizes</h3>
+                <h3 className="text-muted-foreground mb-4 text-lg font-semibold">Sizes</h3>
                 <div className="flex flex-wrap items-center gap-12">
                   <AppLoader fullScreen={false} size="sm" text="Small" />
                   <AppLoader fullScreen={false} size="md" text="Medium" />
@@ -257,11 +223,14 @@ const ComponentsShowcase: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Full Screen</h3>
-                <Button variant="primary" onClick={() => {
-                  setShowLoader(true);
-                  setTimeout(() => setShowLoader(false), 3000);
-                }}>
+                <h3 className="text-muted-foreground mb-4 text-lg font-semibold">Full Screen</h3>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setShowLoader(true);
+                    setTimeout(() => setShowLoader(false), 3000);
+                  }}
+                >
                   Show Full Screen Loader (3s)
                 </Button>
                 {showLoader && <AppLoader text="Loading your data..." />}
@@ -271,18 +240,14 @@ const ComponentsShowcase: React.FC = () => {
         </motion.section>
 
         {/* Color Palette */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <div className="glass-effect rounded-3xl p-8">
-            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-3xl font-bold">
               <span className="text-4xl">🎨</span>
               Color Palette
             </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {[
                 { name: "Primary 40", color: "bg-primary-40" },
                 { name: "Primary 50", color: "bg-primary-50" },
@@ -294,8 +259,8 @@ const ComponentsShowcase: React.FC = () => {
                 { name: "Gray 90", color: "bg-gray-90" },
               ].map((item) => (
                 <div key={item.name} className="text-center">
-                  <div className={`${item.color} h-24 rounded-xl shadow-lg mb-2`} />
-                  <p className="text-sm font-medium text-muted-foreground">{item.name}</p>
+                  <div className={`${item.color} mb-2 h-24 rounded-xl shadow-lg`} />
+                  <p className="text-muted-foreground text-sm font-medium">{item.name}</p>
                 </div>
               ))}
             </div>
@@ -307,4 +272,3 @@ const ComponentsShowcase: React.FC = () => {
 };
 
 export default ComponentsShowcase;
-

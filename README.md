@@ -19,7 +19,7 @@ A beautiful, modern decentralized exchange (DEX) interface built with React, Typ
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - Yarn or npm
 
 ### Installation
@@ -64,6 +64,7 @@ src/
 ## 🎨 Design System
 
 ### Custom Components Library 🌟
+
 QSwap features a **completely custom component library** with unique styling:
 
 - **6 Custom Components**: Button, Input, Modal, AppLoader, Header, Footer
@@ -78,6 +79,7 @@ QSwap features a **completely custom component library** with unique styling:
   - Advanced micro-interactions
 
 ### Design Tokens
+
 - **Font**: Inter (Google Fonts) - Weights 300-900
 - **Colors**: Cyan/Turquoise gradient (`#61f0fe` → `#03c1db`)
 - **Animations**: Spring physics, easing curves, GPU acceleration
@@ -86,11 +88,13 @@ QSwap features a **completely custom component library** with unique styling:
 ## 📚 Pages
 
 ### Home (`/`)
+
 - Hero section with gradient text and CTAs
 - Platform statistics (TVL, Volume, Users)
 - Feature highlights with animated cards
 
 ### Swap (`/swap`)
+
 - Token input with balance and USD values
 - Token selector modal with search
 - Swap settings (slippage tolerance)
@@ -99,6 +103,7 @@ QSwap features a **completely custom component library** with unique styling:
 - Real-time swap calculations
 
 ### Liquidity (`/liquidity`)
+
 - Add/Remove liquidity modes
 - Token pair selection
 - Pool share calculations
@@ -119,6 +124,7 @@ QSwap features a **completely custom component library** with unique styling:
 ## 📝 Note
 
 This is a **mock UI implementation** without real smart contract integration. Perfect for:
+
 - UI/UX demonstrations
 - Frontend development
 - Design presentations

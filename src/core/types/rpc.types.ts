@@ -134,4 +134,3 @@ export interface TransactionInfo {
     txId: string;
   };
 }
-

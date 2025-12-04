@@ -6,5 +6,4 @@ export const ROUTES = {
   SHOWCASE: "/showcase",
 } as const;
 
-export type Route = typeof ROUTES[keyof typeof ROUTES];
-
+export type Route = (typeof ROUTES)[keyof typeof ROUTES];

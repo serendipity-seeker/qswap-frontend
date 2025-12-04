@@ -56,13 +56,13 @@ const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={closeOnBackdrop ? onClose : undefined}
-            className="fixed inset-0 bg-black/70 backdrop-blur-md z-[var(--z-modal)]"
+            className="fixed inset-0 z-[var(--z-modal)] bg-black/70 backdrop-blur-md"
             style={{ backdropFilter: "blur(8px) saturate(150%)" }}
           />
 
           {/* Modal */}
           <div className="fixed inset-0 z-[calc(var(--z-modal)+1)] overflow-y-auto">
-            <div className="min-h-full flex items-center justify-center p-4">
+            <div className="flex min-h-full items-center justify-center p-4">
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -72,31 +72,24 @@ const Modal: React.FC<ModalProps> = ({
                   damping: 25,
                   stiffness: 300,
                 }}
-                className={`
-                  relative w-full ${sizes[size]} 
-                  bg-gradient-to-br from-card via-card to-muted
-                  border-2 border-primary-40/20
-                  rounded-3xl shadow-2xl
-                  overflow-hidden
-                  ${className}
-                `}
+                className={`relative w-full ${sizes[size]} from-card via-card to-muted border-primary-40/20 overflow-hidden rounded-3xl border-2 bg-gradient-to-br shadow-2xl ${className} `}
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Animated Border Glow */}
                 <div className="absolute inset-0 opacity-50">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary-40 via-primary-60 to-primary-40 rounded-3xl blur opacity-20 animate-pulse" />
+                  <div className="from-primary-40 via-primary-60 to-primary-40 absolute -inset-1 animate-pulse rounded-3xl bg-gradient-to-r opacity-20 blur" />
                 </div>
 
                 {/* Content Container */}
-                <div className="relative z-10 bg-card/80 backdrop-blur-xl rounded-3xl">
+                <div className="bg-card/80 relative z-10 rounded-3xl backdrop-blur-xl">
                   {/* Header */}
                   {(title || showCloseButton) && (
-                    <div className="flex items-center justify-between p-6 border-b border-border/50">
+                    <div className="border-border/50 flex items-center justify-between border-b p-6">
                       {title && (
                         <motion.h2
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="text-2xl font-bold bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent"
+                          className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent"
                         >
                           {title}
                         </motion.h2>
@@ -106,9 +99,9 @@ const Modal: React.FC<ModalProps> = ({
                           whileHover={{ scale: 1.1, rotate: 90 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={onClose}
-                          className="p-2 hover:bg-muted rounded-xl transition-colors group"
+                          className="hover:bg-muted group rounded-xl p-2 transition-colors"
                         >
-                          <X className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                          <X className="text-muted-foreground group-hover:text-foreground h-6 w-6 transition-colors" />
                         </motion.button>
                       )}
                     </div>
@@ -119,7 +112,7 @@ const Modal: React.FC<ModalProps> = ({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="p-6 max-h-[70vh] overflow-y-auto custom-scrollbar"
+                    className="custom-scrollbar max-h-[70vh] overflow-y-auto p-6"
                   >
                     {children}
                   </motion.div>
@@ -130,7 +123,7 @@ const Modal: React.FC<ModalProps> = ({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.15 }}
-                      className="p-6 border-t border-border/50 bg-muted/30"
+                      className="border-border/50 bg-muted/30 border-t p-6"
                     >
                       {footer}
                     </motion.div>
@@ -138,8 +131,8 @@ const Modal: React.FC<ModalProps> = ({
                 </div>
 
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary-40/10 rounded-full blur-3xl -z-10" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-60/10 rounded-full blur-3xl -z-10" />
+                <div className="bg-primary-40/10 absolute top-0 right-0 -z-10 h-64 w-64 rounded-full blur-3xl" />
+                <div className="bg-primary-60/10 absolute bottom-0 left-0 -z-10 h-64 w-64 rounded-full blur-3xl" />
               </motion.div>
             </div>
           </div>
@@ -152,4 +145,3 @@ const Modal: React.FC<ModalProps> = ({
 };
 
 export default Modal;
-

@@ -17,34 +17,28 @@ interface TokenInputProps {
   readOnly?: boolean;
 }
 
-const TokenInput: React.FC<TokenInputProps> = ({
-  token,
-  amount,
-  onAmountChange,
-  onTokenClick,
-  readOnly = false,
-}) => {
+const TokenInput: React.FC<TokenInputProps> = ({ token, amount, onAmountChange, onTokenClick, readOnly = false }) => {
   const handleMaxClick = () => {
     onAmountChange(token.balance.replace(/,/g, ""));
   };
 
   return (
-    <div className="bg-muted/30 hover:bg-muted/50 rounded-2xl p-4 transition-all duration-300">
-      <div className="flex justify-between items-center">
+    <div className="bg-muted/30 hover:bg-muted/50 rounded-xl p-3 transition-all duration-300 sm:p-4 md:rounded-2xl">
+      <div className="flex items-center justify-between gap-2">
         {/* Token Selector */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onTokenClick}
-          className="flex items-center gap-2 px-3 py-2 bg-background hover:bg-muted rounded-xl transition-all duration-200 shadow-sm"
+          className="bg-background hover:bg-muted flex flex-shrink-0 items-center gap-1.5 rounded-lg px-2 py-1.5 shadow-sm transition-all duration-200 sm:gap-2 sm:rounded-xl sm:px-3 sm:py-2"
         >
-          <img src={token.icon} alt={token.symbol} className="w-7 h-7 rounded-full" />
-          <span className="font-bold text-lg">{token.symbol}</span>
-          <ChevronDown className="w-5 h-5 text-muted-foreground" />
+          <img src={token.icon} alt={token.symbol} className="h-6 w-6 rounded-full sm:h-7 sm:w-7" />
+          <span className="text-base font-bold sm:text-lg">{token.symbol}</span>
+          <ChevronDown className="text-muted-foreground h-4 w-4 sm:h-5 sm:w-5" />
         </motion.button>
 
         {/* Amount Input */}
-        <div className="flex-1 text-right">
+        <div className="min-w-0 flex-1 text-right">
           <input
             type="text"
             value={amount}
@@ -56,26 +50,26 @@ const TokenInput: React.FC<TokenInputProps> = ({
             }}
             placeholder="0.00"
             readOnly={readOnly}
-            className="bg-transparent text-right text-3xl font-bold w-full outline-none placeholder:text-muted-foreground/30"
+            className="placeholder:text-muted-foreground/30 w-full bg-transparent text-right text-2xl font-bold outline-none sm:text-3xl"
           />
         </div>
       </div>
 
       {/* Balance & USD Value */}
-      <div className="flex justify-between items-center mt-2">
-        <div className="text-sm text-muted-foreground">
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <div className="text-muted-foreground truncate text-xs sm:text-sm">
           Balance: {token.balance}
           {!readOnly && (
             <button
               onClick={handleMaxClick}
-              className="ml-2 px-2 py-0.5 bg-primary-40/20 hover:bg-primary-40/30 text-primary-40 rounded text-xs font-medium transition-colors"
+              className="bg-primary-40/20 hover:bg-primary-40/30 text-primary-40 ml-1 rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors sm:ml-2 sm:px-2 sm:text-xs"
             >
               MAX
             </button>
           )}
         </div>
         {amount && parseFloat(amount) > 0 && (
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-xs whitespace-nowrap sm:text-sm">
             ≈ ${(parseFloat(amount) * 0.15).toFixed(2)}
           </div>
         )}
@@ -85,4 +79,3 @@ const TokenInput: React.FC<TokenInputProps> = ({
 };
 
 export default TokenInput;
-

@@ -7,11 +7,7 @@ interface AppLoaderProps {
   size?: "sm" | "md" | "lg";
 }
 
-const AppLoader: React.FC<AppLoaderProps> = ({
-  fullScreen = true,
-  text = "Loading...",
-  size = "md",
-}) => {
+const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, text = "Loading...", size = "md" }) => {
   const sizes = {
     sm: { container: "w-16 h-16", dot: "w-3 h-3" },
     md: { container: "w-24 h-24", dot: "w-4 h-4" },
@@ -32,7 +28,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({
         <div className="relative">
           {/* Outer Ring */}
           <motion.div
-            className={`${sizes[size].container} rounded-full border-4 border-primary-40/20`}
+            className={`${sizes[size].container} border-primary-40/20 rounded-full border-4`}
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           >
@@ -49,7 +45,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({
 
           {/* Inner Pulsing Circle */}
           <motion.div
-            className={`absolute inset-0 m-auto ${sizes[size].dot === "w-3 h-3" ? "w-8 h-8" : sizes[size].dot === "w-4 h-4" ? "w-12 h-12" : "w-16 h-16"} rounded-full bg-gradient-to-br from-primary-40 to-primary-60`}
+            className={`absolute inset-0 m-auto ${sizes[size].dot === "h-3 w-3" ? "h-8 w-8" : sizes[size].dot === "h-4 w-4" ? "h-12 w-12" : "h-16 w-16"} from-primary-40 to-primary-60 rounded-full bg-gradient-to-br`}
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.5, 1, 0.5],
@@ -62,7 +58,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({
             <motion.img
               src="/qswap.svg"
               alt="Loading"
-              className={`${sizes[size].dot === "w-3 h-3" ? "w-6 h-6" : sizes[size].dot === "w-4 h-4" ? "w-10 h-10" : "w-14 h-14"}`}
+              className={`${sizes[size].dot === "h-3 w-3" ? "h-6 w-6" : sizes[size].dot === "h-4 w-4" ? "h-10 w-10" : "h-14 w-14"}`}
               animate={{
                 rotate: [0, 360],
               }}
@@ -74,7 +70,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className={`absolute ${sizes[size].dot} rounded-full bg-gradient-to-br from-primary-40 to-primary-60 shadow-lg shadow-primary-40/50`}
+              className={`absolute ${sizes[size].dot} from-primary-40 to-primary-60 shadow-primary-40/50 rounded-full bg-gradient-to-br shadow-lg`}
               style={{
                 top: "50%",
                 left: "50%",
@@ -104,7 +100,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({
         {/* Loading Text */}
         <div className="flex flex-col items-center gap-3">
           <motion.p
-            className="text-lg font-semibold bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent"
+            className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent"
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -116,7 +112,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
-                className="w-2 h-2 rounded-full bg-primary-40"
+                className="bg-primary-40 h-2 w-2 rounded-full"
                 animate={{
                   y: [0, -8, 0],
                   opacity: [0.3, 1, 0.3],
@@ -132,9 +128,9 @@ const AppLoader: React.FC<AppLoaderProps> = ({
         </div>
 
         {/* Progress Bar (Optional) */}
-        <div className="w-64 h-1 bg-muted rounded-full overflow-hidden">
+        <div className="bg-muted h-1 w-64 overflow-hidden rounded-full">
           <motion.div
-            className="h-full bg-gradient-to-r from-primary-40 via-primary-50 to-primary-60 rounded-full"
+            className="from-primary-40 via-primary-50 to-primary-60 h-full rounded-full bg-gradient-to-r"
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}
             transition={{
@@ -150,4 +146,3 @@ const AppLoader: React.FC<AppLoaderProps> = ({
 };
 
 export default AppLoader;
-

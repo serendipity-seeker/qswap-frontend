@@ -10,7 +10,7 @@ export const LoadingSpinner: React.FC<{ size?: "sm" | "md" | "lg" }> = ({ size =
 
   return (
     <motion.div
-      className={`${sizes[size]} border-4 border-primary-40/30 border-t-primary-40 rounded-full`}
+      className={`${sizes[size]} border-primary-40/30 border-t-primary-40 rounded-full border-4`}
       animate={{ rotate: 360 }}
       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
     />
@@ -23,7 +23,7 @@ export const LoadingDots: React.FC = () => {
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="w-3 h-3 bg-primary-40 rounded-full"
+          className="bg-primary-40 h-3 w-3 rounded-full"
           animate={{
             y: [0, -10, 0],
             opacity: [1, 0.5, 1],
@@ -43,7 +43,7 @@ export const LoadingPulse: React.FC = () => {
   return (
     <div className="flex items-center justify-center">
       <motion.div
-        className="w-16 h-16 bg-gradient-to-r from-primary-40 to-primary-60 rounded-full"
+        className="from-primary-40 to-primary-60 h-16 w-16 rounded-full bg-gradient-to-r"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.5, 1, 0.5],
@@ -57,4 +57,3 @@ export const LoadingPulse: React.FC = () => {
     </div>
   );
 };
-

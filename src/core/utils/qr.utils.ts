@@ -288,4 +288,3 @@ const detectDataType = (value: string): string => {
 
   return "Text";
 };
-

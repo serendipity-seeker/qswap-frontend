@@ -18,4 +18,3 @@ export interface IEvent {
   eventSize: number;
   eventData: string;
 }
-

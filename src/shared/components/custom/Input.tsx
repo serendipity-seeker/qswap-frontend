@@ -29,7 +29,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -74,13 +74,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <motion.label
             animate={{
-              color: isFocused
-                ? "var(--primary-40)"
-                : hasError
-                ? "var(--error-40)"
-                : "var(--muted-foreground)",
+              color: isFocused ? "var(--primary-40)" : hasError ? "var(--error-40)" : "var(--muted-foreground)",
             }}
-            className="block text-sm font-semibold mb-2 transition-colors"
+            className="mb-2 block text-sm font-semibold transition-colors"
           >
             {label}
           </motion.label>
@@ -89,11 +85,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {/* Input Container */}
         <div className="relative">
           {/* Left Icon */}
-          {leftIcon && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-              {leftIcon}
-            </div>
-          )}
+          {leftIcon && <div className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2">{leftIcon}</div>}
 
           {/* Input Field */}
           <motion.input
@@ -108,15 +100,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 ? hasError
                   ? "0 0 0 3px rgba(249, 112, 102, 0.1)"
                   : hasSuccess
-                  ? "0 0 0 3px rgba(71, 205, 137, 0.1)"
-                  : "0 0 0 3px rgba(97, 240, 254, 0.1)"
+                    ? "0 0 0 3px rgba(71, 205, 137, 0.1)"
+                    : "0 0 0 3px rgba(97, 240, 254, 0.1)"
                 : "0 0 0 0px rgba(0, 0, 0, 0)",
             }}
             {...props}
           />
 
           {/* Right Icons */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+          <div className="absolute top-1/2 right-4 flex -translate-y-1/2 items-center gap-2">
             {/* Status Icons */}
             <AnimatePresence mode="wait">
               {hasError && (
@@ -125,7 +117,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   animate={{ scale: 1, rotate: 0 }}
                   exit={{ scale: 0, rotate: 180 }}
                 >
-                  <AlertCircle className="w-5 h-5 text-error-40" />
+                  <AlertCircle className="text-error-40 h-5 w-5" />
                 </motion.div>
               )}
               {hasSuccess && (
@@ -134,7 +126,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   animate={{ scale: 1, rotate: 0 }}
                   exit={{ scale: 0, rotate: 180 }}
                 >
-                  <CheckCircle2 className="w-5 h-5 text-success-40" />
+                  <CheckCircle2 className="text-success-40 h-5 w-5" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -147,19 +139,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 tabIndex={-1}
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             )}
 
             {/* Custom Right Icon */}
-            {rightIcon && !isPassword && (
-              <div className="text-muted-foreground">{rightIcon}</div>
-            )}
+            {rightIcon && !isPassword && <div className="text-muted-foreground">{rightIcon}</div>}
           </div>
 
           {/* Focus Line Animation */}
           <motion.div
-            className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary-40 to-primary-60"
+            className="from-primary-40 to-primary-60 absolute bottom-0 left-0 h-0.5 bg-gradient-to-r"
             initial={{ width: "0%" }}
             animate={{ width: isFocused ? "100%" : "0%" }}
             transition={{ duration: 0.3 }}
@@ -176,29 +166,26 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className="mt-2"
             >
               {error && (
-                <p className="text-sm text-error-40 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
+                <p className="text-error-40 flex items-center gap-1 text-sm">
+                  <AlertCircle className="h-4 w-4" />
                   {error}
                 </p>
               )}
               {success && !error && (
-                <p className="text-sm text-success-40 flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" />
+                <p className="text-success-40 flex items-center gap-1 text-sm">
+                  <CheckCircle2 className="h-4 w-4" />
                   {success}
                 </p>
               )}
-              {hint && !error && !success && (
-                <p className="text-sm text-muted-foreground">{hint}</p>
-              )}
+              {hint && !error && !success && <p className="text-muted-foreground text-sm">{hint}</p>}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";
 
 export default Input;
-

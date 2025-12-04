@@ -29,7 +29,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
     const baseStyles = `
       relative overflow-hidden font-bold transition-all duration-300
@@ -100,7 +100,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         <span className="relative z-10 flex items-center justify-center gap-2">
           {loading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>
               {icon && iconPosition === "left" && <span>{icon}</span>}
@@ -111,10 +111,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </span>
       </motion.button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
 
 export default Button;
-

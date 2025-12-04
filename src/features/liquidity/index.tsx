@@ -47,27 +47,26 @@ const Liquidity: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
+    <div className="min-h-screen px-4 pt-24 pb-12">
       {/* Background decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-primary-40/20 rounded-full blur-[120px] animate-float"></div>
-        <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-primary-60/20 rounded-full blur-[120px] animate-float" style={{ animationDelay: "1s" }}></div>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
+        <div
+          className="bg-primary-60/20 animate-float absolute -right-48 bottom-1/4 h-96 w-96 rounded-full blur-[120px]"
+          style={{ animationDelay: "1s" }}
+        ></div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto relative z-10">
+      <div className="relative z-10 mx-auto max-w-[1200px]">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 text-center"
-        >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent mb-2">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6 text-center">
+          <h1 className="from-primary-40 to-primary-60 mb-2 bg-gradient-to-r bg-clip-text text-4xl font-bold text-transparent">
             Liquidity
           </h1>
           <p className="text-muted-foreground">Add liquidity to earn fees from swaps</p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid gap-6 lg:grid-cols-2">
           {/* Add/Remove Liquidity Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -76,27 +75,27 @@ const Liquidity: React.FC = () => {
           >
             <div className="glass-effect rounded-3xl p-6 shadow-2xl">
               {/* Mode Selector */}
-              <div className="flex gap-2 mb-6">
+              <div className="mb-6 flex gap-2">
                 <button
                   onClick={() => setMode("add")}
-                  className={`flex-1 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-bold transition-all ${
                     mode === "add"
-                      ? "bg-gradient-to-r from-primary-40 to-primary-60 text-white shadow-lg"
+                      ? "from-primary-40 to-primary-60 bg-gradient-to-r text-white shadow-lg"
                       : "bg-muted/30 hover:bg-muted/50"
                   }`}
                 >
-                  <Plus className="w-5 h-5" />
+                  <Plus className="h-5 w-5" />
                   Add Liquidity
                 </button>
                 <button
                   onClick={() => setMode("remove")}
-                  className={`flex-1 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-bold transition-all ${
                     mode === "remove"
-                      ? "bg-gradient-to-r from-primary-40 to-primary-60 text-white shadow-lg"
+                      ? "from-primary-40 to-primary-60 bg-gradient-to-r text-white shadow-lg"
                       : "bg-muted/30 hover:bg-muted/50"
                   }`}
                 >
-                  <Minus className="w-5 h-5" />
+                  <Minus className="h-5 w-5" />
                   Remove Liquidity
                 </button>
               </div>
@@ -105,7 +104,7 @@ const Liquidity: React.FC = () => {
                 <>
                   {/* Token A Input */}
                   <div className="mb-4">
-                    <div className="text-sm text-muted-foreground mb-2">Token A</div>
+                    <div className="text-muted-foreground mb-2 text-sm">Token A</div>
                     <TokenInput
                       token={tokenA}
                       amount={amountA}
@@ -118,15 +117,15 @@ const Liquidity: React.FC = () => {
                   </div>
 
                   {/* Plus Icon */}
-                  <div className="flex justify-center -my-2 relative z-10">
-                    <div className="p-2 bg-muted rounded-full">
-                      <Plus className="w-5 h-5 text-muted-foreground" />
+                  <div className="relative z-10 -my-2 flex justify-center">
+                    <div className="bg-muted rounded-full p-2">
+                      <Plus className="text-muted-foreground h-5 w-5" />
                     </div>
                   </div>
 
                   {/* Token B Input */}
                   <div className="mb-6">
-                    <div className="text-sm text-muted-foreground mb-2">Token B</div>
+                    <div className="text-muted-foreground mb-2 text-sm">Token B</div>
                     <TokenInput
                       token={tokenB}
                       amount={amountB}
@@ -143,7 +142,7 @@ const Liquidity: React.FC = () => {
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
-                      className="mb-4 p-4 bg-muted/30 rounded-xl space-y-2"
+                      className="bg-muted/30 mb-4 space-y-2 rounded-xl p-4"
                     >
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Pool Share</span>
@@ -153,17 +152,13 @@ const Liquidity: React.FC = () => {
                         <span className="text-muted-foreground">
                           {tokenA.symbol} per {tokenB.symbol}
                         </span>
-                        <span className="font-medium">
-                          {(parseFloat(amountA) / parseFloat(amountB)).toFixed(6)}
-                        </span>
+                        <span className="font-medium">{(parseFloat(amountA) / parseFloat(amountB)).toFixed(6)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">
                           {tokenB.symbol} per {tokenA.symbol}
                         </span>
-                        <span className="font-medium">
-                          {(parseFloat(amountB) / parseFloat(amountA)).toFixed(6)}
-                        </span>
+                        <span className="font-medium">{(parseFloat(amountB) / parseFloat(amountA)).toFixed(6)}</span>
                       </div>
                     </motion.div>
                   )}
@@ -183,29 +178,29 @@ const Liquidity: React.FC = () => {
                 <>
                   {/* Remove Liquidity Interface */}
                   <div className="mb-6">
-                    <div className="text-sm text-muted-foreground mb-2">Amount to Remove</div>
+                    <div className="text-muted-foreground mb-2 text-sm">Amount to Remove</div>
                     <div className="bg-muted/30 rounded-2xl p-4">
-                      <div className="flex items-center gap-3 mb-4">
-                        <img src={tokenA.icon} alt={tokenA.symbol} className="w-8 h-8 rounded-full" />
+                      <div className="mb-4 flex items-center gap-3">
+                        <img src={tokenA.icon} alt={tokenA.symbol} className="h-8 w-8 rounded-full" />
                         <span className="text-xl font-bold">{tokenA.symbol}</span>
                         <span className="text-muted-foreground">/</span>
-                        <img src={tokenB.icon} alt={tokenB.symbol} className="w-8 h-8 rounded-full" />
+                        <img src={tokenB.icon} alt={tokenB.symbol} className="h-8 w-8 rounded-full" />
                         <span className="text-xl font-bold">{tokenB.symbol}</span>
                       </div>
-                      
+
                       <input
                         type="range"
                         min="0"
                         max="100"
                         defaultValue="0"
-                        className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary-40"
+                        className="bg-muted accent-primary-40 h-2 w-full cursor-pointer appearance-none rounded-lg"
                       />
-                      
-                      <div className="flex justify-between mt-2">
+
+                      <div className="mt-2 flex justify-between">
                         {["25%", "50%", "75%", "Max"].map((label) => (
                           <button
                             key={label}
-                            className="px-3 py-1 bg-muted/50 hover:bg-muted rounded-lg text-sm transition-colors"
+                            className="bg-muted/50 hover:bg-muted rounded-lg px-3 py-1 text-sm transition-colors"
                           >
                             {label}
                           </button>
@@ -214,8 +209,8 @@ const Liquidity: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mb-6 p-4 bg-muted/30 rounded-xl space-y-2">
-                    <div className="text-sm text-muted-foreground mb-2">You will receive:</div>
+                  <div className="bg-muted/30 mb-6 space-y-2 rounded-xl p-4">
+                    <div className="text-muted-foreground mb-2 text-sm">You will receive:</div>
                     <div className="flex justify-between">
                       <span className="font-medium">{tokenA.symbol}</span>
                       <span className="font-bold">0.00</span>
@@ -226,22 +221,18 @@ const Liquidity: React.FC = () => {
                     </div>
                   </div>
 
-                  <Button
-                    variant="danger"
-                    size="lg"
-                    onClick={handleRemoveLiquidity}
-                    fullWidth
-                  >
+                  <Button variant="danger" size="lg" onClick={handleRemoveLiquidity} fullWidth>
                     Remove Liquidity
                   </Button>
                 </>
               )}
 
               {/* Info Footer */}
-              <div className="mt-4 p-3 bg-muted/50 rounded-lg flex items-start gap-2">
-                <Info className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-muted-foreground">
-                  By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool.
+              <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
+                <Info className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+                <p className="text-muted-foreground text-xs">
+                  By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the
+                  pool.
                 </p>
               </div>
             </div>
@@ -262,40 +253,40 @@ const Liquidity: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+          className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3"
         >
           <div className="glass-effect rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-primary-40/20 rounded-lg">
-                <Droplets className="w-6 h-6 text-primary-40" />
+            <div className="mb-2 flex items-center gap-3">
+              <div className="bg-primary-40/20 rounded-lg p-2">
+                <Droplets className="text-primary-40 h-6 w-6" />
               </div>
               <div>
                 <div className="text-2xl font-bold">$45.2M</div>
-                <div className="text-sm text-muted-foreground">Total Liquidity</div>
+                <div className="text-muted-foreground text-sm">Total Liquidity</div>
               </div>
             </div>
           </div>
 
           <div className="glass-effect rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-success-40/20 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-success-40" />
+            <div className="mb-2 flex items-center gap-3">
+              <div className="bg-success-40/20 rounded-lg p-2">
+                <TrendingUp className="text-success-40 h-6 w-6" />
               </div>
               <div>
                 <div className="text-2xl font-bold">$1.2M</div>
-                <div className="text-sm text-muted-foreground">24h Volume</div>
+                <div className="text-muted-foreground text-sm">24h Volume</div>
               </div>
             </div>
           </div>
 
           <div className="glass-effect rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-warning-40/20 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-warning-40" />
+            <div className="mb-2 flex items-center gap-3">
+              <div className="bg-warning-40/20 rounded-lg p-2">
+                <TrendingUp className="text-warning-40 h-6 w-6" />
               </div>
               <div>
                 <div className="text-2xl font-bold">$85.4K</div>
-                <div className="text-sm text-muted-foreground">24h Fees</div>
+                <div className="text-muted-foreground text-sm">24h Fees</div>
               </div>
             </div>
           </div>
@@ -315,4 +306,3 @@ const Liquidity: React.FC = () => {
 };
 
 export default Liquidity;
-

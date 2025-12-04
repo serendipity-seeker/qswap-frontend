@@ -16,12 +16,7 @@ interface SwapStatsProps {
   toAmount: string;
 }
 
-const SwapStats: React.FC<SwapStatsProps> = ({
-  fromToken,
-  toToken,
-  fromAmount,
-  toAmount,
-}) => {
+const SwapStats: React.FC<SwapStatsProps> = ({ fromToken, toToken, fromAmount, toAmount }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   // Mock calculations
@@ -35,18 +30,15 @@ const SwapStats: React.FC<SwapStatsProps> = ({
       {/* Summary */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-3 bg-muted/30 hover:bg-muted/50 rounded-xl transition-all flex items-center justify-between group"
+        className="bg-muted/30 hover:bg-muted/50 group flex w-full items-center justify-between rounded-xl p-3 transition-all"
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             1 {fromToken.symbol} ≈ {rate.toFixed(6)} {toToken.symbol}
           </span>
         </div>
-        <motion.div
-          animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <ChevronDown className="w-4 h-4 text-muted-foreground" />
+        <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+          <ChevronDown className="text-muted-foreground h-4 w-4" />
         </motion.div>
       </button>
 
@@ -56,50 +48,50 @@ const SwapStats: React.FC<SwapStatsProps> = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="mt-2 p-4 bg-muted/30 rounded-xl space-y-3"
+          className="bg-muted/30 mt-2 space-y-3 rounded-xl p-4"
         >
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center gap-1">
               <span>Expected Output</span>
-              <Info className="w-3 h-3" />
+              <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
               {toAmount} {toToken.symbol}
             </span>
           </div>
 
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center gap-1">
               <span>Price Impact</span>
-              <Info className="w-3 h-3" />
+              <Info className="h-3 w-3" />
             </div>
-            <span className="font-medium text-success-40">&lt; {priceImpact}%</span>
+            <span className="text-success-40 font-medium">&lt; {priceImpact}%</span>
           </div>
 
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center gap-1">
               <span>Minimum received</span>
-              <Info className="w-3 h-3" />
+              <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
               {minimumReceived} {toToken.symbol}
             </span>
           </div>
 
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center gap-1">
               <span>Liquidity Provider Fee</span>
-              <Info className="w-3 h-3" />
+              <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
               {liquidityProviderFee} {fromToken.symbol}
             </span>
           </div>
 
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-1 text-muted-foreground">
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center gap-1">
               <span>Route</span>
-              <Info className="w-3 h-3" />
+              <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
               {fromToken.symbol} → {toToken.symbol}
@@ -112,4 +104,3 @@ const SwapStats: React.FC<SwapStatsProps> = ({
 };
 
 export default SwapStats;
-

@@ -57,15 +57,18 @@ const Swap: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
+    <div className="min-h-screen px-3 pt-20 pb-12 sm:px-4 md:px-6 md:pt-24">
       {/* Background decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-primary-40/20 rounded-full blur-[120px] animate-float"></div>
-        <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-primary-60/20 rounded-full blur-[120px] animate-float" style={{ animationDelay: "1s" }}></div>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
+        <div
+          className="bg-primary-60/20 animate-float absolute -right-48 bottom-1/4 h-96 w-96 rounded-full blur-[120px]"
+          style={{ animationDelay: "1s" }}
+        ></div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto relative z-10">
-        <div className="grid lg:grid-cols-[1fr_480px_1fr] gap-6 items-start">
+      <div className="relative z-10 mx-auto max-w-[1600px]">
+        <div className="grid grid-cols-1 items-start gap-4 md:gap-6 lg:grid-cols-[1fr_minmax(400px,500px)_1fr] xl:grid-cols-[1fr_480px_1fr]">
           {/* Left: Price Chart */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -77,165 +80,170 @@ const Swap: React.FC = () => {
           </motion.div>
 
           {/* Center: Swap Card */}
-          <div>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 text-center"
-        >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent mb-2">
-            Swap
-          </h1>
-          <p className="text-muted-foreground">Trade tokens in an instant</p>
-        </motion.div>
-
-        {/* Main Swap Card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-          className="glass-effect rounded-3xl p-6 shadow-2xl"
-        >
-          {/* Settings Bar */}
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2">
-              <div className="px-3 py-1 rounded-full bg-primary-40/10 text-primary-40 text-sm font-medium">
-                Swap
+          <div className="mx-auto w-full max-w-[500px] lg:max-w-none">
+            {/* Main Swap Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1 }}
+              className="glass-effect rounded-2xl p-4 shadow-2xl sm:p-5 md:rounded-3xl md:p-6"
+            >
+              {/* Settings Bar */}
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary-40/10 text-primary-40 rounded-full px-3 py-1 text-sm font-medium">
+                    Swap
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                    className="hover:bg-muted rounded-lg p-2 transition-colors"
+                  >
+                    <Settings className="h-5 w-5" />
+                  </button>
+                  <button className="hover:bg-muted rounded-lg p-2 transition-colors">
+                    <RefreshCw className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
+
+              {/* Settings Panel */}
+              {isSettingsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <SwapSettings slippage={slippage} onSlippageChange={setSlippage} />
+                </motion.div>
+              )}
+
+              {/* From Token */}
+              <div className="mb-2">
+                <div className="text-muted-foreground mb-2 text-sm">You pay</div>
+                <TokenInput
+                  token={fromToken}
+                  amount={fromAmount}
+                  onAmountChange={setFromAmount}
+                  onTokenClick={() => {
+                    setSelectingToken("from");
+                    setIsTokenModalOpen(true);
+                  }}
+                />
+              </div>
+
+              {/* Swap Button */}
+              <div className="relative z-10 -my-3 flex justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 180 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleSwapTokens}
+                  className="bg-card hover:bg-muted border-background rounded-xl border-4 p-3 shadow-lg transition-colors"
+                >
+                  <ArrowDownUp className="text-primary-40 h-5 w-5" />
+                </motion.button>
+              </div>
+
+              {/* To Token */}
+              <div className="mb-4">
+                <div className="text-muted-foreground mb-2 text-sm">You receive</div>
+                <TokenInput
+                  token={toToken}
+                  amount={toAmount}
+                  onAmountChange={setToAmount}
+                  onTokenClick={() => {
+                    setSelectingToken("to");
+                    setIsTokenModalOpen(true);
+                  }}
+                  readOnly
+                />
+              </div>
+
+              {/* Swap Stats */}
+              {fromAmount && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}>
+                  <SwapStats
+                    fromToken={fromToken}
+                    toToken={toToken}
+                    fromAmount={fromAmount}
+                    toAmount={toAmount || "0"}
+                  />
+                </motion.div>
+              )}
+
+              {/* Swap Button */}
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleSwap}
+                disabled={!fromAmount || parseFloat(fromAmount) <= 0}
+                fullWidth
               >
-                <Settings className="w-5 h-5" />
-              </button>
-              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-                <RefreshCw className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+                {!fromAmount || parseFloat(fromAmount) <= 0 ? "Enter an amount" : "Swap"}
+              </Button>
 
-          {/* Settings Panel */}
-          {isSettingsOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-            >
-              <SwapSettings slippage={slippage} onSlippageChange={setSlippage} />
+              {/* Info Footer */}
+              <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
+                <Info className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+                <p className="text-muted-foreground text-xs">
+                  This is a mock interface. No real transactions will be executed.
+                </p>
+              </div>
             </motion.div>
-          )}
 
-          {/* From Token */}
-          <div className="mb-2">
-            <div className="text-sm text-muted-foreground mb-2">You pay</div>
-            <TokenInput
-              token={fromToken}
-              amount={fromAmount}
-              onAmountChange={setFromAmount}
-              onTokenClick={() => {
-                setSelectingToken("from");
-                setIsTokenModalOpen(true);
-              }}
-            />
-          </div>
-
-          {/* Swap Button */}
-          <div className="flex justify-center -my-3 relative z-10">
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 180 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleSwapTokens}
-              className="p-3 bg-card hover:bg-muted border-4 border-background rounded-xl shadow-lg transition-colors"
-            >
-              <ArrowDownUp className="w-5 h-5 text-primary-40" />
-            </motion.button>
-          </div>
-
-          {/* To Token */}
-          <div className="mb-4">
-            <div className="text-sm text-muted-foreground mb-2">You receive</div>
-            <TokenInput
-              token={toToken}
-              amount={toAmount}
-              onAmountChange={setToAmount}
-              onTokenClick={() => {
-                setSelectingToken("to");
-                setIsTokenModalOpen(true);
-              }}
-              readOnly
-            />
-          </div>
-
-          {/* Swap Stats */}
-          {fromAmount && (
+            {/* Additional Info Cards - Mobile/Tablet Only */}
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mt-4 grid grid-cols-3 gap-2 sm:gap-4 md:mt-6 lg:hidden"
             >
-              <SwapStats
-                fromToken={fromToken}
-                toToken={toToken}
-                fromAmount={fromAmount}
-                toAmount={toAmount || "0"}
-              />
+              <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
+                <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">$1.2M</div>
+                <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">24h Volume</div>
+              </div>
+              <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
+                <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">$45M</div>
+                <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">TVL</div>
+              </div>
+              <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
+                <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">1,234</div>
+                <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">Users</div>
+              </div>
             </motion.div>
-          )}
 
-          {/* Swap Button */}
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={handleSwap}
-            disabled={!fromAmount || parseFloat(fromAmount) <= 0}
-            fullWidth
-          >
-            {!fromAmount || parseFloat(fromAmount) <= 0 ? "Enter an amount" : "Swap"}
-          </Button>
+            {/* Price Chart - Mobile/Tablet Only */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-4 md:mt-6 lg:hidden"
+            >
+              <PriceChart />
+            </motion.div>
 
-          {/* Info Footer */}
-          <div className="mt-4 p-3 bg-muted/50 rounded-lg flex items-start gap-2">
-            <Info className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-            <p className="text-xs text-muted-foreground">
-              This is a mock interface. No real transactions will be executed.
-            </p>
+            {/* Pool Stats - Tablet Only */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-4 hidden md:mt-6 md:block lg:hidden"
+            >
+              <PoolStats />
+            </motion.div>
           </div>
-        </motion.div>
 
-          {/* Additional Info Cards - Mobile Only */}
+          {/* Right: Pool Stats - Desktop Only */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-6 grid grid-cols-3 gap-4 lg:hidden"
+            className="hidden lg:block"
           >
-            <div className="glass-effect rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-primary-40">$1.2M</div>
-              <div className="text-xs text-muted-foreground mt-1">24h Volume</div>
-            </div>
-            <div className="glass-effect rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-primary-40">$45M</div>
-              <div className="text-xs text-muted-foreground mt-1">TVL</div>
-            </div>
-            <div className="glass-effect rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-primary-40">1,234</div>
-              <div className="text-xs text-muted-foreground mt-1">Users</div>
-            </div>
+            <PoolStats />
           </motion.div>
         </div>
-
-        {/* Right: Pool Stats */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="hidden lg:block"
-        >
-          <PoolStats />
-        </motion.div>
-      </div>
       </div>
 
       {/* Token Selector Modal */}
@@ -251,4 +259,3 @@ const Swap: React.FC = () => {
 };
 
 export default Swap;
-
