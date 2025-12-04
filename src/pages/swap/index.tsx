@@ -7,6 +7,7 @@ import SwapStats from "@/components/composed/swap/SwapStats";
 import SwapSettings from "@/components/composed/swap/SwapSettings";
 import PriceChart from "@/components/composed/stats/PriceChart";
 import PoolStats from "@/components/composed/stats/PoolStats";
+import { Button } from "@/components/custom";
 
 interface Token {
   symbol: string;
@@ -184,15 +185,15 @@ const Swap: React.FC = () => {
           )}
 
           {/* Swap Button */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <Button
+            variant="primary"
+            size="lg"
             onClick={handleSwap}
             disabled={!fromAmount || parseFloat(fromAmount) <= 0}
-            className="w-full py-4 bg-gradient-to-r from-primary-40 to-primary-60 hover:from-primary-50 hover:to-primary-70 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 animate-glow"
+            fullWidth
           >
             {!fromAmount || parseFloat(fromAmount) <= 0 ? "Enter an amount" : "Swap"}
-          </motion.button>
+          </Button>
 
           {/* Info Footer */}
           <div className="mt-4 p-3 bg-muted/50 rounded-lg flex items-start gap-2">

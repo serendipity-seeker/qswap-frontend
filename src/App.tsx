@@ -4,12 +4,13 @@ import Error404 from "@/pages/error404";
 import Home from "@/pages/home";
 import Swap from "@/pages/swap";
 import Liquidity from "@/pages/liquidity";
+import ComponentsShowcase from "@/pages/components-showcase";
 import { useQubicConnect } from "@/components/composed/wallet-connect/QubicConnectContext";
 import { useContext, useEffect } from "react";
 import { useAtom } from "jotai";
 import { settingsAtom } from "@/store/settings";
 import { MetaMaskContext } from "./components/composed/wallet-connect/MetamaskContext";
-import useRPCDataFetcher from "./hooks/useRPCDataFether";
+// import useRPCDataFetcher from "./hooks/useRPCDataFether";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/liquidity",
         element: <Liquidity />,
+      },
+      {
+        path: "/showcase",
+        element: <ComponentsShowcase />,
       },
     ],
   },

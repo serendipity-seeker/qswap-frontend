@@ -4,6 +4,7 @@ import { Plus, Minus, TrendingUp, Droplets, Info } from "lucide-react";
 import TokenInput from "@/components/composed/swap/TokenInput";
 import TokenSelectorModal from "@/components/composed/swap/TokenSelectorModal";
 import PoolPositions from "@/components/composed/liquidity/PoolPositions";
+import { Button } from "@/components/custom";
 
 interface Token {
   symbol: string;
@@ -168,15 +169,15 @@ const Liquidity: React.FC = () => {
                   )}
 
                   {/* Add Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Button
+                    variant="primary"
+                    size="lg"
                     onClick={handleAddLiquidity}
                     disabled={!amountA || !amountB || parseFloat(amountA) <= 0 || parseFloat(amountB) <= 0}
-                    className="w-full py-4 bg-gradient-to-r from-primary-40 to-primary-60 hover:from-primary-50 hover:to-primary-70 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 animate-glow"
+                    fullWidth
                   >
                     {!amountA || !amountB ? "Enter amounts" : "Add Liquidity"}
-                  </motion.button>
+                  </Button>
                 </>
               ) : (
                 <>
@@ -225,14 +226,14 @@ const Liquidity: React.FC = () => {
                     </div>
                   </div>
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Button
+                    variant="danger"
+                    size="lg"
                     onClick={handleRemoveLiquidity}
-                    className="w-full py-4 bg-gradient-to-r from-error-40 to-destructive hover:opacity-90 text-white font-bold rounded-xl shadow-lg transition-all duration-300"
+                    fullWidth
                   >
                     Remove Liquidity
-                  </motion.button>
+                  </Button>
                 </>
               )}
 

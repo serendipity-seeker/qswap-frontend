@@ -35,7 +35,7 @@ const Header: React.FC = () => {
             <motion.img 
               whileHover={{ scale: 1.05, rotate: 5 }} 
               transition={{ duration: 0.2 }} 
-              src={"/qubic.svg"} 
+              src={"/qswap.svg"} 
               alt="logo" 
               className="w-10 h-10"
             />

@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Zap, Shield, TrendingUp, Droplets } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/custom";
 
 const Home: React.FC = () => {
   const features = [
@@ -70,23 +71,19 @@ const Home: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link to="/swap">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-gradient-to-r from-primary-40 to-primary-60 hover:from-primary-50 hover:to-primary-70 text-white font-bold rounded-xl shadow-2xl text-lg flex items-center gap-2 animate-glow"
+                  <Button
+                    variant="primary"
+                    size="xl"
+                    icon={<ArrowRight className="w-5 h-5" />}
+                    iconPosition="right"
                   >
                     Start Trading
-                    <ArrowRight className="w-5 h-5" />
-                  </motion.button>
+                  </Button>
                 </Link>
                 <Link to="/liquidity">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 glass-effect hover:bg-muted text-foreground font-bold rounded-xl shadow-lg text-lg"
-                  >
+                  <Button variant="outline" size="xl">
                     Add Liquidity
-                  </motion.button>
+                  </Button>
                 </Link>
               </div>
             </motion.div>
@@ -177,46 +174,18 @@ const Home: React.FC = () => {
                 Join thousands of users already trading on QSwap
               </p>
               <Link to="/swap">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-10 py-5 bg-gradient-to-r from-primary-40 to-primary-60 hover:from-primary-50 hover:to-primary-70 text-white font-bold rounded-xl shadow-2xl text-lg inline-flex items-center gap-2 animate-glow"
+                <Button
+                  variant="primary"
+                  size="xl"
+                  icon={<ArrowRight className="w-5 h-5" />}
+                  iconPosition="right"
                 >
                   Launch App
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
+                </Button>
               </Link>
             </div>
           </motion.div>
         </section>
-
-        {/* Footer */}
-        <footer className="py-12 px-4 border-t border-border">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="flex items-center gap-3">
-                <img src="/qubic.svg" alt="QSwap" className="w-10 h-10" />
-                <span className="text-xl font-bold bg-gradient-to-r from-primary-40 to-primary-60 bg-clip-text text-transparent">
-                  QSwap
-                </span>
-              </div>
-              <div className="text-sm text-muted-foreground text-center">
-                <p>© 2025 QSwap. Mock interface for demonstration purposes.</p>
-              </div>
-              <div className="flex gap-4">
-                <a href="#" className="text-muted-foreground hover:text-primary-40 transition-colors">
-                  Twitter
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-primary-40 transition-colors">
-                  Discord
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-primary-40 transition-colors">
-                  Docs
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );
