@@ -1,6 +1,6 @@
-# QSwap - Modern DEX Interface
+# Qubic Portal - Decentralized Exchange on Qubic Network
 
-A beautiful, modern decentralized exchange (DEX) interface built with React, TypeScript, TailwindCSS, and Framer Motion. Inspired by Raydium and Uniswap with stunning animations and a polished user experience.
+A beautiful, modern decentralized exchange (DEX) built on the Qubic network. Experience lightning-fast token swaps, deep liquidity pools, and a polished user interface powered by React, TypeScript, TailwindCSS, and Framer Motion.
 
 ## ✨ Features
 
@@ -48,7 +48,7 @@ src/
 │   ├── liquidity/           # Liquidity management
 │   └── components-showcase/ # Custom components demo
 ├── components/
-│   ├── custom/              # 🌟 Unique QSwap components
+│   ├── custom/              # 🌟 Unique Qubic Portal components
 │   │   ├── Button.tsx      # Advanced button with 6 variants
 │   │   ├── Input.tsx       # Animated input with validation
 │   │   ├── Modal.tsx       # Beautiful modal with blur
@@ -65,7 +65,7 @@ src/
 
 ### Custom Components Library 🌟
 
-QSwap features a **completely custom component library** with unique styling:
+Qubic Portal features a **completely custom component library** with unique styling:
 
 - **6 Custom Components**: Button, Input, Modal, AppLoader, Header, Footer
 - **15+ Variants**: Multiple styles for different use cases

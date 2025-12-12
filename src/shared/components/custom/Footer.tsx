@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <Link to="/" className="group mb-6 flex w-fit items-center">
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="relative">
-                <img src="/logo-text.svg" alt="QSwap" className="relative z-10 h-12 sm:h-14" />
+                <img src="/logo-text.svg" alt="Qubic Portal" className="relative z-10 h-12 sm:h-14" />
               </motion.div>
             </Link>
 
@@ -136,7 +136,7 @@ const Footer: React.FC = () => {
             viewport={{ once: true }}
             className="text-muted-foreground text-center text-sm md:text-left"
           >
-            © 2025 QSwap. All rights reserved.
+            © 2025 Qubic Portal. All rights reserved.
           </motion.p>
 
           <motion.div

@@ -49,7 +49,7 @@ const Header: React.FC = () => {
             {/* Logo */}
             <Link to="/" className="group flex items-center">
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="relative">
-                <img src="/logo-text.svg" alt="QSwap" className="relative z-10 h-10 drop-shadow-lg sm:h-12" />
+                <img src="/logo-text.svg" alt="Qubic Portal" className="relative z-10 h-10 drop-shadow-lg sm:h-12" />
               </motion.div>
             </Link>
 

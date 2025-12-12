@@ -122,7 +122,7 @@ const Home: React.FC = () => {
               <h2 className="mb-4 text-4xl font-bold md:text-5xl">
                 Why Choose{" "}
                 <span className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-transparent">
-                  QSwap
+                  Qubic Portal
                 </span>
                 ?
               </h2>
@@ -170,7 +170,7 @@ const Home: React.FC = () => {
             <div className="from-primary-40/10 to-primary-60/10 absolute inset-0 bg-gradient-to-r"></div>
             <div className="relative z-10">
               <h2 className="mb-6 text-4xl font-bold md:text-5xl">Ready to Start Trading?</h2>
-              <p className="text-muted-foreground mb-8 text-xl">Join thousands of users already trading on QSwap</p>
+              <p className="text-muted-foreground mb-8 text-xl">Join thousands of users already trading on Qubic Portal</p>
               <Link to="/swap">
                 <Button variant="primary" size="xl" icon={<ArrowRight className="h-5 w-5" />} iconPosition="right">
                   Launch App
