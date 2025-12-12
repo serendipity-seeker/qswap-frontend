@@ -68,6 +68,21 @@ const Swap: React.FC = () => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1600px]">
+        {/* Page Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 text-center md:mb-10"
+        >
+          <h1 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-5xl font-black text-transparent">
+            Swap Tokens
+          </h1>
+          <p className="text-muted-foreground text-xl">
+            Trade tokens instantly with the best rates on Qubic network
+          </p>
+        </motion.div>
+
         <div className="grid grid-cols-1 items-start gap-4 md:gap-6 lg:grid-cols-[1fr_minmax(400px,500px)_1fr] xl:grid-cols-[1fr_480px_1fr]">
           {/* Left: Price Chart */}
           <motion.div
