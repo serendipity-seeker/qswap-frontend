@@ -50,7 +50,7 @@ const PriceChart: React.FC = () => {
         horzLines: { color: "rgba(255, 255, 255, 0.05)" },
       },
       width: chartContainerRef.current.clientWidth,
-      height: 256,
+      height: chartContainerRef.current.clientHeight || 256,
       rightPriceScale: {
         borderColor: "rgba(255, 255, 255, 0.1)",
       },
@@ -100,6 +100,7 @@ const PriceChart: React.FC = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({
           width: chartContainerRef.current.clientWidth,
+          height: chartContainerRef.current.clientHeight || 256,
         });
       }
     };
@@ -143,8 +144,7 @@ const PriceChart: React.FC = () => {
       {/* TradingView Lightweight Chart */}
       <div 
         ref={chartContainerRef} 
-        className="bg-muted/20 relative rounded-xl overflow-hidden"
-        style={{ height: "256px" }}
+        className="bg-muted/20 relative h-[280px] overflow-hidden rounded-xl sm:h-[360px]"
       />
 
       {/* Stats */}

@@ -99,33 +99,34 @@ const Swap: React.FC = () => {
             <PriceChart />
           </motion.div>
 
-          <div className="mx-auto w-full max-w-[500px] lg:max-w-none">
-            {/* Main Swap Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              className="glass-effect rounded-2xl p-4 shadow-2xl sm:p-5 md:rounded-3xl md:p-6"
-            >
-              {/* Settings Bar */}
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary-40/10 text-primary-40 rounded-full px-3 py-1 text-sm font-medium">
-                    Swap
+          <div className="mx-auto w-full max-w-[920px] lg:max-w-none">
+            <div className="mx-auto w-full max-w-[500px] lg:max-w-none">
+              {/* Main Swap Card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="glass-effect rounded-2xl p-4 shadow-2xl sm:p-5 md:rounded-3xl md:p-6"
+              >
+                {/* Settings Bar */}
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-primary-40/10 text-primary-40 rounded-full px-3 py-1 text-sm font-medium">
+                      Swap
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                      className="hover:bg-muted rounded-lg p-2 transition-colors"
+                    >
+                      <Settings className="h-5 w-5" />
+                    </button>
+                    <button className="hover:bg-muted rounded-lg p-2 transition-colors">
+                      <RefreshCw className="h-5 w-5" />
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                    className="hover:bg-muted rounded-lg p-2 transition-colors"
-                  >
-                    <Settings className="h-5 w-5" />
-                  </button>
-                  <button className="hover:bg-muted rounded-lg p-2 transition-colors">
-                    <RefreshCw className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
 
               {/* Settings Panel */}
               {isSettingsOpen && (
@@ -202,37 +203,38 @@ const Swap: React.FC = () => {
                 {!fromAmount || parseFloat(fromAmount) <= 0 ? "Enter an amount" : "Swap"}
               </Button>
 
-              {/* Info Footer */}
-              <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
-                <Info className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
-                <p className="text-muted-foreground text-xs">
-                  This is a mock interface. No real transactions will be executed.
-                </p>
-              </div>
-            </motion.div>
+                {/* Info Footer */}
+                <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
+                  <Info className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+                  <p className="text-muted-foreground text-xs">
+                    This is a mock interface. No real transactions will be executed.
+                  </p>
+                </div>
+              </motion.div>
 
-            {/* Additional Info Cards - Mobile/Tablet Only */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mt-4 grid grid-cols-3 gap-2 sm:gap-4 md:mt-6 lg:hidden"
-            >
-              <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
-                <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">$1.2M</div>
-                <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">24h Volume</div>
-              </div>
-              <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
-                <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">$45M</div>
-                <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">TVL</div>
-              </div>
-              <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
-                <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">1,234</div>
-                <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">Users</div>
-              </div>
-            </motion.div>
+              {/* Additional Info Cards - Mobile/Tablet Only */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-4 grid grid-cols-3 gap-2 sm:gap-4 md:mt-6 lg:hidden"
+              >
+                <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
+                  <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">$1.2M</div>
+                  <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">24h Volume</div>
+                </div>
+                <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
+                  <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">$45M</div>
+                  <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">TVL</div>
+                </div>
+                <div className="glass-effect rounded-lg p-3 text-center sm:p-4 md:rounded-xl">
+                  <div className="text-primary-40 text-lg font-bold sm:text-xl md:text-2xl">1,234</div>
+                  <div className="text-muted-foreground mt-1 text-[10px] sm:text-xs">Users</div>
+                </div>
+              </motion.div>
+            </div>
 
-            {/* Price Chart - Mobile/Tablet Only */}
+            {/* Price Chart - Mobile/Tablet Only (wider container) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
