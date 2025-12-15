@@ -75,13 +75,13 @@ const Header: React.FC = () => {
                     {isActive(item.href) && (
                       <motion.div
                         layoutId="activeNav"
-                        className="from-primary-40/10 to-primary-60/10 border-primary-40/20 absolute inset-0 rounded-xl border bg-gradient-to-r"
+                        className="bg-primary/10 border-primary/20 absolute inset-0 rounded-xl border"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
 
                     {/* Hover Effect */}
-                    <div className="from-primary-40/5 to-primary-60/5 absolute inset-0 rounded-xl bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="bg-primary/5 absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100" />
                   </motion.div>
                 </Link>
               ))}
@@ -96,7 +96,7 @@ const Header: React.FC = () => {
                 onClick={toggleTheme}
                 className="bg-muted/50 hover:bg-muted group relative overflow-hidden rounded-xl p-3 transition-colors"
               >
-                <div className="from-primary-40/0 to-primary-60/0 group-hover:from-primary-40/10 group-hover:to-primary-60/10 absolute inset-0 bg-gradient-to-r transition-all" />
+                <div className="bg-primary/0 group-hover:bg-primary/10 absolute inset-0 transition-all" />
                 <AnimatePresence mode="wait">
                   {settings.darkMode ? (
                     <motion.div
@@ -185,7 +185,7 @@ const Header: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="from-background via-background to-muted border-primary-40/20 absolute top-0 right-0 bottom-0 w-80 border-l bg-gradient-to-br shadow-2xl"
+              className="bg-background border-primary/20 absolute top-0 right-0 bottom-0 w-80 border-l shadow-2xl"
             >
               <div className="space-y-6 p-6">
                 {/* Close Button */}
@@ -210,7 +210,7 @@ const Header: React.FC = () => {
                         transition={{ delay: index * 0.1 }}
                         className={`rounded-xl p-4 font-bold transition-all ${
                           isActive(item.href)
-                            ? "from-primary-40/20 to-primary-60/20 text-primary-40 border-primary-40/30 border bg-gradient-to-r"
+                            ? "bg-primary/20 text-primary border-primary/30 border"
                             : "hover:bg-muted text-muted-foreground hover:text-foreground"
                         }`}
                       >

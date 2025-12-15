@@ -68,20 +68,20 @@ html {
   --smoke-light: rgba(0, 0, 0, 0.4);
 
   /* System colors using palette */
-  --background: var(--white);
-  --foreground: var(--gray-100);
+  --background: #fafafa;
+  --foreground: var(--gray-900);
   --card: var(--white);
-  --card-border: var(--gray-200);
+  --card-border: var(--gray-300);
   --primary: var(--primary-40);
   --primary-foreground: var(--white);
-  --secondary: var(--gray-100);
-  --secondary-foreground: var(--gray-100);
+  --secondary: var(--gray-800);
+  --secondary-foreground: var(--white);
   --muted: var(--gray-200);
-  --muted-foreground: var(--gray-500);
+  --muted-foreground: var(--gray-700);
   --accent: var(--primary-40);
-  --accent-foreground: var(--gray-100);
+  --accent-foreground: var(--gray-900);
   --destructive: var(--error-40);
-  --border: var(--gray-200);
+  --border: var(--gray-300);
   --input: var(--gray-200);
   --ring: var(--primary-40);
 
@@ -254,7 +254,7 @@ html {
 
 .animate-shimmer {
   animation: shimmer 2s infinite;
-  background: linear-gradient(to right, transparent 0%, rgba(26, 222, 245, 0.1) 50%, transparent 100%);
+  background: rgba(26, 222, 245, 0.1);
   background-size: 1000px 100%;
 }
 
@@ -267,15 +267,17 @@ html {
 }
 
 .glass-effect {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .dark .glass-effect {
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: none;
 }
 
 /* Custom Scrollbar */
@@ -290,13 +292,14 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--primary-40), var(--primary-60));
+  background: var(--primary);
   border-radius: 10px;
   border: 2px solid var(--muted);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, var(--primary-50), var(--primary-70));
+  background: var(--primary);
+  opacity: 0.8;
 }
 
 /* Global Scrollbar */
@@ -310,22 +313,23 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--primary-40), var(--primary-60));
+  background: var(--primary);
   border-radius: 10px;
   border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, var(--primary-50), var(--primary-70));
+  background: var(--primary);
+  opacity: 0.8;
 }
 
 /* Selection */
 ::selection {
-  background-color: var(--primary-40);
+  background-color: var(--primary);
   color: white;
 }
 
 ::-moz-selection {
-  background-color: var(--primary-40);
+  background-color: var(--primary);
   color: white;
 }

@@ -43,7 +43,7 @@ export const LoadingPulse: React.FC = () => {
   return (
     <div className="flex items-center justify-center">
       <motion.div
-        className="from-primary-40 to-primary-60 h-16 w-16 rounded-full bg-gradient-to-r"
+        className="bg-primary h-16 w-16 rounded-full"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.5, 1, 0.5],

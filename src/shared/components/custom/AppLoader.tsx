@@ -36,7 +36,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, text = "Loadin
             <motion.div
               className="absolute inset-0 rounded-full"
               style={{
-                background: `conic-gradient(from 0deg, transparent 0deg, var(--primary-40) 90deg, var(--primary-60) 180deg, transparent 270deg)`,
+                background: `var(--primary)`,
               }}
               animate={{ rotate: -360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -45,7 +45,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, text = "Loadin
 
           {/* Inner Pulsing Circle */}
           <motion.div
-            className={`absolute inset-0 m-auto ${sizes[size].dot === "h-3 w-3" ? "h-8 w-8" : sizes[size].dot === "h-4 w-4" ? "h-12 w-12" : "h-16 w-16"} from-primary-40 to-primary-60 rounded-full bg-gradient-to-br`}
+            className={`absolute inset-0 m-auto ${sizes[size].dot === "h-3 w-3" ? "h-8 w-8" : sizes[size].dot === "h-4 w-4" ? "h-12 w-12" : "h-16 w-16"} bg-primary rounded-full`}
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.5, 1, 0.5],
@@ -70,7 +70,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, text = "Loadin
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className={`absolute ${sizes[size].dot} from-primary-40 to-primary-60 shadow-primary-40/50 rounded-full bg-gradient-to-br shadow-lg`}
+              className={`absolute ${sizes[size].dot} bg-primary shadow-primary/50 rounded-full shadow-lg`}
               style={{
                 top: "50%",
                 left: "50%",
@@ -100,7 +100,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, text = "Loadin
         {/* Loading Text */}
         <div className="flex flex-col items-center gap-3">
           <motion.p
-            className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-lg font-semibold text-transparent"
+            className="text-primary text-lg font-semibold"
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -130,7 +130,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ fullScreen = true, text = "Loadin
         {/* Progress Bar (Optional) */}
         <div className="bg-muted h-1 w-64 overflow-hidden rounded-full">
           <motion.div
-            className="from-primary-40 via-primary-50 to-primary-60 h-full rounded-full bg-gradient-to-r"
+            className="bg-primary h-full rounded-full"
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}
             transition={{

@@ -44,9 +44,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         hover:border-muted-foreground/30
       `,
       filled: `
-        bg-gradient-to-br from-muted/50 to-muted/30 border-2 border-transparent
-        focus:border-primary-40 focus:from-muted/60 focus:to-muted/40
-        hover:from-muted/60 hover:to-muted/40
+        bg-muted/50 border-2 border-transparent
+        focus:border-primary focus:bg-muted/60
+        hover:bg-muted/60
       `,
       outline: `
         bg-transparent border-2 border-border
@@ -149,7 +149,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {/* Focus Line Animation */}
           <motion.div
-            className="from-primary-40 to-primary-60 absolute bottom-0 left-0 h-0.5 bg-gradient-to-r"
+            className="bg-primary absolute bottom-0 left-0 h-0.5"
             initial={{ width: "0%" }}
             animate={{ width: isFocused ? "100%" : "0%" }}
             transition={{ duration: 0.3 }}

@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="from-primary-40/10 to-primary-60/10 border-primary-40/20 flex items-center gap-2 rounded-xl border bg-gradient-to-r px-4 py-2"
+                    className="bg-primary/10 border-primary/20 flex items-center gap-2 rounded-xl border px-4 py-2"
                   >
                     <Icon className="text-primary-40 h-4 w-4" />
                     <span className="text-sm font-medium">{feature.text}</span>
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-lg font-bold text-transparent">
+            <h3 className="text-primary mb-4 text-lg font-bold">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -95,7 +95,7 @@ const Footer: React.FC = () => {
 
           {/* Community */}
           <div>
-            <h3 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-lg font-bold text-transparent">
+            <h3 className="text-primary mb-4 text-lg font-bold">
               Community
             </h3>
             <div className="space-y-4">
@@ -125,7 +125,7 @@ const Footer: React.FC = () => {
 
         {/* Divider with Gradient */}
         <div className="relative mb-8 h-px">
-          <div className="via-primary-40/50 absolute inset-0 bg-gradient-to-r from-transparent to-transparent" />
+          <div className="bg-primary/50 absolute inset-0" />
         </div>
 
         {/* Bottom Section */}
@@ -164,10 +164,10 @@ const Footer: React.FC = () => {
           viewport={{ once: true }}
           className="mt-8 flex justify-center"
         >
-          <div className="from-primary-40/10 to-primary-60/10 border-primary-40/20 rounded-full border bg-gradient-to-r px-6 py-3">
+          <div className="bg-primary/10 border-primary/20 rounded-full border px-6 py-3">
             <p className="text-center text-sm font-medium">
               <span className="text-muted-foreground">Powered by</span>{" "}
-              <span className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text font-bold text-transparent">
+              <span className="text-primary font-bold">
                 Qubic Network
               </span>
             </p>

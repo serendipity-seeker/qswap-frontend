@@ -6,7 +6,7 @@ const Error404: React.FC = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6">
       <div className="text-center">
-        <h1 className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-9xl font-black text-transparent">
+        <h1 className="text-primary text-9xl font-black">
           404
         </h1>
         <p className="mt-4 text-2xl font-bold">Page Not Found</p>

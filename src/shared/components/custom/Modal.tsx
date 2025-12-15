@@ -72,12 +72,12 @@ const Modal: React.FC<ModalProps> = ({
                   damping: 25,
                   stiffness: 300,
                 }}
-                className={`relative w-full ${sizes[size]} from-card via-card to-muted border-primary-40/20 overflow-hidden rounded-3xl border-2 bg-gradient-to-br shadow-2xl ${className} `}
+                className={`relative w-full ${sizes[size]} bg-card border-primary/20 overflow-hidden rounded-3xl border-2 shadow-2xl ${className} `}
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Animated Border Glow */}
                 <div className="absolute inset-0 opacity-50">
-                  <div className="from-primary-40 via-primary-60 to-primary-40 absolute -inset-1 animate-pulse rounded-3xl bg-gradient-to-r opacity-20 blur" />
+                  <div className="bg-primary absolute -inset-1 animate-pulse rounded-3xl opacity-20 blur" />
                 </div>
 
                 {/* Content Container */}
@@ -89,7 +89,7 @@ const Modal: React.FC<ModalProps> = ({
                         <motion.h2
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent"
+                          className="text-primary text-2xl font-bold"
                         >
                           {title}
                         </motion.h2>

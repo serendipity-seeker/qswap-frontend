@@ -108,7 +108,7 @@ const PoolPositions: React.FC = () => {
               {/* Progress Bar */}
               <div className="mt-4">
                 <div className="bg-muted h-1 overflow-hidden rounded-full">
-                  <div className="from-primary-40 to-primary-60 h-full bg-gradient-to-r" style={{ width: "45%" }}></div>
+                  <div className="bg-primary h-full" style={{ width: "45%" }}></div>
                 </div>
               </div>
             </motion.div>

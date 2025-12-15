@@ -67,7 +67,7 @@ const Liquidity: React.FC = () => {
       <div className="relative z-10 mx-auto max-w-[1200px]">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6 text-center">
-          <h1 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-5xl font-black text-transparent">
+          <h1 className="text-primary mb-4 text-5xl font-black">
             Liquidity
           </h1>
           <p className="text-muted-foreground text-xl">Add liquidity to earn fees from swaps</p>

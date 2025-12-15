@@ -6,7 +6,6 @@ import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import SwapStats from "@/features/swap/components/SwapStats";
 import SwapSettings from "@/features/swap/components/SwapSettings";
 import PriceChart from "@/features/stats/components/PriceChart";
-import PoolStats from "@/features/stats/components/PoolStats";
 import { Button, SEO } from "@/shared/components/custom";
 
 interface Token {
@@ -82,7 +81,7 @@ const Swap: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-8 text-center md:mb-10"
         >
-          <h1 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-5xl font-black text-transparent">
+          <h1 className="text-primary mb-4 text-5xl font-black">
             Swap Tokens
           </h1>
           <p className="text-muted-foreground text-xl">
@@ -90,8 +89,7 @@ const Swap: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 items-start gap-4 md:gap-6 lg:grid-cols-[1fr_minmax(400px,500px)_1fr] xl:grid-cols-[1fr_480px_1fr]">
-          {/* Left: Price Chart */}
+        <div className="grid grid-cols-1 items-start gap-4 md:gap-6 lg:grid-cols-[1fr_480px]">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -101,7 +99,6 @@ const Swap: React.FC = () => {
             <PriceChart />
           </motion.div>
 
-          {/* Center: Swap Card */}
           <div className="mx-auto w-full max-w-[500px] lg:max-w-none">
             {/* Main Swap Card */}
             <motion.div
@@ -244,27 +241,7 @@ const Swap: React.FC = () => {
             >
               <PriceChart />
             </motion.div>
-
-            {/* Pool Stats - Tablet Only */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="mt-4 hidden md:mt-6 md:block lg:hidden"
-            >
-              <PoolStats />
-            </motion.div>
           </div>
-
-          {/* Right: Pool Stats - Desktop Only */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="hidden lg:block"
-          >
-            <PoolStats />
-          </motion.div>
         </div>
       </div>
 

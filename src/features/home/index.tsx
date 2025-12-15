@@ -24,25 +24,21 @@ const Home: React.FC = () => {
       icon: Zap,
       title: "Lightning Fast",
       description: "Execute swaps in milliseconds with our optimized smart contracts",
-      color: "from-yellow-400 to-orange-500",
     },
     {
       icon: Shield,
       title: "Secure & Audited",
       description: "Your funds are protected by industry-leading security practices",
-      color: "from-blue-400 to-blue-600",
     },
     {
       icon: TrendingUp,
       title: "Best Rates",
       description: "Get the most competitive rates across multiple liquidity pools",
-      color: "from-green-400 to-emerald-600",
     },
     {
       icon: Droplets,
       title: "Deep Liquidity",
       description: "Access deep liquidity pools for seamless trading",
-      color: "from-cyan-400 to-blue-500",
     },
   ];
 
@@ -101,24 +97,36 @@ const Home: React.FC = () => {
 
   const faqs = [
     {
-      q: "Do I need an account?",
-      a: "No. Connect a supported wallet and you can start using the app immediately.",
+      q: "What is Qubic Portal?",
+      a: "Qubic Portal is a decentralized exchange (DEX) built on the Qubic blockchain. It allows users to swap tokens directly from their wallets without the need for a centralized intermediary. Qubic Portal uses an automated market maker (AMM) model to facilitate trades.",
     },
     {
-      q: "What is slippage?",
-      a: "Slippage is the allowed difference between the quoted and executed price. You can adjust it in settings.",
+      q: "How do I connect my wallet?",
+      a: "Click the 'Connect Wallet' button in the header. Qubic Portal supports WalletConnect and other Qubic-compatible wallets. Follow the prompts to authorize the connection. Your funds remain in your wallet at all times.",
     },
     {
-      q: "Where do swap rates come from?",
-      a: "Rates are derived from available liquidity and pool pricing. The UI shows execution details before you confirm.",
+      q: "What is liquidity providing?",
+      a: "Liquidity providing involves depositing pairs of tokens into a liquidity pool. In return, you receive LP (Liquidity Provider) tokens representing your share of the pool. As trades occur, you earn a portion of the trading fees proportional to your share.",
     },
     {
-      q: "How do I earn fees?",
-      a: "By providing liquidity to pools, you can earn a portion of swap fees proportional to your share.",
+      q: "What are the trading fees?",
+      a: "Qubic Portal charges a 0.3% fee on each swap. This fee is distributed to liquidity providers as an incentive for providing liquidity to the pools. The fee is automatically deducted from the trade amount.",
     },
     {
-      q: "Is this live or a demo?",
-      a: "Some screens may use mock data depending on the feature area. Always verify details in your wallet before confirming.",
+      q: "What is slippage tolerance?",
+      a: "Slippage tolerance is the maximum price difference you're willing to accept between when you submit a trade and when it executes. Higher slippage tolerance means your trade is more likely to succeed but may execute at a less favorable price.",
+    },
+    {
+      q: "How is the exchange rate determined?",
+      a: "Qubic Portal uses an automated market maker (AMM) with a constant product formula (x * y = k). The exchange rate is determined by the ratio of tokens in the liquidity pool. Larger trades relative to pool size will experience more price impact.",
+    },
+    {
+      q: "Is Qubic Portal safe?",
+      a: "Qubic Portal's smart contracts have been designed with security in mind. However, as with any DeFi protocol, there are inherent risks including smart contract bugs, impermanent loss for liquidity providers, and market volatility. Always DYOR.",
+    },
+    {
+      q: "What is impermanent loss?",
+      a: "Impermanent loss occurs when the price ratio of your deposited tokens changes compared to when you deposited them. The larger the change, the more impermanent loss you may experience. It's called 'impermanent' because it only becomes permanent when you withdraw.",
     },
   ];
 
@@ -148,28 +156,28 @@ const Home: React.FC = () => {
 
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="px-4 pt-32 pb-20">
+        <section className="px-4 pt-24 pb-16">
           <div className="mx-auto max-w-6xl text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <h1 className="mb-6 text-6xl leading-tight font-black md:text-7xl lg:text-8xl">
-                <span className="from-primary-40 via-primary-50 to-primary-60 bg-gradient-to-r bg-clip-text text-transparent">
+              <h1 className="mb-6 text-4xl leading-tight font-black md:text-5xl lg:text-6xl uppercase">
+                <span className="text-primary">
                   Swap Tokens
                 </span>
                 <br />
                 <span className="text-foreground">Like Never Before</span>
               </h1>
-              <p className="text-muted-foreground mx-auto mb-12 max-w-3xl text-xl md:text-2xl">
+              <p className="text-muted-foreground mx-auto mb-10 max-w-3xl text-lg md:text-xl">
                 Experience the future of decentralized trading on Qubic. Fast, secure, and with the best rates in DeFi.
               </p>
 
-              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link to="/swap">
-                  <Button variant="primary" size="xl" icon={<ArrowRight className="h-5 w-5" />} iconPosition="right">
+                  <Button variant="primary" size="lg" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                     Start Trading
                   </Button>
                 </Link>
                 <Link to="/liquidity">
-                  <Button variant="outline" size="xl">
+                  <Button variant="outline" size="lg">
                     Add Liquidity
                   </Button>
                 </Link>
@@ -181,7 +189,7 @@ const Home: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mt-24 grid grid-cols-2 gap-6 md:grid-cols-4"
+              className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4"
             >
               {stats.map((stat, index) => (
                 <motion.div
@@ -189,17 +197,17 @@ const Home: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="glass-effect hover:bg-muted/50 rounded-2xl p-6 transition-all"
+                  className="glass-effect hover:bg-muted/50 rounded-xl p-4 transition-all"
                 >
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                      <stat.icon className="h-5 w-5" />
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
+                      <stat.icon className="h-4 w-4" />
                     </div>
                   </div>
-                  <div className="from-primary-40 to-primary-60 mb-2 bg-gradient-to-r bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
+                  <div className="text-primary mb-1 text-2xl font-bold md:text-3xl">
                     {stat.value}
                   </div>
-                  <div className="text-muted-foreground text-sm">{stat.label}</div>
+                  <div className="text-muted-foreground text-xs">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -216,8 +224,8 @@ const Home: React.FC = () => {
               viewport={{ once: true }}
               className="mb-8 text-center"
             >
-              <h2 className="text-3xl font-bold md:text-4xl">Everything you need to get started</h2>
-              <p className="text-muted-foreground mx-auto mt-3 max-w-2xl">
+              <h2 className="text-2xl font-bold md:text-3xl">Everything you need to get started</h2>
+              <p className="text-muted-foreground mx-auto mt-2 max-w-2xl text-sm">
                 Swap, provide liquidity, and explore the ecosystem — all in one place.
               </p>
             </motion.div>
@@ -231,13 +239,13 @@ const Home: React.FC = () => {
                   transition={{ duration: 0.5, delay: idx * 0.05 }}
                   viewport={{ once: true }}
                   whileHover={{ y: -4 }}
-                  className="glass-effect hover:bg-muted/50 rounded-2xl p-6 transition-all"
+                  className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
                 >
-                  <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-2xl">
-                    <item.icon className="h-6 w-6" />
+                  <div className="bg-primary/10 text-primary mb-3 flex h-10 w-10 items-center justify-center rounded-xl">
+                    <item.icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mb-2 text-xl font-bold">{item.title}</h3>
-                  <p className="text-muted-foreground mb-5 text-sm">{item.description}</p>
+                  <h3 className="mb-1.5 text-lg font-bold">{item.title}</h3>
+                  <p className="text-muted-foreground mb-4 text-sm">{item.description}</p>
                   <Link to={item.href} className="inline-flex">
                     <Button variant="outline" size="sm" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                       Open
@@ -250,7 +258,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Features Section */}
-        <section className="px-4 py-20">
+        <section className="px-4 py-12">
           <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -259,14 +267,14 @@ const Home: React.FC = () => {
               viewport={{ once: true }}
               className="mb-16 text-center"
             >
-              <h2 className="mb-4 text-4xl font-bold md:text-5xl">
+              <h2 className="mb-3 text-3xl font-bold md:text-4xl">
                 Why Choose{" "}
-                <span className="from-primary-40 to-primary-60 bg-gradient-to-r bg-clip-text text-transparent">
+                <span className="text-primary">
                   Qubic Portal
                 </span>
                 ?
               </h2>
-              <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+              <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
                 Built on cutting-edge technology to provide the best trading experience
               </p>
             </motion.div>
@@ -282,14 +290,14 @@ const Home: React.FC = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.02, y: -5 }}
-                    className="glass-effect hover:bg-muted/50 group rounded-2xl p-8 transition-all"
+                    className="glass-effect hover:bg-muted/50 group rounded-xl p-6 transition-all"
                   >
                     <div
-                      className={`h-14 w-14 rounded-xl bg-gradient-to-br ${feature.color} mb-4 flex items-center justify-center transition-transform group-hover:scale-110`}
+                      className="bg-primary/10 h-12 w-12 rounded-lg mb-3 flex items-center justify-center transition-transform group-hover:scale-110"
                     >
-                      <Icon className="h-7 w-7 text-white" />
+                      <Icon className="text-primary h-6 w-6" />
                     </div>
-                    <h3 className="mb-3 text-2xl font-bold">{feature.title}</h3>
+                    <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
                     <p className="text-muted-foreground">{feature.description}</p>
                   </motion.div>
                 );
@@ -299,7 +307,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* How it works */}
-        <section className="px-4 py-16 md:py-20">
+        <section className="px-4 py-12 md:py-16">
           <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -308,8 +316,8 @@ const Home: React.FC = () => {
               viewport={{ once: true }}
               className="mb-12 text-center"
             >
-              <h2 className="mb-4 text-4xl font-bold md:text-5xl">How it works</h2>
-              <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+              <h2 className="mb-3 text-3xl font-bold md:text-4xl">How it works</h2>
+              <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
                 A simple flow designed to keep you in control at every step.
               </p>
             </motion.div>
@@ -324,18 +332,18 @@ const Home: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: idx * 0.05 }}
                     viewport={{ once: true }}
-                    className="glass-effect hover:bg-muted/50 rounded-2xl p-6 transition-all"
+                    className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 text-primary flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl">
-                        <Icon className="h-6 w-6" />
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 text-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl">
+                        <Icon className="h-5 w-5" />
                       </div>
                       <div>
                         <div className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
                           Step {idx + 1}
                         </div>
-                        <h3 className="mt-1 text-xl font-bold">{step.title}</h3>
-                        <p className="text-muted-foreground mt-2 text-sm">{step.description}</p>
+                        <h3 className="mt-1 text-lg font-bold">{step.title}</h3>
+                        <p className="text-muted-foreground mt-1.5 text-sm">{step.description}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -355,7 +363,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-4xl font-bold md:text-5xl">Built for trust</h2>
+                <h2 className="text-3xl font-bold md:text-4xl">Built for trust</h2>
                 <p className="text-muted-foreground mt-4 text-lg">
                   Clear confirmations, transparent settings, and a UX designed to reduce surprises.
                 </p>
@@ -374,15 +382,15 @@ const Home: React.FC = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: idx * 0.05 }}
                       viewport={{ once: true }}
-                      className="glass-effect hover:bg-muted/50 rounded-2xl p-6 transition-all"
+                      className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="bg-primary/10 text-primary flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl">
-                          <Icon className="h-6 w-6" />
+                      <div className="flex items-start gap-3">
+                        <div className="bg-primary/10 text-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl">
+                          <Icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold">{p.title}</h3>
-                          <p className="text-muted-foreground mt-2 text-sm">{p.description}</p>
+                          <h3 className="text-lg font-bold">{p.title}</h3>
+                          <p className="text-muted-foreground mt-1.5 text-sm">{p.description}</p>
                         </div>
                       </div>
                     </motion.div>
@@ -394,7 +402,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* FAQ */}
-        <section className="px-4 py-16 md:py-20">
+        <section className="px-4 py-12 md:py-16">
           <div className="mx-auto max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -404,22 +412,22 @@ const Home: React.FC = () => {
               className="mb-10 text-center"
             >
               <h2 className="text-4xl font-bold md:text-5xl">FAQ</h2>
-              <p className="text-muted-foreground mx-auto mt-3 max-w-2xl text-lg">Quick answers to common questions.</p>
+              <p className="text-muted-foreground mx-auto mt-2 max-w-2xl text-sm">Quick answers to common questions.</p>
             </motion.div>
 
             <div className="space-y-3">
               {faqs.map((item) => (
                 <details
                   key={item.q}
-                  className="glass-effect hover:bg-muted/50 group rounded-2xl p-5 transition-all"
+                  className="glass-effect hover:bg-muted/50 group rounded-xl p-4 transition-all"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-                    <span className="text-lg font-bold">{item.q}</span>
-                    <span className="bg-primary/10 text-primary flex h-9 w-9 items-center justify-center rounded-xl transition-transform group-open:rotate-45">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                    <span className="text-base font-bold">{item.q}</span>
+                    <span className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg transition-transform group-open:rotate-45">
                       <PlusIcon />
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{item.a}</p>
+                  <p className="text-muted-foreground mt-2.5 text-sm leading-relaxed">{item.a}</p>
                 </details>
               ))}
             </div>
@@ -427,20 +435,20 @@ const Home: React.FC = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="px-4 py-20">
+        <section className="px-4 py-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="glass-effect relative mx-auto max-w-4xl overflow-hidden rounded-3xl p-12 text-center"
+            className="glass-effect relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-8 md:p-10 text-center"
           >
-            <div className="from-primary-40/10 to-primary-60/10 absolute inset-0 bg-gradient-to-r"></div>
+            <div className="bg-primary/5 absolute inset-0"></div>
             <div className="relative z-10">
-              <h2 className="mb-6 text-4xl font-bold md:text-5xl">Ready to Start Trading?</h2>
-              <p className="text-muted-foreground mb-8 text-xl">Join thousands of users already trading on Qubic Portal</p>
+              <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to Start Trading?</h2>
+              <p className="text-muted-foreground mb-6 text-base">Join thousands of users already trading on Qubic Portal</p>
               <Link to="/swap">
-                <Button variant="primary" size="xl" icon={<ArrowRight className="h-5 w-5" />} iconPosition="right">
+                <Button variant="primary" size="lg" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                   Launch App
                 </Button>
               </Link>
