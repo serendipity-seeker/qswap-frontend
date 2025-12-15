@@ -214,49 +214,6 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* What you can do */}
-        <section className="px-4 pb-6 md:pb-10">
-          <div className="mx-auto max-w-6xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="mb-8 text-center"
-            >
-              <h2 className="text-2xl font-bold md:text-3xl">Everything you need to get started</h2>
-              <p className="text-muted-foreground mx-auto mt-2 max-w-2xl text-sm">
-                Swap, provide liquidity, and explore the ecosystem — all in one place.
-              </p>
-            </motion.div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              {actions.map((item, idx) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: idx * 0.05 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
-                >
-                  <div className="bg-primary/10 text-primary mb-3 flex h-10 w-10 items-center justify-center rounded-xl">
-                    <item.icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="mb-1.5 text-lg font-bold">{item.title}</h3>
-                  <p className="text-muted-foreground mb-4 text-sm">{item.description}</p>
-                  <Link to={item.href} className="inline-flex">
-                    <Button variant="outline" size="sm" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
-                      Open
-                    </Button>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Features Section */}
         <section className="px-4 py-12">
           <div className="mx-auto max-w-6xl">
