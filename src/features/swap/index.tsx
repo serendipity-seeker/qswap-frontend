@@ -17,9 +17,9 @@ interface Token {
 
 const mockTokens: Token[] = [
   { symbol: "QUBIC", name: "Qubic", icon: "/assets/qubic-coin.png", balance: "1,234.56" },
-  { symbol: "QX", name: "Qx Token", icon: "/assets/default-coin.svg", balance: "5,678.90" },
-  { symbol: "CFT", name: "CFT Token", icon: "/assets/default-coin.svg", balance: "10,000.00" },
-  { symbol: "QCAP", name: "QCAP Token", icon: "/assets/default-coin.svg", balance: "2.5" },
+  { symbol: "GARTH", name: "Gart Token", icon: "/assets/asset_GARTH-GARTHFANXMPXMDPEZFQPWFPYMHOAWTKILINCTRMVLFFVATKVJRKEDYXGHJBF_logo_dark.png", balance: "5,678.90" },
+  { symbol: "CFB", name: "CFB Token", icon: "/assets/asset_CFB-CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL_logo_dark.png", balance: "10,000.00" },
+  { symbol: "QCAP", name: "QCAP Token", icon: "/assets/asset_QCAP-QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG_logo_dark.png", balance: "2.5" },
 ];
 
 const Swap: React.FC = () => {

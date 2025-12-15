@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createChart, ColorType, LineStyle } from "lightweight-charts";
+import {
+  createChart,
+  AreaSeries,
+  ColorType,
+  LineStyle,
+  type AreaData,
+  type UTCTimestamp,
+} from "lightweight-charts";
 import { TrendingUp } from "lucide-react";
 
 const PriceChart: React.FC = () => {
@@ -8,20 +15,20 @@ const PriceChart: React.FC = () => {
   const timeframes = ["1H", "24H", "7D", "30D", "1Y"];
 
   // Generate mock candlestick data
-  const generateData = () => {
-    const data = [];
+  const generateData = (): AreaData[] => {
+    const data: AreaData[] = [];
     let basePrice = 0.145;
-    const now = Math.floor(Date.now() / 1000);
+    const now = Math.floor(Date.now() / 1000) as UTCTimestamp;
     const interval = 3600; // 1 hour in seconds
 
     for (let i = 0; i < 24; i++) {
-      const time = now - (24 - i) * interval;
+      const time = (now - (24 - i) * interval) as UTCTimestamp;
       const volatility = 0.002;
       const change = (Math.random() - 0.5) * volatility;
       basePrice = Math.max(0.14, basePrice + change);
-      
+
       data.push({
-        time: time,
+        time,
         value: basePrice,
       });
     }
@@ -68,9 +75,8 @@ const PriceChart: React.FC = () => {
       },
     });
 
-    // Create area series - use addSeries with type specification for v5
-    const areaSeries = chart.addSeries({
-      type: 'Area',
+    // Create area series (v5+ API)
+    const areaSeries = chart.addSeries(AreaSeries, {
       lineColor: "#1adef5",
       topColor: "rgba(26, 222, 245, 0.4)",
       bottomColor: "rgba(26, 222, 245, 0.0)",
@@ -80,11 +86,11 @@ const PriceChart: React.FC = () => {
         precision: 6,
         minMove: 0.000001,
       },
-    } as any);
+    });
 
     // Set data
     const data = generateData();
-    chart.setData(data);
+    areaSeries.setData(data);
 
     // Fit content
     chart.timeScale().fitContent();
