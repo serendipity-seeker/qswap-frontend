@@ -87,7 +87,7 @@ const Liquidity: React.FC = () => {
                   onClick={() => setMode("add")}
                   className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-bold transition-all ${
                     mode === "add"
-                      ? "from-primary-40 to-primary-60 bg-gradient-to-r text-white shadow-lg"
+                      ? "bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
                       : "bg-muted/30 hover:bg-muted/50"
                   }`}
                 >
@@ -98,7 +98,7 @@ const Liquidity: React.FC = () => {
                   onClick={() => setMode("remove")}
                   className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-bold transition-all ${
                     mode === "remove"
-                      ? "from-primary-40 to-primary-60 bg-gradient-to-r text-white shadow-lg"
+                      ? "bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
                       : "bg-muted/30 hover:bg-muted/50"
                   }`}
                 >

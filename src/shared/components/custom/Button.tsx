@@ -40,26 +40,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants: Record<ButtonVariant, string> = {
       primary: `
-        bg-gradient-to-br from-primary-40 via-primary-50 to-primary-60
-        hover:from-primary-50 hover:via-primary-60 hover:to-primary-70
-        text-white shadow-lg shadow-primary-40/30
-        hover:shadow-xl hover:shadow-primary-50/50
-        before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
-        before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-700
-        focus:ring-primary-40
+        bg-primary text-primary-foreground hover:bg-primary/90
+        shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50
+        focus:ring-primary
       `,
       secondary: `
-        bg-gradient-to-br from-gray-70 via-gray-80 to-gray-90
-        hover:from-gray-60 hover:via-gray-70 hover:to-gray-80
-        text-white shadow-lg shadow-gray-90/50
-        hover:shadow-xl hover:shadow-gray-80/50
-        focus:ring-gray-70
+        bg-secondary text-secondary-foreground hover:bg-secondary/90
+        shadow-lg shadow-black/10 hover:shadow-xl
+        focus:ring-secondary
       `,
       outline: `
-        bg-transparent border-2 border-primary-40 text-primary-40
-        hover:bg-primary-40/10 hover:border-primary-50
-        shadow-none hover:shadow-lg hover:shadow-primary-40/20
-        focus:ring-primary-40
+        bg-transparent border-2 border-primary text-primary
+        hover:bg-primary/10
+        shadow-none hover:shadow-lg hover:shadow-primary/20
+        focus:ring-primary
       `,
       ghost: `
         bg-transparent hover:bg-muted text-foreground
@@ -67,15 +61,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         focus:ring-muted
       `,
       danger: `
-        bg-gradient-to-br from-error-40 via-red-500 to-red-600
-        hover:from-red-500 hover:via-red-600 hover:to-red-700
-        text-white shadow-lg shadow-error-40/30
-        hover:shadow-xl hover:shadow-error-40/50
-        focus:ring-error-40
+        bg-destructive text-white hover:bg-destructive/90
+        shadow-lg shadow-destructive/30 hover:shadow-xl hover:shadow-destructive/50
+        focus:ring-destructive
       `,
       success: `
-        bg-gradient-to-br from-success-40 via-green-500 to-green-600
-        hover:from-green-500 hover:via-green-600 hover:to-green-700
+        bg-success-40 hover:bg-success-40/90
         text-white shadow-lg shadow-success-40/30
         hover:shadow-xl hover:shadow-success-40/50
         focus:ring-success-40
