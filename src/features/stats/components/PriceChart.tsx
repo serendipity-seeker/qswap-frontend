@@ -1,56 +1,118 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { createChart, ColorType, LineStyle } from "lightweight-charts";
 import { TrendingUp } from "lucide-react";
 
 const PriceChart: React.FC = () => {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
   const [timeframe, setTimeframe] = useState("24H");
   const timeframes = ["1H", "24H", "7D", "30D", "1Y"];
 
-  // Mock data points for the chart
-  const dataPoints = [30, 35, 32, 45, 42, 50, 48, 55, 52, 58, 62, 60, 65, 70, 68, 75, 72, 78, 82, 80];
+  // Generate mock candlestick data
+  const generateData = () => {
+    const data = [];
+    let basePrice = 0.145;
+    const now = Math.floor(Date.now() / 1000);
+    const interval = 3600; // 1 hour in seconds
 
-  const maxValue = Math.max(...dataPoints);
-  const minValue = Math.min(...dataPoints);
+    for (let i = 0; i < 24; i++) {
+      const time = now - (24 - i) * interval;
+      const volatility = 0.002;
+      const change = (Math.random() - 0.5) * volatility;
+      basePrice = Math.max(0.14, basePrice + change);
+      
+      data.push({
+        time: time,
+        value: basePrice,
+      });
+    }
 
-  // Chart size in px
-  const width = 400;
-  const height = 256;
-  // NOTE: UI svg uses width="100%" and height="100%", which scales relatively, but for our point
-  // calculations, we need px to generate proper SVG "points" attribute (not with %).
-
-  // Get polyline points as "x,y x,y ..." in px, not using '%'
-  const getPolylinePoints = (points: number[]) => {
-    const stepX = width / (points.length - 1);
-    return points
-      .map((value, index) => {
-        const x = index * stepX;
-        // Flip y axis - lower values higher on SVG
-        const y = ((maxValue - value) / (maxValue - minValue)) * height;
-        return `${x},${y}`;
-      })
-      .join(" ");
+    return data;
   };
 
-  // For area, we need to close the path: start at (0, height), draw data points, end at (width, height)
-  const getPolygonPoints = (points: number[]) => {
-    const stepX = width / (points.length - 1);
-    let coord = points
-      .map((value, index) => {
-        const x = index * stepX;
-        const y = ((maxValue - value) / (maxValue - minValue)) * height;
-        return `${x},${y}`;
-      })
-      .join(" ");
-    return `0,${height} ${coord} ${width},${height}`;
-  };
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+
+    // Create chart
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor: "#9e9e9e",
+      },
+      grid: {
+        vertLines: { color: "rgba(255, 255, 255, 0.05)" },
+        horzLines: { color: "rgba(255, 255, 255, 0.05)" },
+      },
+      width: chartContainerRef.current.clientWidth,
+      height: 256,
+      rightPriceScale: {
+        borderColor: "rgba(255, 255, 255, 0.1)",
+      },
+      timeScale: {
+        borderColor: "rgba(255, 255, 255, 0.1)",
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      crosshair: {
+        vertLine: {
+          color: "#1adef5",
+          width: 1,
+          style: LineStyle.Dashed,
+          labelBackgroundColor: "#1adef5",
+        },
+        horzLine: {
+          color: "#1adef5",
+          width: 1,
+          style: LineStyle.Dashed,
+          labelBackgroundColor: "#1adef5",
+        },
+      },
+    });
+
+    // Create area series - use addSeries with type specification for v5
+    const areaSeries = chart.addSeries({
+      type: 'Area',
+      lineColor: "#1adef5",
+      topColor: "rgba(26, 222, 245, 0.4)",
+      bottomColor: "rgba(26, 222, 245, 0.0)",
+      lineWidth: 2,
+      priceFormat: {
+        type: "price",
+        precision: 6,
+        minMove: 0.000001,
+      },
+    } as any);
+
+    // Set data
+    const data = generateData();
+    chart.setData(data);
+
+    // Fit content
+    chart.timeScale().fitContent();
+
+    // Handle resize
+    const handleResize = () => {
+      if (chartContainerRef.current) {
+        chart.applyOptions({
+          width: chartContainerRef.current.clientWidth,
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [timeframe]);
 
   return (
-    <div className="glass-effect rounded-2xl p-4 shadow-2xl sm:p-5 md:rounded-3xl md:p-6">
-      <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center md:mb-6">
+    <div className="glass-effect rounded-xl p-4 shadow-2xl sm:p-5">
+      <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h2 className="mb-1 text-xl font-bold sm:text-2xl">QUBIC/USDT</h2>
+          <h2 className="mb-1 text-lg font-bold sm:text-xl">QUBIC/USDT</h2>
           <div className="flex items-center gap-2 sm:gap-3">
-            <span className="text-2xl font-bold sm:text-3xl">$0.152</span>
+            <span className="text-xl font-bold sm:text-2xl">$0.152</span>
             <span className="text-success-40 flex items-center gap-1 text-sm font-medium">
               <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
               +12.5%
@@ -63,7 +125,7 @@ const PriceChart: React.FC = () => {
               key={tf}
               onClick={() => setTimeframe(tf)}
               className={`rounded-lg px-2 py-1 text-xs font-medium transition-all sm:px-3 sm:py-1.5 sm:text-sm ${
-                timeframe === tf ? "bg-primary-40 text-white" : "bg-muted/50 hover:bg-muted"
+                timeframe === tf ? "bg-primary text-white" : "bg-muted/50 hover:bg-muted"
               }`}
             >
               {tf}
@@ -72,61 +134,15 @@ const PriceChart: React.FC = () => {
         </div>
       </div>
 
-      {/* Simple SVG Chart */}
-      <div className="bg-muted/20 relative h-48 rounded-xl p-3 sm:h-56 sm:p-4 md:h-64">
-        <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-          {/* Grid lines */}
-          {[0, 1, 2, 3, 4].map((i) => (
-            <line
-              key={i}
-              x1={0}
-              y1={((i * height) / 4).toFixed(2)}
-              x2={width}
-              y2={((i * height) / 4).toFixed(2)}
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-muted-foreground/20"
-            />
-          ))}
-
-          {/* Price line */}
-          <motion.polyline
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            points={getPolylinePoints(dataPoints)}
-            fill="none"
-            stroke="url(#gradient)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Gradient fill */}
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="var(--primary-40)" />
-              <stop offset="100%" stopColor="var(--primary-60)" />
-            </linearGradient>
-            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="var(--primary-40)" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="var(--primary-40)" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* Area under the line */}
-          <motion.polygon
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            points={getPolygonPoints(dataPoints)}
-            fill="url(#areaGradient)"
-          />
-        </svg>
-      </div>
+      {/* TradingView Lightweight Chart */}
+      <div 
+        ref={chartContainerRef} 
+        className="bg-muted/20 relative rounded-xl overflow-hidden"
+        style={{ height: "256px" }}
+      />
 
       {/* Stats */}
-      <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-4 md:mt-6">
+      <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-4">
         <div>
           <div className="text-muted-foreground mb-1 text-[10px] sm:text-xs">24h High</div>
           <div className="text-success-40 text-sm font-bold sm:text-base">$0.158</div>

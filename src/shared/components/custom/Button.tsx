@@ -41,34 +41,28 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variants: Record<ButtonVariant, string> = {
       primary: `
         bg-primary text-primary-foreground hover:bg-primary/90
-        shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50
         focus:ring-primary
       `,
       secondary: `
         bg-secondary text-secondary-foreground hover:bg-secondary/90
-        shadow-lg shadow-black/10 hover:shadow-xl
         focus:ring-secondary
       `,
       outline: `
         bg-transparent border-2 border-primary text-primary
         hover:bg-primary/10
-        shadow-none hover:shadow-lg hover:shadow-primary/20
         focus:ring-primary
       `,
       ghost: `
         bg-transparent hover:bg-muted text-foreground
-        shadow-none hover:shadow-md
         focus:ring-muted
       `,
       danger: `
         bg-destructive text-white hover:bg-destructive/90
-        shadow-lg shadow-destructive/30 hover:shadow-xl hover:shadow-destructive/50
         focus:ring-destructive
       `,
       success: `
         bg-success-40 hover:bg-success-40/90
-        text-white shadow-lg shadow-success-40/30
-        hover:shadow-xl hover:shadow-success-40/50
+        text-white
         focus:ring-success-40
       `,
     };
@@ -83,8 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <motion.button
         ref={ref}
-        whileHover={{ scale: disabled || loading ? 1 : 1.02, y: -2 }}
-        whileTap={{ scale: disabled || loading ? 1 : 0.98, y: 0 }}
+        whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
         className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
         disabled={disabled || loading}
         {...props}

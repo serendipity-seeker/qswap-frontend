@@ -156,21 +156,21 @@ const Home: React.FC = () => {
 
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="px-4 pt-24 pb-16">
+        <section className="px-4 pt-32 pb-20 md:pt-40 md:pb-24">
           <div className="mx-auto max-w-6xl text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <h1 className="mb-6 text-4xl leading-tight font-black md:text-5xl lg:text-6xl uppercase">
+              <h1 className="mb-8 text-4xl leading-tight font-black md:text-5xl lg:text-6xl uppercase">
                 <span className="text-primary">
                   Swap Tokens
                 </span>
                 <br />
                 <span className="text-foreground">Like Never Before</span>
               </h1>
-              <p className="text-muted-foreground mx-auto mb-10 max-w-3xl text-lg md:text-xl">
+              <p className="text-muted-foreground mx-auto mb-12 max-w-3xl text-lg md:text-xl">
                 Experience the future of decentralized trading on Qubic. Fast, secure, and with the best rates in DeFi.
               </p>
 
-              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link to="/swap">
                   <Button variant="primary" size="lg" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                     Start Trading
@@ -189,7 +189,7 @@ const Home: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4"
+              className="mt-20 grid grid-cols-2 gap-4 md:grid-cols-4 md:mt-24"
             >
               {stats.map((stat, index) => (
                 <motion.div

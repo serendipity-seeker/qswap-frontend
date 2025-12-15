@@ -17,7 +17,7 @@ const ComponentsShowcase: React.FC = () => {
         keywords="UI components, design system, React components, custom components, web design"
         canonical="https://qubicportal.org/showcase"
       />
-      <div className="min-h-screen px-4 pt-24 pb-12">
+      <div className="min-h-screen px-4 pt-32 pb-12">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-center">

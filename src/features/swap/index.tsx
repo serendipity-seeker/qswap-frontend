@@ -63,7 +63,7 @@ const Swap: React.FC = () => {
         keywords="token swap, crypto swap, Qubic DEX, trade tokens, exchange crypto, swap QUBIC, decentralized trading"
         canonical="https://qubicportal.org/swap"
       />
-      <div className="min-h-screen px-3 pt-20 pb-12 sm:px-4 md:px-6 md:pt-24">
+      <div className="min-h-screen px-3 pt-28 pb-12 sm:px-4 md:px-6 md:pt-32">
         {/* Background decorations */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>

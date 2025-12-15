@@ -54,7 +54,7 @@ const Liquidity: React.FC = () => {
         keywords="liquidity pools, add liquidity, earn fees, DeFi yield, liquidity mining, LP tokens, passive income, Qubic liquidity"
         canonical="https://qubicportal.org/liquidity"
       />
-      <div className="min-h-screen px-4 pt-24 pb-12">
+      <div className="min-h-screen px-4 pt-32 pb-12">
         {/* Background decorations */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>

@@ -45,7 +45,7 @@ const Header: React.FC = () => {
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-24 items-center justify-between">
             {/* Logo */}
             <Link to="/" className="group flex items-center">
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="relative">
