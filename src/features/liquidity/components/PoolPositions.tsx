@@ -15,20 +15,20 @@ interface PoolPosition {
 
 const mockPositions: PoolPosition[] = [
   {
-    tokenA: "QUBIC",
-    tokenB: "USDT",
-    iconA: "/qubic.svg",
-    iconB: "/qubic-coin.svg",
+    tokenA: "QCAP",
+    tokenB: "QUBIC",
+    iconA: "/assets/asset_QCAP-QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG_logo_dark.png",
+    iconB: "/assets/qubic-coin.png",
     liquidity: "$12,345.67",
     share: "0.15%",
     apy: "45.2%",
     earnings: "$234.56",
   },
   {
-    tokenA: "QX",
+    tokenA: "CFB",
     tokenB: "QUBIC",
-    iconA: "/qubic-coin.svg",
-    iconB: "/qubic.svg",
+    iconA: "/assets/asset_CFB-CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL_logo_dark.png",
+    iconB: "/assets/qubic-coin.png",
     liquidity: "$8,901.23",
     share: "0.08%",
     apy: "32.8%",

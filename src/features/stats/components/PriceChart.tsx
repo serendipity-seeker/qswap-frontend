@@ -110,7 +110,7 @@ const PriceChart: React.FC = () => {
     <div className="glass-effect rounded-xl p-4 shadow-2xl sm:p-5">
       <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h2 className="mb-1 text-lg font-bold sm:text-xl">QUBIC/USDT</h2>
+          <h2 className="mb-1 text-lg font-bold sm:text-xl">QCAP/QUBIC</h2>
           <div className="flex items-center gap-2 sm:gap-3">
             <span className="text-xl font-bold sm:text-2xl">$0.152</span>
             <span className="text-success-40 flex items-center gap-1 text-sm font-medium">

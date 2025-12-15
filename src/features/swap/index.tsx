@@ -16,10 +16,10 @@ interface Token {
 }
 
 const mockTokens: Token[] = [
-  { symbol: "QUBIC", name: "Qubic", icon: "/qubic.svg", balance: "1,234.56" },
-  { symbol: "QX", name: "Qx Token", icon: "/qubic-coin.svg", balance: "5,678.90" },
-  { symbol: "USDT", name: "Tether USD", icon: "/qubic-coin.svg", balance: "10,000.00" },
-  { symbol: "WETH", name: "Wrapped Ethereum", icon: "/qubic-coin.svg", balance: "2.5" },
+  { symbol: "QUBIC", name: "Qubic", icon: "/assets/qubic-coin.png", balance: "1,234.56" },
+  { symbol: "QX", name: "Qx Token", icon: "/assets/default-coin.svg", balance: "5,678.90" },
+  { symbol: "CFT", name: "CFT Token", icon: "/assets/default-coin.svg", balance: "10,000.00" },
+  { symbol: "QCAP", name: "QCAP Token", icon: "/assets/default-coin.svg", balance: "2.5" },
 ];
 
 const Swap: React.FC = () => {
