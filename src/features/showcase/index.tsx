@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Button, Input, Modal, AppLoader } from "@/shared/components/custom";
+import { Button, Input, Modal, AppLoader, SEO } from "@/shared/components/custom";
 import { Heart, Trash2, Check, Mail, Lock, Search, Download, Share2 } from "lucide-react";
 
 const ComponentsShowcase: React.FC = () => {
@@ -10,9 +10,16 @@ const ComponentsShowcase: React.FC = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <div className="min-h-screen px-4 pt-24 pb-12">
-      <div className="mx-auto max-w-6xl">
-        {/* Header */}
+    <>
+      <SEO
+        title="Components Showcase"
+        description="Explore Qubic Portal's custom-designed UI components. Beautiful buttons, inputs, modals, and more with advanced animations and unique styling."
+        keywords="UI components, design system, React components, custom components, web design"
+        canonical="https://qubicportal.org/showcase"
+      />
+      <div className="min-h-screen px-4 pt-24 pb-12">
+        <div className="mx-auto max-w-6xl">
+          {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-center">
           <h1 className="from-primary-40 to-primary-60 mb-4 bg-gradient-to-r bg-clip-text text-5xl font-black text-transparent">
             Components Showcase
@@ -268,6 +275,7 @@ const ComponentsShowcase: React.FC = () => {
         </motion.section>
       </div>
     </div>
+    </>
   );
 };
 

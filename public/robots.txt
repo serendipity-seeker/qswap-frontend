@@ -1,0 +1,10 @@
+# Qubic Portal - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://qubicportal.org/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 0
+

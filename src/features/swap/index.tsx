@@ -7,7 +7,7 @@ import SwapStats from "@/features/swap/components/SwapStats";
 import SwapSettings from "@/features/swap/components/SwapSettings";
 import PriceChart from "@/features/stats/components/PriceChart";
 import PoolStats from "@/features/stats/components/PoolStats";
-import { Button } from "@/shared/components/custom";
+import { Button, SEO } from "@/shared/components/custom";
 
 interface Token {
   symbol: string;
@@ -57,8 +57,15 @@ const Swap: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen px-3 pt-20 pb-12 sm:px-4 md:px-6 md:pt-24">
-      {/* Background decorations */}
+    <>
+      <SEO
+        title="Swap Tokens"
+        description="Trade tokens instantly with the best rates on Qubic Portal. Experience lightning-fast swaps with deep liquidity and minimal slippage on the Qubic network."
+        keywords="token swap, crypto swap, Qubic DEX, trade tokens, exchange crypto, swap QUBIC, decentralized trading"
+        canonical="https://qubicportal.org/swap"
+      />
+      <div className="min-h-screen px-3 pt-20 pb-12 sm:px-4 md:px-6 md:pt-24">
+        {/* Background decorations */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
         <div
@@ -270,6 +277,7 @@ const Swap: React.FC = () => {
         selectedToken={selectingToken === "from" ? fromToken : toToken}
       />
     </div>
+    </>
   );
 };
 

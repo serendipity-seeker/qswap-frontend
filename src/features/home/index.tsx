@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Zap, Shield, TrendingUp, Droplets } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/shared/components/custom";
+import { Button, SEO, StructuredData } from "@/shared/components/custom";
 
 const Home: React.FC = () => {
   const features = [
@@ -40,8 +40,17 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Background decorations */}
+    <>
+      <SEO
+        title="Qubic Portal - Decentralized Exchange on Qubic Network"
+        description="Experience the future of decentralized trading on Qubic. Fast, secure, and with the best rates in DeFi. Join thousands of users trading on Qubic Portal."
+        keywords="Qubic, DEX, decentralized exchange, crypto trading, token swap, DeFi, Qubic network, liquidity pools, cryptocurrency, blockchain"
+        canonical="https://qubicportal.org/"
+      />
+      <StructuredData type="WebSite" />
+      <StructuredData type="Organization" />
+      <div className="min-h-screen">
+        {/* Background decorations */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
         <div
@@ -181,6 +190,7 @@ const Home: React.FC = () => {
         </section>
       </div>
     </div>
+    </>
   );
 };
 

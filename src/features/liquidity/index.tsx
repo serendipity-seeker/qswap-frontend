@@ -4,7 +4,7 @@ import { Plus, Minus, TrendingUp, Droplets, Info } from "lucide-react";
 import TokenInput from "@/features/swap/components/TokenInput";
 import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
-import { Button } from "@/shared/components/custom";
+import { Button, SEO } from "@/shared/components/custom";
 
 interface Token {
   symbol: string;
@@ -47,8 +47,15 @@ const Liquidity: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen px-4 pt-24 pb-12">
-      {/* Background decorations */}
+    <>
+      <SEO
+        title="Liquidity Pools"
+        description="Add liquidity to Qubic Portal pools and earn fees from swaps. Provide liquidity to earn passive income with competitive APY rates on the Qubic network."
+        keywords="liquidity pools, add liquidity, earn fees, DeFi yield, liquidity mining, LP tokens, passive income, Qubic liquidity"
+        canonical="https://qubicportal.org/liquidity"
+      />
+      <div className="min-h-screen px-4 pt-24 pb-12">
+        {/* Background decorations */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
         <div
@@ -302,6 +309,7 @@ const Liquidity: React.FC = () => {
         selectedToken={selectingToken === "A" ? tokenA : tokenB}
       />
     </div>
+    </>
   );
 };
 
