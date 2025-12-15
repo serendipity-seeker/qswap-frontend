@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type HTMLMotionProps } from "framer-motion";
 import { Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 
-interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
+interface InputProps extends Omit<HTMLMotionProps<"input">, "size"> {
   label?: string;
   error?: string;
   success?: string;

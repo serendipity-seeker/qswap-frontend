@@ -5,14 +5,14 @@ import { MetamaskActions, MetaMaskContext, MetaMaskProvider } from "./MetamaskCo
 import { connectTypes, defaultSnapOrigin } from "./config";
 import { useWalletConnect } from "./WalletConnectContext";
 import { QubicTransaction } from "@qubic-lib/qubic-ts-library/dist/qubic-types/QubicTransaction";
-import { base64ToUint8Array, decodeUint8ArrayTx, uint8ArrayToBase64 } from "@/core/utils";
+import { base64ToUint8Array, decodeUint8ArrayTx, uint8ArrayToBase64 } from "@/shared/utils";
 import { toast } from "sonner";
 import { getSnap } from "./utils/snap";
 import { connectSnap } from "./utils/snap";
 // @ts-ignore
 import { QubicVault } from "@qubic-lib/qubic-ts-vault-library";
 import { useAtom } from "jotai";
-import { balancesAtom } from "@/store/balances";
+import { balancesAtom } from "@/shared/store/balances";
 
 interface Wallet {
   connectType: string;

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 import { HelmetProvider } from "react-helmet-async";
 import { QubicConnectProvider } from "@/shared/lib/wallet-connect/QubicConnectContext";

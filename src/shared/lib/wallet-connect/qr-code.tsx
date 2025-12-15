@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import QRCode, { type QRCodeToDataURLOptions } from "qrcode";
-import { cn } from "@/core/utils";
+import { cn } from "@/shared/utils";
 
 export interface QRCodeStyleOptions {
   // Size options

@@ -1,4 +1,4 @@
-import { copyText, cn } from "@/core/utils";
+import { copyText, cn } from "@/shared/utils";
 import React, { useState } from "react";
 import { MdCheck, MdContentCopy } from "react-icons/md";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";

@@ -11,8 +11,8 @@ import type {
   TransactionInfo,
   TxHistory,
   TxStatus,
-} from "@/types";
-import { uint8ArrayToBase64 } from "@/utils";
+} from "@/shared/types";
+import { uint8ArrayToBase64 } from "@/shared/utils";
 import axios from "axios";
 
 const RPC_URL = import.meta.env.VITE_RPC_URL || "https://rpc.qubic.org";

@@ -1,6 +1,6 @@
 import { StyledQRCode } from "@/shared/lib/wallet-connect/qr-code";
-import { QRCodePresets, downloadQRCode } from "@/core/utils/qr.utils";
-import { copyText } from "@/core/utils";
+import { QRCodePresets, downloadQRCode } from "@/shared/utils/qr.utils";
+import { copyText } from "@/shared/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useContext, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";

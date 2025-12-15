@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useAtom } from "jotai";
-import { settingsAtom } from "@/store/settings";
+import { settingsAtom } from "@/shared/store/settings";
 import { MetaMaskContext } from "@/shared/lib/wallet-connect/MetamaskContext";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { router } from "./router";

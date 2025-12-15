@@ -1,4 +1,4 @@
-import { base64ToUint8Array, createPayload, uint8ArrayToBase64, uriDecode } from "@/utils";
+import { base64ToUint8Array, createPayload, uint8ArrayToBase64, uriDecode } from "@/shared/utils";
 import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
 
 import { createSCTx } from "./tx.service";

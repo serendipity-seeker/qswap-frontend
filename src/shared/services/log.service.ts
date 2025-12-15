@@ -1,5 +1,5 @@
-import type { IEvent, TickEvents } from "@/types";
-import { base64ToUint8Array } from "@/utils";
+import type { IEvent, TickEvents } from "@/shared/types";
+import { base64ToUint8Array } from "@/shared/utils";
 
 const CONTRACT_INDEX = 12;
 

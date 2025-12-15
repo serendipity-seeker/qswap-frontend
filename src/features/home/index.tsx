@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   BarChart3,
-  BookOpen,
   CheckCircle2,
   Droplets,
   Layers,
@@ -47,27 +46,6 @@ const Home: React.FC = () => {
     { label: "24h Trading Volume", value: "$1.2M", icon: BarChart3 },
     { label: "Total Users", value: "12,345", icon: Users },
     { label: "Transactions", value: "234K+", icon: Sparkles },
-  ];
-
-  const actions = [
-    {
-      title: "Swap tokens",
-      description: "Trade instantly with competitive pricing and clear execution.",
-      href: "/swap",
-      icon: ArrowRight,
-    },
-    {
-      title: "Provide liquidity",
-      description: "Add liquidity to pools and earn fees from swaps.",
-      href: "/liquidity",
-      icon: Droplets,
-    },
-    {
-      title: "Explore the app",
-      description: "See UI components, charts, and patterns in our showcase.",
-      href: "/showcase",
-      icon: BookOpen,
-    },
   ];
 
   const steps = [

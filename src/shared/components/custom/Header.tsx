@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Wallet, Sun, Moon } from "lucide-react";
 import Button from "./Button";
 import { useAtom } from "jotai";
-import { settingsAtom } from "@/store/settings";
+import { settingsAtom } from "@/shared/store/settings";
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
