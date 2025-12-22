@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const [settings, setSettings] = useAtom(settingsAtom);
-  const { connected, wallet, showConnectModal, toggleConnectModal, disconnect } = useQubicConnect();
+  const { connected, wallet, showConnectModal, toggleConnectModal } = useQubicConnect();
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -132,25 +132,14 @@ const Header: React.FC = () => {
               </motion.button>
 
               {/* Connect Wallet Button */}
-              {connected ? (
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="md" onClick={toggleConnectModal} icon={<Wallet className="h-5 w-5" />}>
-                    {wallet?.alias || shortId(wallet?.publicKey) || "Connected"}
-                  </Button>
-                  <Button variant="ghost" size="md" onClick={disconnect}>
-                    Disconnect
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="primary"
-                  size="md"
-                  icon={<Wallet className="h-5 w-5" />}
-                  onClick={toggleConnectModal}
-                >
-                  Connect Wallet
-                </Button>
-              )}
+              <Button
+                variant={connected ? "outline" : "primary"}
+                size="md"
+                icon={<Wallet className="h-5 w-5" />}
+                onClick={toggleConnectModal}
+              >
+                {connected ? wallet?.alias || shortId(wallet?.publicKey) || "Connected" : "Connect Wallet"}
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -259,46 +248,18 @@ const Header: React.FC = () => {
 
                 {/* Connect Wallet */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                  {connected ? (
-                    <div className="space-y-2">
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        fullWidth
-                        icon={<Wallet className="h-5 w-5" />}
-                        onClick={() => {
-                          toggleConnectModal();
-                          setMobileMenuOpen(false);
-                        }}
-                      >
-                        {wallet?.alias || shortId(wallet?.publicKey) || "Connected"}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="lg"
-                        fullWidth
-                        onClick={() => {
-                          disconnect();
-                          setMobileMenuOpen(false);
-                        }}
-                      >
-                        Disconnect
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      fullWidth
-                      icon={<Wallet className="h-5 w-5" />}
-                      onClick={() => {
-                        toggleConnectModal();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      Connect Wallet
-                    </Button>
-                  )}
+                  <Button
+                    variant={connected ? "outline" : "primary"}
+                    size="lg"
+                    fullWidth
+                    icon={<Wallet className="h-5 w-5" />}
+                    onClick={() => {
+                      toggleConnectModal();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    {connected ? wallet?.alias || shortId(wallet?.publicKey) || "Connected" : "Connect Wallet"}
+                  </Button>
                 </motion.div>
               </div>
             </motion.div>
