@@ -1,7 +1,8 @@
 import type { IEvent, TickEvents } from "@/shared/types";
 import { base64ToUint8Array } from "@/shared/utils";
 
-const CONTRACT_INDEX = 12;
+import { SC_INDEX } from "./sc.service";
+import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
 
 enum EventType {
   QU_TRANSFER = 0,
@@ -20,45 +21,24 @@ enum EventType {
   CUSTOM_MESSAGE = 255,
 }
 
-enum QBAY_LOGS {
-  SUCCESS = 0,
-  INSUFFICIENT_QUBIC = 1,
-  INVALID_INPUT = 2,
-  // For createCollection
-  INVALID_VOLUME_SIZE = 3,
-  INSUFFICIENT_CFB = 4,
-  LIMIT_COLLECTION_VOLUME = 5,
-  ERROR_TRANSFER_ASSET = 6,
-  MAX_NUMBER_OF_COLLECTION = 7,
-  // For mint
-  OVERFLOW_NFT = 8,
-  LIMIT_HOLDING_NFT_PER_ONE_ID = 9,
-  NOT_COLLECTION_CREATOR = 10,
-  COLLECTION_FOR_DROP = 11,
-  // For listInMarket & sale
-  NOT_POSSESSOR = 12,
-  WRONG_NFT_ID = 13,
-  WRONG_URI = 14,
-  NOT_SALE_STATUS = 15,
-  LOW_PRICE = 16,
-  NOT_ASK_STATUS = 17,
-  NOT_OWNER = 18,
-  NOT_ASK_USER = 19,
-  RESERVED_NFT = 27,
-  // For DropMint
-  NOT_COLLECTION_FOR_DROP = 20,
-  OVERFLOW_MAX_SIZE_PER_ONE_ID = 21,
-  // For Auction
-  NOT_ENDED_AUCTION = 22,
-  NOT_TRADITIONAL_AUCTION = 23,
-  NOT_AUCTION_TIME = 24,
-  SMALL_PRICE = 25,
-  NOT_MATCH_PAYMENT_METHOD = 26,
-  NOT_AVAILABLE_CREATE_AND_MINT = 28,
-  EXCHANGE_STATUS = 29,
-  SALE_STATUS = 30,
-  CREATOR_OF_AUCTION = 31,
-  POSSESSOR = 32,
+// `qswap.sc.h`:
+// enum QSWAPLogInfo {
+//   QSWAPAddLiquidity = 4,
+//   QSWAPRemoveLiquidity = 5,
+//   QSWAPSwapExactQuForAsset = 6,
+//   QSWAPSwapQuForExactAsset = 7,
+//   QSWAPSwapExactAssetForQu = 8,
+//   QSWAPSwapAssetForExactQu = 9,
+//   QSWAPFailedDistribution = 10,
+// };
+enum QSWAP_LOGS {
+  QSWAPAddLiquidity = 4,
+  QSWAPRemoveLiquidity = 5,
+  QSWAPSwapExactQuForAsset = 6,
+  QSWAPSwapQuForExactAsset = 7,
+  QSWAPSwapExactAssetForQu = 8,
+  QSWAPSwapAssetForExactQu = 9,
+  QSWAPFailedDistribution = 10,
 }
 
 const checkSCLog = (event: IEvent) => {
@@ -80,27 +60,57 @@ const decodeLogHeader = (eventData: string) => {
   const SCIdx = dataView.getUint32(0, true);
   const eventType = dataView.getUint32(4, true);
 
-  return { contractIdx: SCIdx, logType: QBAY_LOGS[eventType] };
+  return { contractIdx: SCIdx, rawType: eventType, logType: (QSWAP_LOGS as any)[eventType] as string | undefined };
 };
 
-const decodeLogBody = (eventData: string, logType: keyof typeof QBAY_LOGS) => {
-  // const eventDataArray = base64ToUint8Array(eventData);
-  // const dataView = new DataView(eventDataArray.buffer);
+const decodeLogBody = async (eventData: string, rawType: number) => {
+  const bytes = base64ToUint8Array(eventData);
+  const view = new DataView(bytes.buffer);
+  const qHelper = new QubicHelper();
 
-  console.log(eventData, logType);
+  const getID = async (offset: number) => qHelper.getIdentity(bytes.slice(offset, offset + 32));
+  const getU64 = (offset: number) => Number(view.getBigUint64(offset, true));
+  const getI64 = (offset: number) => Number(view.getBigInt64(offset, true));
 
-  //   switch (logType) {
-  //     case "SUCCESS":
-  //       return {}; // Cutomize for other contracts
-  //     default:
-  //       return {};
-  //   }
-
-  // QBAY logs doesnt have any body data
-  return {};
+  switch (rawType) {
+    case QSWAP_LOGS.QSWAPAddLiquidity: {
+      return {
+        assetIssuer: await getID(8),
+        assetName: getU64(40),
+        userIncreaseLiquidity: getI64(48),
+        quAmount: getI64(56),
+        assetAmount: getI64(64),
+      };
+    }
+    case QSWAP_LOGS.QSWAPRemoveLiquidity: {
+      return {
+        quAmount: getI64(8),
+        assetAmount: getI64(16),
+      };
+    }
+    case QSWAP_LOGS.QSWAPSwapExactQuForAsset:
+    case QSWAP_LOGS.QSWAPSwapQuForExactAsset:
+    case QSWAP_LOGS.QSWAPSwapExactAssetForQu:
+    case QSWAP_LOGS.QSWAPSwapAssetForExactQu: {
+      return {
+        assetIssuer: await getID(8),
+        assetName: getU64(40),
+        assetAmountIn: getI64(48),
+        assetAmountOut: getI64(56),
+      };
+    }
+    case QSWAP_LOGS.QSWAPFailedDistribution: {
+      return {
+        dst: await getID(8),
+        amount: getU64(40),
+      };
+    }
+    default:
+      return null;
+  }
 };
 
-const decodeQbayLog = async (log: TickEvents) => {
+const decodeQswapLog = async (log: TickEvents) => {
   const result: any[] = [];
 
   for (const tx of log.txEvents) {
@@ -108,11 +118,11 @@ const decodeQbayLog = async (log: TickEvents) => {
       const isSCLog = checkSCLog(event);
       if (!isSCLog) continue;
 
-      const { contractIdx, logType } = decodeLogHeader(event.eventData);
-      if (contractIdx !== CONTRACT_INDEX) continue;
+      const { contractIdx, rawType, logType } = decodeLogHeader(event.eventData);
+      if (contractIdx !== SC_INDEX) continue;
 
-      const eventData = decodeLogBody(event.eventData, logType as keyof typeof QBAY_LOGS);
-      if (eventData) {
+      const eventData = await decodeLogBody(event.eventData, rawType);
+      if (eventData && logType) {
         result.push({
           tick: log.tick,
           eventId: Number(event.header.eventId),
@@ -126,4 +136,4 @@ const decodeQbayLog = async (log: TickEvents) => {
   return result;
 };
 
-export { decodeQbayLog };
+export { decodeQswapLog };
