@@ -153,6 +153,7 @@ export function WalletConnectProvider({ children }: WalletConnectProviderProps) 
             from: params.from,
             to: params.to,
             amount: params.amount,
+            tick: params.tick,
             inputType: params.inputType,
             payload: params.payload,
             nonce: Date.now().toString(),
