@@ -1,16 +1,10 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: string;
-}
+import type { TokenDisplay } from "@/shared/constants/tokens";
 
 interface TokenInputProps {
-  token: Token;
+  token: TokenDisplay;
   amount: string;
   onAmountChange: (value: string) => void;
   onTokenClick: () => void;

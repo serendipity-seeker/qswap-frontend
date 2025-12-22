@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, TrendingUp } from "lucide-react";
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: string;
-}
+import type { TokenDisplay } from "@/shared/constants/tokens";
 
 interface TokenSelectorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  tokens: Token[];
-  onSelectToken: (token: Token) => void;
-  selectedToken: Token;
+  tokens: TokenDisplay[];
+  onSelectToken: (token: TokenDisplay) => void;
+  selectedToken: TokenDisplay;
 }
 
 const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({

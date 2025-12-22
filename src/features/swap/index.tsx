@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDownUp, Settings, RefreshCw, Info } from "lucide-react";
 import TokenInput from "@/features/swap/components/TokenInput";
@@ -7,30 +7,75 @@ import SwapStats from "@/features/swap/components/SwapStats";
 import SwapSettings from "@/features/swap/components/SwapSettings";
 import PriceChart from "@/features/stats/components/PriceChart";
 import { Button, SEO } from "@/shared/components/custom";
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: string;
-}
-
-const mockTokens: Token[] = [
-  { symbol: "QUBIC", name: "Qubic", icon: "/assets/qubic-coin.png", balance: "1,234.56" },
-  { symbol: "GARTH", name: "Gart Token", icon: "/assets/asset_GARTH-GARTHFANXMPXMDPEZFQPWFPYMHOAWTKILINCTRMVLFFVATKVJRKEDYXGHJBF_logo_dark.png", balance: "5,678.90" },
-  { symbol: "CFB", name: "CFB Token", icon: "/assets/asset_CFB-CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL_logo_dark.png", balance: "10,000.00" },
-  { symbol: "QCAP", name: "QCAP Token", icon: "/assets/asset_QCAP-QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG_logo_dark.png", balance: "2.5" },
-];
+import { DEFAULT_TOKENS, isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
+import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
+import { fetchAssetsBalance, fetchBalance, fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
+import { quoteExactAssetInput, quoteExactQuInput, swapExactAssetForQu, swapExactQuForAsset } from "@/shared/services/sc.service";
+import { settingsAtom } from "@/shared/store/settings";
+import { useAtom } from "jotai";
+import { toast } from "sonner";
 
 const Swap: React.FC = () => {
-  const [fromToken, setFromToken] = useState<Token>(mockTokens[0]);
-  const [toToken, setToToken] = useState<Token>(mockTokens[1]);
+  const { wallet, connected, getSignedTx, toggleConnectModal } = useQubicConnect();
+  const [settings] = useAtom(settingsAtom);
+
+  const [tokens, setTokens] = useState<TokenDisplay[]>(
+    DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })),
+  );
+
+  const defaultFrom = useMemo(() => tokens.find((t) => t.symbol === "QUBIC") ?? tokens[0], [tokens]);
+  const defaultTo = useMemo(() => tokens.find((t) => t.symbol !== "QUBIC") ?? tokens[1], [tokens]);
+
+  const [fromToken, setFromToken] = useState<TokenDisplay>(defaultFrom);
+  const [toToken, setToToken] = useState<TokenDisplay>(defaultTo);
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectingToken, setSelectingToken] = useState<"from" | "to">("from");
   const [slippage, setSlippage] = useState("0.5");
+
+  // Keep selected tokens in sync when token list updates (balances refresh)
+  useEffect(() => {
+    setFromToken((prev) => tokens.find((t) => t.symbol === prev.symbol) ?? defaultFrom);
+    setToToken((prev) => tokens.find((t) => t.symbol === prev.symbol) ?? defaultTo);
+  }, [tokens, defaultFrom, defaultTo]);
+
+  // Load balances when wallet changes
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      if (!wallet?.publicKey) {
+        setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+        return;
+      }
+
+      try {
+        const qubicBal = await fetchBalance(wallet.publicKey);
+        const next: TokenDisplay[] = [];
+
+        for (const t of DEFAULT_TOKENS) {
+          if (isQubic(t)) {
+            next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
+          } else {
+            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.symbol, 1);
+            next.push({ ...t, balance: Number(assetBal || 0).toLocaleString() });
+          }
+        }
+
+        if (!cancelled) setTokens(next);
+      } catch (e) {
+        console.error(e);
+        if (!cancelled) setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [wallet?.publicKey]);
 
   const handleSwapTokens = () => {
     const temp = fromToken;
@@ -41,7 +86,7 @@ const Swap: React.FC = () => {
     setToAmount(tempAmount);
   };
 
-  const handleTokenSelect = (token: Token) => {
+  const handleTokenSelect = (token: TokenDisplay) => {
     if (selectingToken === "from") {
       setFromToken(token);
     } else {
@@ -50,9 +95,124 @@ const Swap: React.FC = () => {
     setIsTokenModalOpen(false);
   };
 
-  const handleSwap = () => {
-    console.log("Swapping:", fromAmount, fromToken.symbol, "to", toToken.symbol);
-    // Mock swap logic
+  // Quote whenever input changes (QSWAP supports QU <-> Asset pools)
+  useEffect(() => {
+    let cancelled = false;
+    const t = setTimeout(async () => {
+      const amt = Number(fromAmount);
+      if (!fromAmount || !Number.isFinite(amt) || amt <= 0) {
+        setToAmount("");
+        return;
+      }
+
+      try {
+        if (isQubic(fromToken) && isAsset(toToken)) {
+          const q = await quoteExactQuInput({
+            assetIssuer: toToken.issuer,
+            assetName: toToken.assetName,
+            quAmountIn: Math.floor(amt),
+          });
+          if (!cancelled) setToAmount(q ? String(q.assetAmountOut) : "");
+          return;
+        }
+
+        if (isAsset(fromToken) && isQubic(toToken)) {
+          const q = await quoteExactAssetInput({
+            assetIssuer: fromToken.issuer,
+            assetName: fromToken.assetName,
+            assetAmountIn: Math.floor(amt),
+          });
+          if (!cancelled) setToAmount(q ? String(q.quAmountOut) : "");
+          return;
+        }
+
+        // Asset <-> Asset is not supported by QSWAP (pools are QU/Asset)
+        setToAmount("");
+      } catch (e) {
+        console.error(e);
+        if (!cancelled) setToAmount("");
+      }
+    }, 300);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [fromAmount, fromToken, toToken]);
+
+  const handleSwap = async () => {
+    if (!connected || !wallet?.publicKey) {
+      toggleConnectModal();
+      return;
+    }
+
+    const amt = Number(fromAmount);
+    if (!Number.isFinite(amt) || amt <= 0) {
+      toast.error("Enter a valid amount");
+      return;
+    }
+
+    const amountIn = Math.floor(amt);
+    const slip = Math.max(0, Number(slippage) || 0) / 100;
+
+    try {
+      toast("Preparing transaction…");
+      const tickInfo = await fetchTickInfo();
+      const tick = tickInfo.tick + settings.tickOffset;
+
+      if (isQubic(fromToken) && isAsset(toToken)) {
+        const q = await quoteExactQuInput({
+          assetIssuer: toToken.issuer,
+          assetName: toToken.assetName,
+          quAmountIn: amountIn,
+        });
+        if (!q) throw new Error("Failed to quote");
+
+        const minOut = Math.max(0, Math.floor(q.assetAmountOut * (1 - slip)));
+        const tx = await swapExactQuForAsset({
+          sourceID: wallet.publicKey,
+          assetIssuer: toToken.issuer,
+          assetName: toToken.assetName,
+          quAmountIn: amountIn,
+          assetAmountOutMin: minOut,
+          tick,
+        });
+
+        const signed = await getSignedTx(tx);
+        const res = await broadcastTx(signed.tx);
+        toast.success(`Swap sent: ${res?.transactionId ?? "OK"}`);
+        return;
+      }
+
+      if (isAsset(fromToken) && isQubic(toToken)) {
+        const q = await quoteExactAssetInput({
+          assetIssuer: fromToken.issuer,
+          assetName: fromToken.assetName,
+          assetAmountIn: amountIn,
+        });
+        if (!q) throw new Error("Failed to quote");
+
+        const minOut = Math.max(0, Math.floor(q.quAmountOut * (1 - slip)));
+        const tx = await swapExactAssetForQu({
+          sourceID: wallet.publicKey,
+          assetIssuer: fromToken.issuer,
+          assetName: fromToken.assetName,
+          assetAmountIn: amountIn,
+          quAmountOutMin: minOut,
+          tick,
+        });
+
+        const signed = await getSignedTx(tx);
+        const res = await broadcastTx(signed.tx);
+        toast.success(`Swap sent: ${res?.transactionId ?? "OK"}`);
+        return;
+      }
+
+      toast.error("Only QUBIC ↔ token swaps are supported (QSWAP pools are QU/Asset).");
+    } catch (e) {
+      console.error(e);
+      toast.error((e as Error)?.message || "Swap failed");
+    }
   };
 
   return (
@@ -200,14 +360,14 @@ const Swap: React.FC = () => {
                 disabled={!fromAmount || parseFloat(fromAmount) <= 0}
                 fullWidth
               >
-                {!fromAmount || parseFloat(fromAmount) <= 0 ? "Enter an amount" : "Swap"}
+                {!connected ? "Connect wallet" : !fromAmount || parseFloat(fromAmount) <= 0 ? "Enter an amount" : "Swap"}
               </Button>
 
                 {/* Info Footer */}
                 <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
-                  <Info className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+                  <Info className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
                   <p className="text-muted-foreground text-xs">
-                    This is a mock interface. No real transactions will be executed.
+                    QSWAP supports pools of QUBIC ↔ Token. For token↔token swaps, route through QUBIC.
                   </p>
                 </div>
               </motion.div>
@@ -251,7 +411,7 @@ const Swap: React.FC = () => {
       <TokenSelectorModal
         isOpen={isTokenModalOpen}
         onClose={() => setIsTokenModalOpen(false)}
-        tokens={mockTokens}
+        tokens={tokens}
         onSelectToken={handleTokenSelect}
         selectedToken={selectingToken === "from" ? fromToken : toToken}
       />

@@ -1,45 +1,124 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Minus, TrendingUp, Droplets, Info } from "lucide-react";
 import TokenInput from "@/features/swap/components/TokenInput";
 import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { Button, SEO } from "@/shared/components/custom";
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: string;
-}
-
-const mockTokens: Token[] = [
-  { symbol: "QUBIC", name: "Qubic", icon: "/assets/qubic-coin.png", balance: "1,234.56" },
-  { symbol: "GARTH", name: "Gart Token", icon: "/assets/asset_GARTH-GARTHFANXMPXMDPEZFQPWFPYMHOAWTKILINCTRMVLFFVATKVJRKEDYXGHJBF_logo_dark.png", balance: "5,678.90" },
-  { symbol: "CFB", name: "CFB Token", icon: "/assets/asset_CFB-CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL_logo_dark.png", balance: "10,000.00" },
-  { symbol: "QCAP", name: "QCAP Token", icon: "/assets/asset_QCAP-QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG_logo_dark.png", balance: "2.5" },
-];
+import { DEFAULT_TOKENS, isAsset, isQubic, QUBIC_TOKEN, type TokenDisplay } from "@/shared/constants/tokens";
+import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
+import { fetchAssetsBalance, fetchBalance, fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
+import { addLiquidity } from "@/shared/services/sc.service";
+import { settingsAtom } from "@/shared/store/settings";
+import { useAtom } from "jotai";
+import { toast } from "sonner";
 
 const Liquidity: React.FC = () => {
+  const { wallet, connected, getSignedTx, toggleConnectModal } = useQubicConnect();
+  const [settings] = useAtom(settingsAtom);
+
   const [mode, setMode] = useState<"add" | "remove">("add");
-  const [tokenA, setTokenA] = useState<Token>(mockTokens[0]);
-  const [tokenB, setTokenB] = useState<Token>(mockTokens[1]);
+  const [tokens, setTokens] = useState<TokenDisplay[]>(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+
+  const assetTokens = useMemo(() => tokens.filter(isAsset), [tokens]);
+  const defaultAsset = useMemo(() => assetTokens[0] ?? (tokens[1] as TokenDisplay), [assetTokens, tokens]);
+
+  // QSWAP pools are QU/Asset; keep tokenA fixed to QUBIC
+  const tokenA = useMemo<TokenDisplay>(
+    () => (tokens.find((t) => t.symbol === "QUBIC") as TokenDisplay) ?? { ...QUBIC_TOKEN, balance: "0" },
+    [tokens],
+  );
+  const [tokenB, setTokenB] = useState<TokenDisplay>(defaultAsset);
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
-  const [selectingToken, setSelectingToken] = useState<"A" | "B">("A");
+  const [selectingToken, setSelectingToken] = useState<"A" | "B">("B");
 
-  const handleTokenSelect = (token: Token) => {
+  // Load balances when wallet changes
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      if (!wallet?.publicKey) {
+        setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+        return;
+      }
+
+      try {
+        const qubicBal = await fetchBalance(wallet.publicKey);
+        const next: TokenDisplay[] = [];
+        for (const t of DEFAULT_TOKENS) {
+          if (isQubic(t)) {
+            next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
+          } else {
+            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.symbol, 1);
+            next.push({ ...t, balance: Number(assetBal || 0).toLocaleString() });
+          }
+        }
+        if (!cancelled) setTokens(next);
+      } catch (e) {
+        console.error(e);
+        if (!cancelled) setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [wallet?.publicKey]);
+
+  const handleTokenSelect = (token: TokenDisplay) => {
     if (selectingToken === "A") {
-      setTokenA(token);
+      // tokenA is fixed to QUBIC for QSWAP
+      return;
     } else {
       setTokenB(token);
     }
     setIsTokenModalOpen(false);
   };
 
-  const handleAddLiquidity = () => {
-    console.log("Adding liquidity:", amountA, tokenA.symbol, "+", amountB, tokenB.symbol);
+  const handleAddLiquidity = async () => {
+    if (!connected || !wallet?.publicKey) {
+      toggleConnectModal();
+      return;
+    }
+    if (!isAsset(tokenB)) {
+      toast.error("Select an asset token (QSWAP pools are QUBIC/Token).");
+      return;
+    }
+
+    const quDesired = Math.floor(Number(amountA));
+    const assetDesired = Math.floor(Number(amountB));
+    if (!Number.isFinite(quDesired) || !Number.isFinite(assetDesired) || quDesired <= 0 || assetDesired <= 0) {
+      toast.error("Enter valid amounts");
+      return;
+    }
+
+    try {
+      const tickInfo = await fetchTickInfo();
+      const tick = tickInfo.tick + settings.tickOffset;
+
+      // Simple 0.5% slippage guard by default.
+      const slip = 0.005;
+      const tx = await addLiquidity({
+        sourceID: wallet.publicKey,
+        assetIssuer: tokenB.issuer,
+        assetName: tokenB.assetName,
+        assetAmountDesired: assetDesired,
+        quAmountDesired: quDesired,
+        quAmountMin: Math.max(0, Math.floor(quDesired * (1 - slip))),
+        assetAmountMin: Math.max(0, Math.floor(assetDesired * (1 - slip))),
+        tick,
+      });
+
+      const signed = await getSignedTx(tx);
+      const res = await broadcastTx(signed.tx);
+      toast.success(`Add liquidity sent: ${res?.transactionId ?? "OK"}`);
+    } catch (e) {
+      console.error(e);
+      toast.error((e as Error)?.message || "Add liquidity failed");
+    }
   };
 
   const handleRemoveLiquidity = () => {
@@ -116,10 +195,7 @@ const Liquidity: React.FC = () => {
                       token={tokenA}
                       amount={amountA}
                       onAmountChange={setAmountA}
-                      onTokenClick={() => {
-                        setSelectingToken("A");
-                        setIsTokenModalOpen(true);
-                      }}
+                    onTokenClick={() => {}}
                     />
                   </div>
 
@@ -178,7 +254,7 @@ const Liquidity: React.FC = () => {
                     disabled={!amountA || !amountB || parseFloat(amountA) <= 0 || parseFloat(amountB) <= 0}
                     fullWidth
                   >
-                    {!amountA || !amountB ? "Enter amounts" : "Add Liquidity"}
+                    {!connected ? "Connect wallet" : !amountA || !amountB ? "Enter amounts" : "Add Liquidity"}
                   </Button>
                 </>
               ) : (
@@ -236,7 +312,7 @@ const Liquidity: React.FC = () => {
 
               {/* Info Footer */}
               <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
-                <Info className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Info className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
                 <p className="text-muted-foreground text-xs">
                   By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the
                   pool.
@@ -304,9 +380,9 @@ const Liquidity: React.FC = () => {
       <TokenSelectorModal
         isOpen={isTokenModalOpen}
         onClose={() => setIsTokenModalOpen(false)}
-        tokens={mockTokens}
+        tokens={tokens.filter((t) => t.symbol !== "QUBIC")}
         onSelectToken={handleTokenSelect}
-        selectedToken={selectingToken === "A" ? tokenA : tokenB}
+        selectedToken={tokenB}
       />
     </div>
     </>
