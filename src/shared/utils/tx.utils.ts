@@ -56,7 +56,7 @@ export const decodeUint8ArrayTx = (tx: Uint8Array) => {
 
 interface ICreatePayload {
   data: number | bigint | Uint8Array;
-  type: "uint8" | "uint16" | "uint32" | "bigint64" | "id";
+  type: "uint8" | "uint16" | "uint32" | "uint64" | "int64" | "bigint64" | "id";
 }
 
 export const uriEncode = (uri: string) => {
@@ -76,6 +76,8 @@ export const createPayload = (data: ICreatePayload[]) => {
     uint8: 1,
     uint16: 2,
     uint32: 4,
+    uint64: 8,
+    int64: 8,
     bigint64: 8,
     id: 32,
   };
@@ -99,6 +101,14 @@ export const createPayload = (data: ICreatePayload[]) => {
       v.setUint32(o, d, true);
       return 4;
     },
+    uint64: (v: DataView, o: number, d: number | bigint) => {
+      v.setBigUint64(o, BigInt(d), true);
+      return 8;
+    },
+    int64: (v: DataView, o: number, d: number | bigint) => {
+      v.setBigInt64(o, BigInt(d), true);
+      return 8;
+    },
     bigint64: (v: DataView, o: number, d: number) => {
       v.setBigUint64(o, BigInt(d), true);
       return 8;
@@ -115,6 +125,8 @@ export const createPayload = (data: ICreatePayload[]) => {
   data.forEach(({ type, data: value }) => {
     if (type === "id") {
       offset += setters[type](view, offset, value as Uint8Array);
+    } else if (type === "uint64" || type === "int64") {
+      offset += setters[type](view, offset, value as number | bigint);
     } else {
       offset += setters[type](view, offset, value as number);
     }
