@@ -86,7 +86,17 @@ const PoolPositions: React.FC = () => {
                     <div className="text-muted-foreground text-sm">Pool share: {position.share}</div>
                   </div>
                 </div>
-                <ExternalLink className="text-muted-foreground h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Open pool info in explorer (adjust URL based on your explorer)
+                    const explorerUrl = `https://explorer.qubic.org/pool/${position.tokenA}-${position.tokenB}`;
+                    window.open(explorerUrl, "_blank", "noopener,noreferrer");
+                  }}
+                  className="text-muted-foreground hover:text-foreground opacity-0 transition-opacity group-hover:opacity-100"
+                >
+                  <ExternalLink className="h-5 w-5" />
+                </button>
               </div>
 
               {/* Stats Grid */}

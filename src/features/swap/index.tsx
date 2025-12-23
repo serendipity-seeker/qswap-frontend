@@ -88,9 +88,35 @@ const Swap: React.FC = () => {
 
   const handleTokenSelect = (token: TokenDisplay) => {
     if (selectingToken === "from") {
-      setFromToken(token);
+      // If selecting from token, ensure to token is valid (QUBIC-asset pairs only)
+      if (isQubic(token)) {
+        // From is QUBIC, to can be any asset
+        setFromToken(token);
+      } else if (isAsset(token)) {
+        // From is asset, to must be QUBIC
+        setFromToken(token);
+        if (!isQubic(toToken)) {
+          const qubicToken = tokens.find((t) => isQubic(t)) ?? defaultFrom;
+          setToToken(qubicToken);
+        }
+      }
     } else {
-      setToToken(token);
+      // If selecting to token, ensure from token is valid (QUBIC-asset pairs only)
+      if (isQubic(token)) {
+        // To is QUBIC, from must be an asset
+        setToToken(token);
+        if (!isAsset(fromToken)) {
+          const assetToken = tokens.find((t) => isAsset(t)) ?? defaultTo;
+          setFromToken(assetToken);
+        }
+      } else if (isAsset(token)) {
+        // To is asset, from must be QUBIC
+        setToToken(token);
+        if (!isQubic(fromToken)) {
+          const qubicToken = tokens.find((t) => isQubic(t)) ?? defaultFrom;
+          setFromToken(qubicToken);
+        }
+      }
     }
     setIsTokenModalOpen(false);
   };
@@ -367,7 +393,7 @@ const Swap: React.FC = () => {
                 <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
                   <Info className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
                   <p className="text-muted-foreground text-xs">
-                    QSWAP supports pools of QUBIC ↔ Token. For token↔token swaps, route through QUBIC.
+                    QSWAP supports pools of QUBIC ↔ Token.
                   </p>
                 </div>
               </motion.div>

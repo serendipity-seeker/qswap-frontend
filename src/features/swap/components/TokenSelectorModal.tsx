@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, TrendingUp } from "lucide-react";
 import type { TokenDisplay } from "@/shared/constants/tokens";
+import { fetchQubicPrice } from "@/shared/services/price.service";
+import { isQubic } from "@/shared/constants/tokens";
 
 interface TokenSelectorModalProps {
   isOpen: boolean;
@@ -19,6 +21,15 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
   selectedToken,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [qubicPrice, setQubicPrice] = useState<number>(0.15);
+
+  useEffect(() => {
+    const loadPrice = async () => {
+      const price = await fetchQubicPrice();
+      setQubicPrice(price);
+    };
+    loadPrice();
+  }, []);
 
   const filteredTokens = tokens.filter(
     (token) =>
@@ -46,7 +57,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed top-1/2 left-1/2 z-[var(--z-modal)] w-full max-w-md -translate-x-1/2 -translate-y-1/2"
           >
-            <div className="glass-effect m-4 overflow-hidden rounded-3xl shadow-2xl">
+            <div className="glass-effect m-4 overflow-hidden rounded-3xl shadow-2xl bg-background text-foreground">
               {/* Header */}
               <div className="border-border border-b p-6">
                 <div className="mb-4 flex items-center justify-between">
@@ -64,7 +75,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search name or paste address"
-                    className="bg-muted/50 focus:ring-primary-40 w-full rounded-xl py-3 pr-4 pl-10 transition-all outline-none focus:ring-2"
+                    className="bg-muted/50 text-foreground focus:ring-primary-40 w-full rounded-xl py-3 pr-4 pl-10 transition-all outline-none focus:ring-2 placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
@@ -101,7 +112,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => onSelectToken(token)}
-                      className={`hover:bg-muted/50 flex w-full items-center justify-between p-4 transition-all ${
+                      className={`hover:bg-muted/50 flex w-full items-center justify-between p-4 transition-all text-foreground ${
                         selectedToken.symbol === token.symbol ? "bg-primary-40/10" : ""
                       }`}
                     >
@@ -122,7 +133,11 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                       <div className="text-right">
                         <div className="font-medium">{token.balance}</div>
                         <div className="text-muted-foreground text-sm">
-                          ${(parseFloat(token.balance.replace(/,/g, "")) * 0.15).toFixed(2)}
+                          {isQubic(token) ? (
+                            <>${(parseFloat(token.balance.replace(/,/g, "")) * qubicPrice).toFixed(2)}</>
+                          ) : (
+                            <>${(parseFloat(token.balance.replace(/,/g, "")) * qubicPrice).toFixed(2)}</>
+                          )}
                         </div>
                       </div>
                     </motion.button>

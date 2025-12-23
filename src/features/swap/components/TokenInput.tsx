@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import type { TokenDisplay } from "@/shared/constants/tokens";
+import { fetchQubicPrice } from "@/shared/services/price.service";
 
 interface TokenInputProps {
   token: TokenDisplay;
@@ -12,6 +13,16 @@ interface TokenInputProps {
 }
 
 const TokenInput: React.FC<TokenInputProps> = ({ token, amount, onAmountChange, onTokenClick, readOnly = false }) => {
+  const [qubicPrice, setQubicPrice] = useState<number>(0.15);
+
+  useEffect(() => {
+    const loadPrice = async () => {
+      const price = await fetchQubicPrice();
+      setQubicPrice(price);
+    };
+    loadPrice();
+  }, []);
+
   const handleMaxClick = () => {
     onAmountChange(token.balance.replace(/,/g, ""));
   };
@@ -64,7 +75,7 @@ const TokenInput: React.FC<TokenInputProps> = ({ token, amount, onAmountChange, 
         </div>
         {amount && parseFloat(amount) > 0 && (
           <div className="text-muted-foreground text-xs whitespace-nowrap sm:text-sm">
-            ≈ ${(parseFloat(amount) * 0.15).toFixed(2)}
+            ≈ ${(parseFloat(amount) * qubicPrice).toFixed(2)}
           </div>
         )}
       </div>
