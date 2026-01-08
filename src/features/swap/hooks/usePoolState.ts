@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getPoolBasicState, getLiquidityOf, type PoolBasicState } from "@/shared/services/sc.service";
 
-export interface PoolState extends PoolBasicState {
+interface PoolState extends PoolBasicState {
   userLiquidity: number;
 }
 

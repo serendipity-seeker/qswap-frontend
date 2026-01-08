@@ -14,7 +14,7 @@ export interface RemoveLiquidityParams {
   slippage?: number; // percentage, e.g., 0.5 for 0.5%
 }
 
-export interface PoolState {
+interface PoolState {
   reservedQuAmount: number;
   reservedAssetAmount: number;
   totalLiquidity: number;
