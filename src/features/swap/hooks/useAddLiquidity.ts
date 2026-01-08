@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { settingsAtom } from "@/shared/store/settings";
 import { fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
-import { addLiquidity } from "@/shared/services/sc.service";
+import { addLiquidity, getLiquidityOf } from "@/shared/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface AddLiquidityParams {
@@ -42,6 +42,14 @@ export const useAddLiquidity = () => {
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
 
+        // Capture initial liquidity position
+        const initialLiquidity = await getLiquidityOf({
+          assetIssuer,
+          assetName,
+          investorID: wallet.publicKey,
+        });
+        const initialLiquidityAmount = initialLiquidity?.liquidity || 0;
+
         const slip = Math.max(0, slippage) / 100;
         const tx = await addLiquidity({
           sourceID: wallet.publicKey,
@@ -62,7 +70,25 @@ export const useAddLiquidity = () => {
         startMonitoring(
           taskId,
           {
-            checker: async () => false,
+            checker: async () => {
+              try {
+                // Check if liquidity position increased
+                const currentLiquidity = await getLiquidityOf({
+                  assetIssuer,
+                  assetName,
+                  investorID: wallet.publicKey,
+                });
+                const currentLiquidityAmount = currentLiquidity?.liquidity || 0;
+                
+                // If liquidity increased, operation was successful
+                const liquidityIncreased = currentLiquidityAmount > initialLiquidityAmount;
+                console.log(`Add liquidity checker: initial=${initialLiquidityAmount}, current=${currentLiquidityAmount}, success=${liquidityIncreased}`);
+                return liquidityIncreased;
+              } catch (error) {
+                console.error("Checker error:", error);
+                return false;
+              }
+            },
             onSuccess: async () => {
               toast.success("Liquidity added successfully");
             },
@@ -72,7 +98,7 @@ export const useAddLiquidity = () => {
             targetTick: tick,
             txHash: res?.transactionId,
           },
-          "v3",
+          "v1",
         );
 
         toast.success(`Add liquidity transaction sent: ${res?.transactionId ?? "OK"}`);

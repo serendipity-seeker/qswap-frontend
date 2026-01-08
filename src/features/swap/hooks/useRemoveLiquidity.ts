@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { settingsAtom } from "@/shared/store/settings";
 import { fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
-import { removeLiquidity } from "@/shared/services/sc.service";
+import { removeLiquidity, getLiquidityOf } from "@/shared/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface RemoveLiquidityParams {
@@ -50,6 +50,14 @@ export const useRemoveLiquidity = () => {
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
 
+        // Capture initial liquidity position
+        const initialLiquidity = await getLiquidityOf({
+          assetIssuer,
+          assetName,
+          investorID: wallet.publicKey,
+        });
+        const initialLiquidityAmount = initialLiquidity?.liquidity || 0;
+
         // Calculate expected amounts based on pool ratios
         const quAmountOut = Math.floor((poolState.reservedQuAmount * burnLiq) / poolState.totalLiquidity);
         const assetAmountOut = Math.floor((poolState.reservedAssetAmount * burnLiq) / poolState.totalLiquidity);
@@ -73,7 +81,29 @@ export const useRemoveLiquidity = () => {
         startMonitoring(
           taskId,
           {
-            checker: async () => false,
+            checker: async () => {
+              try {
+                // Check if liquidity position decreased
+                const currentLiquidity = await getLiquidityOf({
+                  assetIssuer,
+                  assetName,
+                  investorID: wallet.publicKey,
+                });
+                const currentLiquidityAmount = currentLiquidity?.liquidity || 0;
+                
+                // If liquidity decreased by expected amount, operation was successful
+                const liquidityDecreased = currentLiquidityAmount < initialLiquidityAmount;
+                const expectedFinalLiquidity = initialLiquidityAmount - burnLiq;
+                const isCorrectDecrease = Math.abs(currentLiquidityAmount - expectedFinalLiquidity) < 10; // Allow small rounding difference
+                
+                const success = liquidityDecreased && isCorrectDecrease;
+                console.log(`Remove liquidity checker: initial=${initialLiquidityAmount}, current=${currentLiquidityAmount}, expected=${expectedFinalLiquidity}, success=${success}`);
+                return success;
+              } catch (error) {
+                console.error("Checker error:", error);
+                return false;
+              }
+            },
             onSuccess: async () => {
               toast.success("Liquidity removed successfully");
             },
@@ -83,7 +113,7 @@ export const useRemoveLiquidity = () => {
             targetTick: tick,
             txHash: res?.transactionId,
           },
-          "v3",
+          "v1",
         );
 
         toast.success(`Remove liquidity transaction sent: ${res?.transactionId ?? "OK"}`);

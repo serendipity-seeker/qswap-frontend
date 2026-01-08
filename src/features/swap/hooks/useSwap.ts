@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { settingsAtom } from "@/shared/store/settings";
-import { fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
+import { fetchTickInfo, broadcastTx, fetchBalance, fetchAssetsBalance } from "@/shared/services/rpc.service";
 import { swapExactQuForAsset, swapExactAssetForQu, quoteExactQuInput, quoteExactAssetInput } from "@/shared/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
@@ -66,6 +66,13 @@ export const useSwap = () => {
             return;
           }
 
+          // Capture initial balance before swap
+          const initialAssetBalance = await fetchAssetsBalance(
+            wallet.publicKey,
+            toToken.symbol,
+            1 // QSWAP contract index
+          );
+
           const minOut = Math.max(0, Math.floor(quote.assetAmountOut * (1 - slip)));
           const tx = await swapExactQuForAsset({
             sourceID: wallet.publicKey,
@@ -84,7 +91,24 @@ export const useSwap = () => {
           startMonitoring(
             taskId,
             {
-              checker: async () => false,
+              checker: async () => {
+                try {
+                  // Check if asset balance increased
+                  const currentAssetBalance = await fetchAssetsBalance(
+                    wallet.publicKey,
+                    toToken.symbol,
+                    1
+                  );
+                  
+                  // If balance increased, swap was successful
+                  const balanceIncreased = currentAssetBalance > initialAssetBalance;
+                  console.log(`Swap checker: initial=${initialAssetBalance}, current=${currentAssetBalance}, success=${balanceIncreased}`);
+                  return balanceIncreased;
+                } catch (error) {
+                  console.error("Checker error:", error);
+                  return false;
+                }
+              },
               onSuccess: async () => {
                 toast.success(`Swapped ${amountInFloor} ${fromToken.symbol} for ${toToken.symbol}`);
               },
@@ -94,7 +118,7 @@ export const useSwap = () => {
               targetTick: tick,
               txHash: res?.transactionId,
             },
-            "v3",
+            "v1",
           );
 
           toast.success(`Swap transaction sent: ${res?.transactionId ?? "OK"}`);
@@ -110,6 +134,10 @@ export const useSwap = () => {
             toast.error("Failed to get quote");
             return;
           }
+
+          // Capture initial QU balance before swap
+          const initialBalance = await fetchBalance(wallet.publicKey);
+          const initialQuBalance = Number(initialBalance.balance || "0");
 
           const minOut = Math.max(0, Math.floor(quote.quAmountOut * (1 - slip)));
           const tx = await swapExactAssetForQu({
@@ -129,7 +157,22 @@ export const useSwap = () => {
           startMonitoring(
             taskId,
             {
-              checker: async () => false,
+              checker: async () => {
+                try {
+                  // Check if QU balance increased (accounting for tx fee)
+                  const currentBalance = await fetchBalance(wallet.publicKey);
+                  const currentQuBalance = Number(currentBalance.balance || "0");
+                  
+                  // Balance should increase by at least minOut minus some buffer for fees
+                  // We consider it successful if balance is higher than initial
+                  const balanceIncreased = currentQuBalance > initialQuBalance;
+                  console.log(`Swap checker: initial=${initialQuBalance}, current=${currentQuBalance}, success=${balanceIncreased}`);
+                  return balanceIncreased;
+                } catch (error) {
+                  console.error("Checker error:", error);
+                  return false;
+                }
+              },
               onSuccess: async () => {
                 toast.success(`Swapped ${amountInFloor} ${fromToken.symbol} for ${toToken.symbol}`);
               },
@@ -139,7 +182,7 @@ export const useSwap = () => {
               targetTick: tick,
               txHash: res?.transactionId,
             },
-            "v3",
+            "v1",
           );
 
           toast.success(`Swap transaction sent: ${res?.transactionId ?? "OK"}`);
