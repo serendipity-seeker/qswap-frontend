@@ -34,7 +34,7 @@ import { fetchQuerySC } from "./rpc.service";
 const qHelper = new QubicHelper();
 
 // Default kept as 12 for backwards compatibility; override via env.
-export const SC_INDEX = Number(import.meta.env.VITE_QSWAP_SC_INDEX || 12);
+export const SC_INDEX = Number(import.meta.env.VITE_QSWAP_SC_INDEX || 13);
 
 const getResponseValues = (res: any) => {
   if (!res.responseData) return null;
