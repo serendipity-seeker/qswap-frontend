@@ -46,7 +46,7 @@ export const useAddLiquidity = () => {
         const initialLiquidity = await getLiquidityOf({
           assetIssuer,
           assetName,
-          investorID: wallet.publicKey,
+          account: wallet.publicKey,
         });
         const initialLiquidityAmount = initialLiquidity?.liquidity || 0;
 
@@ -76,7 +76,7 @@ export const useAddLiquidity = () => {
                 const currentLiquidity = await getLiquidityOf({
                   assetIssuer,
                   assetName,
-                  investorID: wallet.publicKey,
+                  account: wallet.publicKey,
                 });
                 const currentLiquidityAmount = currentLiquidity?.liquidity || 0;
                 
