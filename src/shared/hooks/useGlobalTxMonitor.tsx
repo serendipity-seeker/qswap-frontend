@@ -135,7 +135,7 @@ const useGlobalTxMonitor = () => {
           stopMonitoring(taskId);
 
           if (approvedTxs && approvedTxs.length > 0) {
-            const tx = approvedTxs.find((tx) => tx.txId === task.txHash);
+            const tx = approvedTxs.find((tx) => tx.transaction.txId === task.txHash);
             if (tx) {
               await onSuccess();
             } else {
@@ -197,7 +197,7 @@ const useGlobalTxMonitor = () => {
           stopMonitoring(taskId);
 
           if (approvedTxs && approvedTxs.length > 0) {
-            const tx = approvedTxs.find((tx) => tx.txId === task.txHash);
+            const tx = approvedTxs.find((tx) => tx.transaction.txId === task.txHash);
             if (tx) {
               // Transaction was approved - assume success
               await onSuccess();
