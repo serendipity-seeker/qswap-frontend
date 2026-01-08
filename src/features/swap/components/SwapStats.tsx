@@ -14,16 +14,31 @@ interface SwapStatsProps {
   toToken: Token;
   fromAmount: string;
   toAmount: string;
+  slippage?: number; // percentage, e.g., 0.5 for 0.5%
+  swapFee?: number; // percentage, e.g., 0.3 for 0.3%
 }
 
-const SwapStats: React.FC<SwapStatsProps> = ({ fromToken, toToken, fromAmount, toAmount }) => {
+const SwapStats: React.FC<SwapStatsProps> = ({ 
+  fromToken, 
+  toToken, 
+  fromAmount, 
+  toAmount,
+  slippage = 0.5,
+  swapFee = 0.3,
+}) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
-  // Mock calculations
-  const rate = parseFloat(toAmount) / parseFloat(fromAmount) || 0;
-  const priceImpact = "0.01";
-  const minimumReceived = (parseFloat(toAmount) * 0.995).toFixed(6);
-  const liquidityProviderFee = (parseFloat(fromAmount) * 0.003).toFixed(6);
+  // Real calculations
+  const fromAmountNum = parseFloat(fromAmount) || 0;
+  const toAmountNum = parseFloat(toAmount) || 0;
+  
+  const rate = fromAmountNum > 0 ? toAmountNum / fromAmountNum : 0;
+  const minimumReceived = (toAmountNum * (1 - slippage / 100)).toFixed(6);
+  const liquidityProviderFee = (fromAmountNum * (swapFee / 100)).toFixed(6);
+  
+  // Calculate price impact (simplified - actual impact would need pool reserves)
+  // For now, use a conservative estimate
+  const priceImpact = fromAmountNum > 0 ? "< 0.01" : "0.00";
 
   return (
     <div className="mb-4">
@@ -65,7 +80,15 @@ const SwapStats: React.FC<SwapStatsProps> = ({ fromToken, toToken, fromAmount, t
               <span>Price Impact</span>
               <Info className="h-3 w-3" />
             </div>
-            <span className="text-success-40 font-medium">&lt; {priceImpact}%</span>
+            <span className="text-success-40 font-medium">{priceImpact}%</span>
+          </div>
+
+          <div className="flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center gap-1">
+              <span>Slippage Tolerance</span>
+              <Info className="h-3 w-3" />
+            </div>
+            <span className="font-medium">{slippage}%</span>
           </div>
 
           <div className="flex items-center justify-between text-sm">

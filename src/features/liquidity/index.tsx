@@ -256,7 +256,7 @@ const Liquidity: React.FC = () => {
                   </div>
 
                   {/* Pool Info */}
-                  {amountA && amountB && (
+                  {amountA && amountB && poolState && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
@@ -264,7 +264,11 @@ const Liquidity: React.FC = () => {
                     >
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Pool Share</span>
-                        <span className="font-medium">0.01%</span>
+                        <span className="font-medium">
+                          {poolState.totalLiquidity > 0
+                            ? ((parseFloat(amountA) / (poolState.reservedQuAmount + parseFloat(amountA))) * 100).toFixed(4)
+                            : "100.00"}%
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">
@@ -278,6 +282,16 @@ const Liquidity: React.FC = () => {
                         </span>
                         <span className="font-medium">{(parseFloat(amountB) / parseFloat(amountA)).toFixed(6)}</span>
                       </div>
+                      {poolState.totalLiquidity > 0 && (
+                        <>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Current Pool Reserves</span>
+                            <span className="font-medium">
+                              {poolState.reservedQuAmount.toLocaleString()} / {poolState.reservedAssetAmount.toLocaleString()}
+                            </span>
+                          </div>
+                        </>
+                      )}
                     </motion.div>
                   )}
 

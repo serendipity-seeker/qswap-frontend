@@ -334,6 +334,7 @@ const Swap: React.FC = () => {
                     toToken={toToken}
                     fromAmount={fromAmount}
                     toAmount={toAmount || "0"}
+                    slippage={Number(slippage) || 0.5}
                   />
                 </motion.div>
               )}
