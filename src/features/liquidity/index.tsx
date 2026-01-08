@@ -7,15 +7,14 @@ import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { Button, SEO } from "@/shared/components/custom";
 import { DEFAULT_TOKENS, isAsset, isQubic, QUBIC_TOKEN, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { fetchAssetsBalance, fetchBalance, fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
-import { addLiquidity, removeLiquidity, getLiquidityOf, getPoolBasicState } from "@/shared/services/sc.service";
-import { settingsAtom } from "@/shared/store/settings";
-import { useAtom } from "jotai";
+import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
+import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/features/swap/hooks";
 import { toast } from "sonner";
 
 const Liquidity: React.FC = () => {
-  const { wallet, connected, getSignedTx, toggleConnectModal } = useQubicConnect();
-  const [settings] = useAtom(settingsAtom);
+  const { wallet, connected, toggleConnectModal } = useQubicConnect();
+  const { handleAddLiquidity } = useAddLiquidity();
+  const { handleRemoveLiquidity } = useRemoveLiquidity();
 
   const [mode, setMode] = useState<"add" | "remove">("add");
   const [tokens, setTokens] = useState<TokenDisplay[]>(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
@@ -33,9 +32,14 @@ const Liquidity: React.FC = () => {
   const [amountB, setAmountB] = useState("");
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
   const [selectingToken, setSelectingToken] = useState<"A" | "B">("B");
-  const [userLiquidity, setUserLiquidity] = useState<number>(0);
   const [removePercentage, setRemovePercentage] = useState<number>(0);
-  const [poolState, setPoolState] = useState<{ reservedQuAmount: number; reservedAssetAmount: number; totalLiquidity: number } | null>(null);
+
+  // Use the pool state hook
+  const { poolState, refetch: refetchPoolState } = usePoolState(
+    isAsset(tokenB) ? tokenB.issuer : undefined,
+    isAsset(tokenB) ? tokenB.assetName : undefined,
+    wallet?.publicKey,
+  );
 
   // Load balances when wallet changes
   useEffect(() => {
@@ -71,52 +75,10 @@ const Liquidity: React.FC = () => {
     };
   }, [wallet?.publicKey]);
 
-  // Load user liquidity and pool state when tokenB or wallet changes
+  // Refetch pool state when tokenB changes
   useEffect(() => {
-    let cancelled = false;
-
-    const loadLiquidity = async () => {
-      if (!wallet?.publicKey || !isAsset(tokenB)) {
-        setUserLiquidity(0);
-        setPoolState(null);
-        return;
-      }
-
-      try {
-        const [liquidityResult, poolResult] = await Promise.all([
-          getLiquidityOf({
-            assetIssuer: tokenB.issuer,
-            assetName: tokenB.assetName,
-            account: wallet.publicKey,
-          }),
-          getPoolBasicState({
-            assetIssuer: tokenB.issuer,
-            assetName: tokenB.assetName,
-          }),
-        ]);
-
-        if (!cancelled) {
-          setUserLiquidity(liquidityResult?.liquidity || 0);
-          setPoolState({
-            reservedQuAmount: poolResult.reservedQuAmount,
-            reservedAssetAmount: poolResult.reservedAssetAmount,
-            totalLiquidity: poolResult.totalLiquidity,
-          });
-        }
-      } catch (e) {
-        console.error(e);
-        if (!cancelled) {
-          setUserLiquidity(0);
-          setPoolState(null);
-        }
-      }
-    };
-
-    loadLiquidity();
-    return () => {
-      cancelled = true;
-    };
-  }, [wallet?.publicKey, tokenB]);
+    refetchPoolState();
+  }, [tokenB, refetchPoolState]);
 
   const handleTokenSelect = (token: TokenDisplay) => {
     if (selectingToken === "A") {
@@ -128,7 +90,7 @@ const Liquidity: React.FC = () => {
     setIsTokenModalOpen(false);
   };
 
-  const handleAddLiquidity = async () => {
+  const onAddLiquidity = async () => {
     if (!connected || !wallet?.publicKey) {
       toggleConnectModal();
       return;
@@ -138,40 +100,28 @@ const Liquidity: React.FC = () => {
       return;
     }
 
-    const quDesired = Math.floor(Number(amountA));
-    const assetDesired = Math.floor(Number(amountB));
+    const quDesired = Number(amountA);
+    const assetDesired = Number(amountB);
     if (!Number.isFinite(quDesired) || !Number.isFinite(assetDesired) || quDesired <= 0 || assetDesired <= 0) {
       toast.error("Enter valid amounts");
       return;
     }
 
-    try {
-      const tickInfo = await fetchTickInfo();
-      const tick = tickInfo.tick + settings.tickOffset;
+    await handleAddLiquidity({
+      assetIssuer: tokenB.issuer,
+      assetName: tokenB.assetName,
+      assetAmountDesired: assetDesired,
+      quAmountDesired: quDesired,
+      slippage: 0.5,
+    });
 
-      // Simple 0.5% slippage guard by default.
-      const slip = 0.005;
-      const tx = await addLiquidity({
-        sourceID: wallet.publicKey,
-        assetIssuer: tokenB.issuer,
-        assetName: tokenB.assetName,
-        assetAmountDesired: assetDesired,
-        quAmountDesired: quDesired,
-        quAmountMin: Math.max(0, Math.floor(quDesired * (1 - slip))),
-        assetAmountMin: Math.max(0, Math.floor(assetDesired * (1 - slip))),
-        tick,
-      });
-
-      const signed = await getSignedTx(tx);
-      const res = await broadcastTx(signed.tx);
-      toast.success(`Add liquidity sent: ${res?.transactionId ?? "OK"}`);
-    } catch (e) {
-      console.error(e);
-      toast.error((e as Error)?.message || "Add liquidity failed");
-    }
+    // Clear inputs and refetch pool state on success
+    setAmountA("");
+    setAmountB("");
+    setTimeout(() => refetchPoolState(), 2000);
   };
 
-  const handleRemoveLiquidity = async () => {
+  const onRemoveLiquidity = async () => {
     if (!connected || !wallet?.publicKey) {
       toggleConnectModal();
       return;
@@ -180,47 +130,34 @@ const Liquidity: React.FC = () => {
       toast.error("Select an asset token (QSWAP pools are QUBIC/Token).");
       return;
     }
-    if (!poolState || userLiquidity <= 0) {
+    if (!poolState || poolState.userLiquidity <= 0) {
       toast.error("No liquidity to remove");
       return;
     }
 
-    const burnLiquidity = Math.floor((userLiquidity * removePercentage) / 100);
-    if (burnLiquidity <= 0) {
+    const burnLiq = Math.floor((poolState.userLiquidity * removePercentage) / 100);
+    if (burnLiq <= 0) {
       toast.error("Select an amount to remove");
       return;
     }
 
-    try {
-      const tickInfo = await fetchTickInfo();
-      const tick = tickInfo.tick + settings.tickOffset;
-
-      // Calculate expected amounts based on pool ratios
-      const quAmountOut = Math.floor((poolState.reservedQuAmount * burnLiquidity) / poolState.totalLiquidity);
-      const assetAmountOut = Math.floor((poolState.reservedAssetAmount * burnLiquidity) / poolState.totalLiquidity);
-
-      // 0.5% slippage guard
-      const slip = 0.005;
-      const tx = await removeLiquidity({
-        sourceID: wallet.publicKey,
+    await handleRemoveLiquidity(
+      {
         assetIssuer: tokenB.issuer,
         assetName: tokenB.assetName,
-        burnLiquidity,
-        quAmountMin: Math.max(0, Math.floor(quAmountOut * (1 - slip))),
-        assetAmountMin: Math.max(0, Math.floor(assetAmountOut * (1 - slip))),
-        tick,
-      });
+        burnLiquidity: burnLiq,
+        slippage: 0.5,
+      },
+      {
+        reservedQuAmount: poolState.reservedQuAmount,
+        reservedAssetAmount: poolState.reservedAssetAmount,
+        totalLiquidity: poolState.totalLiquidity,
+      },
+    );
 
-      const signed = await getSignedTx(tx);
-      const res = await broadcastTx(signed.tx);
-      toast.success(`Remove liquidity sent: ${res?.transactionId ?? "OK"}`);
-      
-      // Reset remove percentage
-      setRemovePercentage(0);
-    } catch (e) {
-      console.error(e);
-      toast.error((e as Error)?.message || "Remove liquidity failed");
-    }
+    // Reset remove percentage and refetch pool state
+    setRemovePercentage(0);
+    setTimeout(() => refetchPoolState(), 2000);
   };
 
   return (
@@ -348,7 +285,7 @@ const Liquidity: React.FC = () => {
                   <Button
                     variant="primary"
                     size="lg"
-                    onClick={handleAddLiquidity}
+                    onClick={onAddLiquidity}
                     disabled={!amountA || !amountB || parseFloat(amountA) <= 0 || parseFloat(amountB) <= 0}
                     fullWidth
                   >
@@ -390,7 +327,7 @@ const Liquidity: React.FC = () => {
                         ))}
                       </div>
                       
-                      {userLiquidity === 0 && (
+                      {poolState?.userLiquidity === 0 && (
                         <div className="text-muted-foreground mt-2 text-center text-sm">
                           No liquidity position found for this pool
                         </div>
@@ -403,16 +340,16 @@ const Liquidity: React.FC = () => {
                     <div className="flex justify-between">
                       <span className="font-medium">{tokenA.symbol}</span>
                       <span className="font-bold">
-                        {poolState && userLiquidity > 0
-                          ? ((poolState.reservedQuAmount * (userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
+                        {poolState && poolState.userLiquidity > 0
+                          ? ((poolState.reservedQuAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
                           : "0.00"}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">{tokenB.symbol}</span>
                       <span className="font-bold">
-                        {poolState && userLiquidity > 0
-                          ? ((poolState.reservedAssetAmount * (userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
+                        {poolState && poolState.userLiquidity > 0
+                          ? ((poolState.reservedAssetAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
                           : "0.00"}
                       </span>
                     </div>
@@ -421,11 +358,11 @@ const Liquidity: React.FC = () => {
                   <Button 
                     variant="danger" 
                     size="lg" 
-                    onClick={handleRemoveLiquidity} 
-                    disabled={!connected || userLiquidity <= 0 || removePercentage <= 0}
+                    onClick={onRemoveLiquidity} 
+                    disabled={!connected || !poolState || poolState.userLiquidity <= 0 || removePercentage <= 0}
                     fullWidth
                   >
-                    {!connected ? "Connect wallet" : userLiquidity <= 0 ? "No liquidity to remove" : removePercentage <= 0 ? "Select amount" : "Remove Liquidity"}
+                    {!connected ? "Connect wallet" : !poolState || poolState.userLiquidity <= 0 ? "No liquidity to remove" : removePercentage <= 0 ? "Select amount" : "Remove Liquidity"}
                   </Button>
                 </>
               )}
