@@ -4,20 +4,53 @@ import { useTxMonitor } from "@/shared/store/txMonitor";
 import { useAtomValue } from "jotai";
 import { settingsAtom } from "@/shared/store/settings";
 import { transferShareManagementRights } from "@/shared/services/sc.service";
-import { fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
+import { fetchTickInfo, broadcastTx, fetchAssetsBalance } from "@/shared/services/rpc.service";
+import { DEFAULT_TOKENS, isAsset } from "@/shared/constants/tokens";
 import { toast } from "sonner";
 
 export interface TransferManagementRightsParams {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   numberOfShares: number;
   newManagingContractIndex: number;
+  fallback?: () => Promise<void>;
 }
 
 export const useTransferManagementRights = () => {
   const { wallet, connected, toggleConnectModal, getSignedTx } = useQubicConnect();
   const { startMonitoring } = useTxMonitor();
   const settings = useAtomValue(settingsAtom);
+
+  /**
+   * Check if the target contract has received the expected amount of shares
+   * This is used as the checker function for v1 transaction monitoring
+   */
+  const checkTransferShareRights = useCallback(
+    async (assetNameStr: string, contractIndex: number, expectedAmount: number): Promise<boolean> => {
+      if (!wallet) {
+        console.error("Please connect your wallet");
+        return false;
+      }
+
+      try {
+        const targetContractCurrentAmount = await fetchAssetsBalance(
+          wallet.publicKey,
+          assetNameStr,
+          contractIndex
+        );
+
+        const success = targetContractCurrentAmount >= expectedAmount;
+        console.log(
+          `Transfer Share Rights checker: targetContract=${contractIndex}, expected=${expectedAmount}, current=${targetContractCurrentAmount}, success=${success}`
+        );
+        return success;
+      } catch (error) {
+        console.error("Error checking transfer share rights:", error);
+        return false;
+      }
+    },
+    [wallet]
+  );
 
   const handleTransferManagementRights = useCallback(
     async (params: TransferManagementRightsParams) => {
@@ -32,6 +65,17 @@ export const useTransferManagementRights = () => {
         // Get current tick
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
+
+        // Find asset symbol for balance checking
+        const assetToken = DEFAULT_TOKENS.filter(isAsset).find((token) => token.assetName === params.assetName);
+        const assetSymbol = assetToken?.symbol || `Asset_${params.assetName}`;
+
+        // Get current balance in target contract
+        const targetContractOriginAmount = await fetchAssetsBalance(
+          wallet.publicKey,
+          assetSymbol,
+          params.newManagingContractIndex
+        );
 
         // Create transaction
         const tx = await transferShareManagementRights({
@@ -61,21 +105,28 @@ export const useTransferManagementRights = () => {
 
         toast.success("Transaction broadcasted!");
 
-        // Monitor transaction
+        // Monitor transaction with balance verification
         const taskId = `transfer-mgmt-${Date.now()}`;
+        const expectedAmount = targetContractOriginAmount + params.numberOfShares;
+
         startMonitoring(
           taskId,
           {
             checker: async () => {
-              // For management rights transfer, we can check if the transaction was included
-              // This is a simple check - in v1 strategy, we'd need to verify the actual state change
-              // For now, we'll rely on tick confirmation
-              return true;
+              return await checkTransferShareRights(
+                assetSymbol,
+                params.newManagingContractIndex,
+                expectedAmount
+              );
             },
             onSuccess: async () => {
               toast.success(
-                `Successfully transferred management rights for ${params.numberOfShares} shares to contract ${params.newManagingContractIndex}`
+                `Successfully transferred management rights for ${params.numberOfShares} ${assetSymbol} shares to contract ${params.newManagingContractIndex}`
               );
+              // Execute fallback callback if provided (e.g., refresh UI)
+              if (params.fallback) {
+                await params.fallback();
+              }
             },
             onFailure: async () => {
               toast.error("Management rights transfer failed");
@@ -90,9 +141,9 @@ export const useTransferManagementRights = () => {
         toast.error((error as Error).message || "Failed to transfer management rights");
       }
     },
-    [connected, wallet, settings, getSignedTx, toggleConnectModal, startMonitoring]
+    [connected, wallet, settings, getSignedTx, toggleConnectModal, startMonitoring, checkTransferShareRights]
   );
 
-  return { handleTransferManagementRights };
+  return { handleTransferManagementRights, checkTransferShareRights };
 };
 
