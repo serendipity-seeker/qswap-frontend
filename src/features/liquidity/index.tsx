@@ -8,7 +8,7 @@ import { Button, SEO } from "@/shared/components/custom";
 import { DEFAULT_TOKENS, isAsset, isQubic, QUBIC_TOKEN, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
-import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/features/swap/hooks";
+import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/core/hooks";
 import { toast } from "sonner";
 
 const Liquidity: React.FC = () => {

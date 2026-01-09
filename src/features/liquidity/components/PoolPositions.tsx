@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, Loader2 } from "lucide-react";
-import { useUserPositions } from "../hooks/useUserPositions";
+import { useUserPositions } from "@/core/hooks";
 import { QUBIC_TOKEN } from "@/shared/constants/tokens";
 
 const PoolPositions: React.FC = () => {

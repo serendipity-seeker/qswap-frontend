@@ -5,6 +5,7 @@ import { ROUTES } from "@/core/constants";
 import Home from "@/features/home";
 import Swap from "@/features/swap";
 import Liquidity from "@/features/liquidity";
+import AssetManagement from "@/features/asset";
 import Showcase from "@/features/showcase";
 
 console.log({ ROUTES });
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.LIQUIDITY,
         element: <Liquidity />,
+      },
+      {
+        path: ROUTES.ASSET,
+        element: <AssetManagement />,
       },
       {
         path: ROUTES.SHOWCASE,

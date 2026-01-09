@@ -10,7 +10,7 @@ import { Button, SEO } from "@/shared/components/custom";
 import { DEFAULT_TOKENS, isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
-import { useSwap } from "@/features/swap/hooks";
+import { useSwap } from "@/core/hooks";
 import { toast } from "sonner";
 
 const Swap: React.FC = () => {

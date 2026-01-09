@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { useTopPools } from "../hooks/useTopPools";
+import { useTopPools } from "@/core/hooks";
 import { QUBIC_TOKEN } from "@/shared/constants/tokens";
 
 const PoolStats: React.FC = () => {
