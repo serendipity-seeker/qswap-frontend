@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 export interface CreatePoolParams {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
 }
 
 export const useCreatePool = () => {

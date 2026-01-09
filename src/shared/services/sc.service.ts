@@ -96,7 +96,7 @@ export type PoolBasicState = {
   totalLiquidity: number;
 };
 
-export const getPoolBasicState = async (params: { assetIssuer: string; assetName: number }): Promise<PoolBasicState> => {
+export const getPoolBasicState = async (params: { assetIssuer: string; assetName: bigint }): Promise<PoolBasicState> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
     { data: params.assetName, type: "uint64" },
@@ -122,7 +122,7 @@ export const getPoolBasicState = async (params: { assetIssuer: string; assetName
 
 export const getLiquidityOf = async (params: {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   account: string;
 }): Promise<{ liquidity: number } | null> => {
   const payload = createPayload([
@@ -145,7 +145,7 @@ export const getLiquidityOf = async (params: {
 
 export const quoteExactQuInput = async (params: {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   quAmountIn: number;
 }): Promise<{ assetAmountOut: number } | null> => {
   const payload = createPayload([
@@ -168,7 +168,7 @@ export const quoteExactQuInput = async (params: {
 
 export const quoteExactQuOutput = async (params: {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   quAmountOut: number;
 }): Promise<{ assetAmountIn: number } | null> => {
   const payload = createPayload([
@@ -191,7 +191,7 @@ export const quoteExactQuOutput = async (params: {
 
 export const quoteExactAssetInput = async (params: {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   assetAmountIn: number;
 }): Promise<{ quAmountOut: number } | null> => {
   const payload = createPayload([
@@ -214,7 +214,7 @@ export const quoteExactAssetInput = async (params: {
 
 export const quoteExactAssetOutput = async (params: {
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   assetAmountOut: number;
 }): Promise<{ quAmountIn: number } | null> => {
   const payload = createPayload([
@@ -254,7 +254,7 @@ export const getInvestRewardsInfo = async (): Promise<{ investRewardsFee: number
 
 export const issueAsset = async (params: {
   sourceID: string;
-  assetName: number;
+  assetName: bigint;
   numberOfShares: number;
   unitOfMeasurement: number;
   numberOfDecimalPlaces: number;
@@ -274,7 +274,7 @@ export const issueAsset = async (params: {
 export const transferShareOwnershipAndPossession = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   newOwnerAndPossessor: string;
   amount: number;
   tick: number;
@@ -293,7 +293,7 @@ export const transferShareOwnershipAndPossession = async (params: {
 export const createPool = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   tick: number;
   feeQu?: number;
 }) => {
@@ -308,7 +308,7 @@ export const createPool = async (params: {
 export const addLiquidity = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   assetAmountDesired: number;
   quAmountDesired: number;
   quAmountMin: number;
@@ -329,7 +329,7 @@ export const addLiquidity = async (params: {
 export const removeLiquidity = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   burnLiquidity: number;
   quAmountMin: number;
   assetAmountMin: number;
@@ -348,7 +348,7 @@ export const removeLiquidity = async (params: {
 export const swapExactQuForAsset = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   quAmountIn: number;
   assetAmountOutMin: number;
   tick: number;
@@ -364,7 +364,7 @@ export const swapExactQuForAsset = async (params: {
 export const swapQuForExactAsset = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   quAmountInMax: number;
   assetAmountOut: number;
   tick: number;
@@ -381,7 +381,7 @@ export const swapQuForExactAsset = async (params: {
 export const swapExactAssetForQu = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   assetAmountIn: number;
   quAmountOutMin: number;
   tick: number;
@@ -399,7 +399,7 @@ export const swapExactAssetForQu = async (params: {
 export const swapAssetForExactQu = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   assetAmountInMax: number;
   quAmountOut: number;
   tick: number;

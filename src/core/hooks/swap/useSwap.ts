@@ -10,12 +10,12 @@ import { useTxMonitor } from "@/shared/store/txMonitor";
 export interface SwapParams {
   fromToken: {
     issuer: string;
-    assetName: number;
+    assetName: bigint;
     symbol: string;
   };
   toToken: {
     issuer: string;
-    assetName: number;
+    assetName: bigint;
     symbol: string;
   };
   amountIn: number;

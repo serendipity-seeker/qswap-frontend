@@ -4,12 +4,12 @@ import { quoteExactQuInput, quoteExactQuOutput, quoteExactAssetInput, quoteExact
 export interface QuoteParams {
   fromToken: {
     issuer: string;
-    assetName: number;
+    assetName: bigint;
     symbol: string;
   };
   toToken: {
     issuer: string;
-    assetName: number;
+    assetName: bigint;
     symbol: string;
   };
   amount: number;

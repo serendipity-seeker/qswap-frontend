@@ -6,9 +6,10 @@ import { settingsAtom } from "@/shared/store/settings";
 import { issueAsset } from "@/shared/services/sc.service";
 import { fetchTickInfo, broadcastTx, fetchAssetsOwnership } from "@/shared/services/rpc.service";
 import { toast } from "sonner";
+import { assetNameConvert } from "@/shared/utils";
 
 export interface IssueAssetParams {
-  assetName: number;
+  assetName: bigint;
   numberOfShares: number;
   unitOfMeasurement: number;
   numberOfDecimalPlaces: number;
@@ -77,7 +78,7 @@ export const useIssueAsset = () => {
               
               // Also check if the specific asset exists
               const hasAsset = currentAssets.some(
-                (asset) => asset.data.issuedAsset.assetName === params.assetName
+                (asset) => asset.assetName === assetNameConvert(params.assetName)
               );
 
               console.log(
