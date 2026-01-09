@@ -422,7 +422,7 @@ export const setInvestRewardsInfo = async (params: { sourceID: string; newInvest
 export const transferShareManagementRights = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: number;
+  assetName: bigint;
   numberOfShares: number;
   newManagingContractIndex: number;
   tick: number;

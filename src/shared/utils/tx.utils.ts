@@ -147,15 +147,45 @@ export const generateSeed = (): string => {
   }
   return seed;
 };
+/**
+ * Converts an asset name between string <-> number representation.
+ * - If input is a string: encodes as ASCII bytes in *little-endian* order (first char is lowest byte).
+ * - If input is a number: decodes as ASCII bytes in *little-endian* order (lowest byte is first char),
+ *   and stops at the first null-byte (0), to avoid doubling/trailing chars.
+ */
+export function assetNameConvert(input: string | bigint): bigint | string {
+  // String → BigInt
+  if (typeof input === "string") {
+    if (input.length > 7) {
+      throw new Error("Input string is too long");
+    }
 
-export const assetNameConvert = (input: string): number => {
-  if (input.length > 7) {
-    throw new Error("Input string is too long");
+    const buffer = new ArrayBuffer(8);
+    const view = new DataView(buffer);
+
+    for (let i = 0; i < input.length; i++) {
+      view.setUint8(i, input.charCodeAt(i));
+    }
+
+    return view.getBigUint64(0, true); // little-endian
   }
-  const buffer = new ArrayBuffer(8);
-  const view = new DataView(buffer);
-  for (let i = 0; i < Math.min(input.length, 8); i++) {
-    view.setUint8(i, input.charCodeAt(i));
+
+  // BigInt → String
+  if (typeof input === "bigint") {
+    const buffer = new ArrayBuffer(8);
+    const view = new DataView(buffer);
+
+    view.setBigUint64(0, input, true);
+
+    let result = "";
+    for (let i = 0; i < 8; i++) {
+      const charCode = view.getUint8(i);
+      if (charCode === 0) break;
+      result += String.fromCharCode(charCode);
+    }
+
+    return result;
   }
-  return Number(view.getBigUint64(0, true));
-};
+
+  throw new Error("Invalid input type");
+}

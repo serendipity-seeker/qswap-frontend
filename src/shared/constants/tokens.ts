@@ -6,7 +6,7 @@ export type AssetToken = {
   name: string;
   icon: string;
   issuer: string;
-  assetName: number; // uint64 name encoded, per QX asset rules
+  assetName: bigint; // uint64 name encoded, per QX asset rules
 };
 
 export type Token = AssetToken;
@@ -18,7 +18,7 @@ export const QUBIC_TOKEN: AssetToken = {
   name: "Qubic",
   icon: "/assets/qubic-coin.png",
   issuer: "",
-  assetName: 0,
+  assetName: 0n,
 };
 
 // Curated default list (derived from `public/assets/asset_<SYMBOL>-<ISSUER>_logo_dark.png`)
@@ -31,7 +31,7 @@ export const DEFAULT_TOKENS: Token[] = [
     icon:
       "/assets/asset_GARTH-GARTHFANXMPXMDPEZFQPWFPYMHOAWTKILINCTRMVLFFVATKVJRKEDYXGHJBF_logo_dark.png",
     issuer: "GARTHFANXMPXMDPEZFQPWFPYMHOAWTKILINCTRMVLFFVATKVJRKEDYXGHJBF",
-    assetName: assetNameConvert("GARTH"),
+    assetName: assetNameConvert("GARTH") as bigint,
   },
   {
     kind: "asset",
@@ -40,7 +40,7 @@ export const DEFAULT_TOKENS: Token[] = [
     icon:
       "/assets/asset_CFB-CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL_logo_dark.png",
     issuer: "CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL",
-    assetName: assetNameConvert("CFB"),
+    assetName: assetNameConvert("CFB") as bigint,
   },
   {
     kind: "asset",
@@ -49,7 +49,7 @@ export const DEFAULT_TOKENS: Token[] = [
     icon:
       "/assets/asset_QCAP-QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG_logo_dark.png",
     issuer: "QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG",
-    assetName: assetNameConvert("QCAP"),
+    assetName: assetNameConvert("QCAP") as bigint,
   },
 ];
 

@@ -36,7 +36,7 @@ const AssetManagement: React.FC = () => {
     }
 
     const assetNameValue = valueOfAssetName(assetName.toUpperCase());
-    if (assetNameValue === 0) {
+    if (assetNameValue === 0n) {
       alert("Invalid asset name. Must be 1-7 uppercase letters.");
       return;
     }
@@ -55,7 +55,7 @@ const AssetManagement: React.FC = () => {
     }
 
     const assetNameValue = valueOfAssetName(poolAssetName.toUpperCase());
-    if (assetNameValue === 0) {
+    if (assetNameValue === 0n) {
       alert("Invalid asset name. Must be 1-7 uppercase letters.");
       return;
     }
@@ -72,7 +72,7 @@ const AssetManagement: React.FC = () => {
     }
 
     const assetNameValue = valueOfAssetName(transferAssetName.toUpperCase());
-    if (assetNameValue === 0) {
+    if (assetNameValue === 0n) {
       alert("Invalid asset name. Must be 1-7 uppercase letters.");
       return;
     }
@@ -82,6 +82,14 @@ const AssetManagement: React.FC = () => {
       assetName: assetNameValue,
       numberOfShares: parseInt(transferShares),
       newManagingContractIndex: parseInt(newContractIndex),
+      fallback: async () => {
+        // Reset form after successful transfer
+        setTransferAssetIssuer("");
+        setTransferAssetName("");
+        setTransferShares("");
+        setNewContractIndex("");
+        console.log("Transfer completed successfully, form reset");
+      },
     });
   };
 
