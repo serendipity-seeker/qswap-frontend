@@ -312,7 +312,7 @@ const Swap: React.FC = () => {
               </div>
 
               {/* To Token */}
-              <div className="mb-4">
+              <div className="mb-4 -mt-8">
                 <div className="text-muted-foreground mb-2 text-sm">You receive</div>
                 <TokenInput
                   token={toToken}

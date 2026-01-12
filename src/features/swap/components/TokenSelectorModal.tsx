@@ -47,7 +47,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[var(--z-modal)] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-modal bg-black/60 backdrop-blur-sm"
           />
 
           {/* Modal */}
@@ -55,7 +55,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-1/2 left-1/2 z-[var(--z-modal)] w-full max-w-md -translate-x-1/2 -translate-y-1/2"
+            className="fixed top-1/2 left-1/2 z-modal w-full max-w-md -translate-x-1/2 -translate-y-1/2"
           >
             <div className="glass-effect m-4 overflow-hidden rounded-3xl shadow-2xl bg-background text-foreground">
               {/* Header */}

@@ -270,7 +270,7 @@ const Home: React.FC = () => {
                     className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 text-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl">
+                      <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div>
@@ -320,7 +320,7 @@ const Home: React.FC = () => {
                       className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
                     >
                       <div className="flex items-start gap-3">
-                        <div className="bg-primary/10 text-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl">
+                        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                           <Icon className="h-5 w-5" />
                         </div>
                         <div>
