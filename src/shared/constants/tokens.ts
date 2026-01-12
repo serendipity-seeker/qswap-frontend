@@ -44,12 +44,39 @@ export const DEFAULT_TOKENS: Token[] = [
   },
   {
     kind: "asset",
-    symbol: "QCAP",
-    name: "QCAP Token",
+    symbol: "CODED",
+    name: "CODED Token",
     icon:
-      "/assets/asset_QCAP-QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG_logo_dark.png",
-    issuer: "QCAPWMYRSHLBJHSTTZQVCIBARVOASKDENASAKNOBRGPFWWKRCUVUAXYEZVOG",
-    assetName: assetNameConvert("QCAP") as bigint,
+      "/assets/asset_CODED-CODEDBUUDDYHECBVSUONSSWTOJRCLZSWHFHZIUWVFGNWVCKIWJCSDSWGQAAI_logo_dark.png",
+    issuer: "CODEDBUUDDYHECBVSUONSSWTOJRCLZSWHFHZIUWVFGNWVCKIWJCSDSWGQAAI",
+    assetName: assetNameConvert("CODED") as bigint,
+  },
+  {
+    kind: "asset",
+    symbol: "PORTAL",
+    name: "PORTAL Token",
+    icon:
+      "/assets/asset_PORTAL-IQUGNVFDQSLTXFJSIOPPNPZINSCDQTJVJWGRPWRTFFXMXSJIAASXOBFFBERK_logo_dark.png",
+    issuer: "IQUGNVFDQSLTXFJSIOPPNPZINSCDQTJVJWGRPWRTFFXMXSJIAASXOBFFBERK",
+    assetName: assetNameConvert("PORTAL") as bigint,
+  },
+  {
+    kind: "asset",
+    symbol: "QXMR",
+    name: "QXMR Token",
+    icon:
+      "/assets/asset_QXMR-QXMRTKAIIGLUREPIQPCMHCKWSIPDTUYFCFNYXQLTECSUJVYEMMDELBMDOEYB_logo_dark.png",
+    issuer: "QXMRTKAIIGLUREPIQPCMHCKWSIPDTUYFCFNYXQLTECSUJVYEMMDELBMDOEYB",
+    assetName: assetNameConvert("QXMR") as bigint,
+  },
+  {
+    kind: "asset",
+    symbol: "QXTRADE",
+    name: "QXTRADE Token",
+    icon:
+      "/assets/asset_QXTRADE-QXTRMABNAJWNQBKYYNUNVYAJAQMDLIKOFXNGTRVYRDQMNZNNMZDGBDNGYMRM_logo_dark.png",
+    issuer: "QXTRMABNAJWNQBKYYNUNVYAJAQMDLIKOFXNGTRVYRDQMNZNNMZDGBDNGYMRM",
+    assetName: assetNameConvert("QXTRADE") as bigint,
   },
 ];
 
