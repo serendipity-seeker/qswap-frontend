@@ -40,8 +40,8 @@ const Swap: React.FC = () => {
 
   // Keep selected tokens in sync when token list updates (balances refresh)
   useEffect(() => {
-    setFromToken((prev) => tokens.find((t) => t.assetName === prev.assetName) ?? defaultFrom);
-    setToToken((prev) => tokens.find((t) => t.assetName === prev.assetName) ?? defaultTo);
+    setFromToken((prev) => tokens.find((t) => t.assetName === prev?.assetName) ?? defaultFrom);
+    setToToken((prev) => tokens.find((t) => t.assetName === prev?.assetName) ?? defaultTo);
   }, [tokens, defaultFrom, defaultTo]);
 
   // Load balances when wallet changes

@@ -10,7 +10,7 @@ interface TokenSelectorModalProps {
   onClose: () => void;
   tokens: TokenDisplay[];
   onSelectToken: (token: TokenDisplay) => void;
-  selectedToken: TokenDisplay;
+  selectedToken: TokenDisplay | undefined;
 }
 
 const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
@@ -18,7 +18,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
   onClose,
   tokens,
   onSelectToken,
-  selectedToken,
+  selectedToken = undefined,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [qubicPrice, setQubicPrice] = useState<number>(0.15);
@@ -113,13 +113,13 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                       transition={{ delay: index * 0.05 }}
                       onClick={() => onSelectToken(token)}
                       className={`hover:bg-muted/50 flex w-full items-center justify-between p-4 transition-all text-foreground ${
-                        selectedToken.assetName === token.assetName ? "bg-primary-40/10" : ""
+                        selectedToken?.assetName === token.assetName ? "bg-primary-40/10" : ""
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="relative">
                           <img src={token.logo} alt={token.assetName} className="h-10 w-10 rounded-full" />
-                          {selectedToken.assetName === token.assetName && (
+                          {selectedToken?.assetName === token.assetName && (
                             <div className="bg-primary-40 absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full">
                               <div className="h-2 w-2 rounded-full bg-white"></div>
                             </div>

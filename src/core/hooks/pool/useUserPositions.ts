@@ -3,7 +3,7 @@ import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext
 import { getLiquidityOf, getPoolBasicState } from "@/shared/services/sc.service";
 import { fetchQubicPrice } from "@/shared/services/price.service";
 import { useQswapTokenList } from "./useQswapTokenList";
-import { type Token } from "@/shared/constants/tokens";
+import { isAsset, type Token } from "@/shared/constants/tokens";
 
 export interface UserPosition {
   token: Token;
@@ -36,7 +36,7 @@ export const useUserPositions = () => {
         const qubicPrice = await fetchQubicPrice();
         const userPositions: UserPosition[] = [];
 
-        for (const token of tokenList) {
+        for (const token of tokenList.filter(isAsset)) {
           try {
             // Get user's liquidity in this pool
             const liquidityData = await getLiquidityOf({

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Minus, TrendingUp, Droplets, Info } from "lucide-react";
+import { Plus, Minus, TrendingUp, Droplets, Info, AlertCircle } from "lucide-react";
 import TokenInput from "@/features/swap/components/TokenInput";
 import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
@@ -30,7 +30,7 @@ const Liquidity: React.FC = () => {
     () => (tokens.find((t) => t.assetName === "QUBIC") as TokenDisplay) ?? { ...QUBIC_TOKEN, balance: "0" },
     [tokens],
   );
-  const [tokenB, setTokenB] = useState<TokenDisplay>(defaultAsset);
+  const [tokenB, setTokenB] = useState<TokenDisplay | undefined>(defaultAsset);
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
@@ -39,8 +39,8 @@ const Liquidity: React.FC = () => {
 
   // Use the pool state hook
   const { poolState, refetch: refetchPoolState } = usePoolState(
-    isAsset(tokenB) ? tokenB.issuer : undefined,
-    isAsset(tokenB) ? tokenB.assetName : undefined,
+    tokenB && isAsset(tokenB) ? tokenB.issuer : undefined,
+    tokenB && isAsset(tokenB) ? tokenB.assetName : undefined,
     wallet?.publicKey,
   );
 
@@ -98,7 +98,7 @@ const Liquidity: React.FC = () => {
       toggleConnectModal();
       return;
     }
-    if (!isAsset(tokenB)) {
+    if (!tokenB || !isAsset(tokenB)) {
       toast.error("Select an asset token (QSWAP pools are QUBIC/Token).");
       return;
     }
@@ -129,7 +129,7 @@ const Liquidity: React.FC = () => {
       toggleConnectModal();
       return;
     }
-    if (!isAsset(tokenB)) {
+    if (!tokenB || !isAsset(tokenB)) {
       toast.error("Select an asset token (QSWAP pools are QUBIC/Token).");
       return;
     }
@@ -224,165 +224,187 @@ const Liquidity: React.FC = () => {
                 </button>
               </div>
 
-              {mode === "add" ? (
-                <>
-                  {/* Token A Input */}
-                  <div className="mb-4">
-                    <div className="text-muted-foreground mb-2 text-sm">Token A</div>
-                    <TokenInput
-                      token={tokenA}
-                      amount={amountA}
-                      onAmountChange={setAmountA}
-                    onTokenClick={() => {}}
-                    />
-                  </div>
-
-                  {/* Plus Icon */}
-                  <div className="relative z-10 -my-2 flex justify-center">
-                    <div className="bg-muted rounded-full p-2">
-                      <Plus className="text-muted-foreground h-5 w-5" />
-                    </div>
-                  </div>
-
-                  {/* Token B Input */}
-                  <div className="mb-6">
-                    <div className="text-muted-foreground mb-2 text-sm">Token B</div>
-                    <TokenInput
-                      token={tokenB}
-                      amount={amountB}
-                      onAmountChange={setAmountB}
-                      onTokenClick={() => {
-                        setSelectingToken("B");
-                        setIsTokenModalOpen(true);
-                      }}
-                    />
-                  </div>
-
-                  {/* Pool Info */}
-                  {amountA && amountB && poolState && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      className="bg-muted/30 mb-4 space-y-2 rounded-xl p-4"
-                    >
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Pool Share</span>
-                        <span className="font-medium">
-                          {poolState.totalLiquidity > 0
-                            ? ((parseFloat(amountA) / (poolState.reservedQuAmount + parseFloat(amountA))) * 100).toFixed(4)
-                            : "100.00"}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">
-                          {tokenA.assetName} per {tokenB.assetName}
-                        </span>
-                        <span className="font-medium">{(parseFloat(amountA) / parseFloat(amountB)).toFixed(6)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">
-                          {tokenB.assetName} per {tokenA.assetName}
-                        </span>
-                        <span className="font-medium">{(parseFloat(amountB) / parseFloat(amountA)).toFixed(6)}</span>
-                      </div>
-                      {poolState.totalLiquidity > 0 && (
-                        <>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Current Pool Reserves</span>
-                            <span className="font-medium">
-                              {poolState.reservedQuAmount.toLocaleString()} / {poolState.reservedAssetAmount.toLocaleString()}
-                            </span>
-                          </div>
-                        </>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {/* Add Button */}
+              {/* Rewrite begins here for meaningful UI when tokenB is undefined */}
+              {(!tokenB || !isAsset(tokenB)) ? (
+                <div className="flex flex-col items-center justify-center py-14">
+                  <AlertCircle className="text-primary mb-4 h-12 w-12 opacity-70" />
+                  <h2 className="mb-2 text-xl font-bold text-primary">Select an Asset Token</h2>
+                  <p className="mb-4 text-sm text-muted-foreground text-center max-w-xs">
+                    Please select a token to pair with QUBIC to add or remove liquidity.
+                  </p>
                   <Button
-                    variant="primary"
                     size="lg"
-                    onClick={onAddLiquidity}
-                    disabled={!amountA || !amountB || parseFloat(amountA) <= 0 || parseFloat(amountB) <= 0}
-                    fullWidth
+                    variant="secondary"
+                    onClick={() => {
+                      setSelectingToken("B");
+                      setIsTokenModalOpen(true);
+                    }}
                   >
-                    {!connected ? "Connect wallet" : !amountA || !amountB ? "Enter amounts" : "Add Liquidity"}
+                    Select Token
                   </Button>
-                </>
+                </div>
               ) : (
-                <>
-                  {/* Remove Liquidity Interface */}
-                  <div className="mb-6">
-                    <div className="text-muted-foreground mb-2 text-sm">Amount to Remove</div>
-                    <div className="bg-muted/30 rounded-2xl p-4">
-                      <div className="mb-4 flex items-center gap-3">
-                        <img src={tokenA.logo} alt={tokenA.assetName} className="h-8 w-8 rounded-full" />
-                        <span className="text-xl font-bold">{tokenA.assetName}</span>
-                        <span className="text-muted-foreground">/</span>
-                        <img src={tokenB.logo} alt={tokenB.assetName} className="h-8 w-8 rounded-full" />
-                        <span className="text-xl font-bold">{tokenB.assetName}</span>
-                      </div>
-
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={removePercentage}
-                        onChange={(e) => setRemovePercentage(Number(e.target.value))}
-                        className="bg-muted accent-primary-40 h-2 w-full cursor-pointer appearance-none rounded-lg"
+                mode === "add" ? (
+                  <>
+                    {/* Token A Input */}
+                    <div className="mb-4">
+                      <div className="text-muted-foreground mb-2 text-sm">Token A</div>
+                      <TokenInput
+                        token={tokenA}
+                        amount={amountA}
+                        onAmountChange={setAmountA}
+                        onTokenClick={() => {}}
                       />
+                    </div>
 
-                      <div className="mt-2 flex justify-between">
-                        {["25%", "50%", "75%", "Max"].map((label) => (
-                          <button
-                            key={label}
-                            onClick={() => setRemovePercentage(label === "Max" ? 100 : Number(label.replace("%", "")))}
-                            className="bg-muted/50 hover:bg-muted rounded-lg px-3 py-1 text-sm transition-colors"
-                          >
-                            {label}
-                          </button>
-                        ))}
+                    {/* Plus Icon */}
+                    <div className="relative z-10 -my-2 flex justify-center">
+                      <div className="bg-muted rounded-full p-2">
+                        <Plus className="text-muted-foreground h-5 w-5" />
                       </div>
-                      
-                      {poolState?.userLiquidity === 0 && (
-                        <div className="text-muted-foreground mt-2 text-center text-sm">
-                          No liquidity position found for this pool
+                    </div>
+
+                    {/* Token B Input */}
+                    <div className="mb-6">
+                      <div className="text-muted-foreground mb-2 text-sm">Token B</div>
+                      <TokenInput
+                        token={tokenB}
+                        amount={amountB}
+                        onAmountChange={setAmountB}
+                        onTokenClick={() => {
+                          setSelectingToken("B");
+                          setIsTokenModalOpen(true);
+                        }}
+                      />
+                    </div>
+
+                    {/* Pool Info */}
+                    {amountA && amountB && poolState && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="bg-muted/30 mb-4 space-y-2 rounded-xl p-4"
+                      >
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Pool Share</span>
+                          <span className="font-medium">
+                            {poolState.totalLiquidity > 0
+                              ? ((parseFloat(amountA) / (poolState.reservedQuAmount + parseFloat(amountA))) * 100).toFixed(4)
+                              : "100.00"}%
+                          </span>
                         </div>
-                      )}
-                    </div>
-                  </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            {tokenA.assetName} per {tokenB?.assetName}
+                          </span>
+                          <span className="font-medium">{(parseFloat(amountA) / parseFloat(amountB)).toFixed(6)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            {tokenB?.assetName} per {tokenA.assetName}
+                          </span>
+                          <span className="font-medium">{(parseFloat(amountB) / parseFloat(amountA)).toFixed(6)}</span>
+                        </div>
+                        {poolState.totalLiquidity > 0 && (
+                          <>
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground">Current Pool Reserves</span>
+                              <span className="font-medium">
+                                {poolState.reservedQuAmount.toLocaleString()} / {poolState.reservedAssetAmount.toLocaleString()}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </motion.div>
+                    )}
 
-                  <div className="bg-muted/30 mb-6 space-y-2 rounded-xl p-4">
-                    <div className="text-muted-foreground mb-2 text-sm">You will receive:</div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">{tokenA.assetName}</span>
-                      <span className="font-bold">
-                        {poolState && poolState.userLiquidity > 0
-                          ? ((poolState.reservedQuAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
-                          : "0.00"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">{tokenB.assetName}</span>
-                      <span className="font-bold">
-                        {poolState && poolState.userLiquidity > 0
-                          ? ((poolState.reservedAssetAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
-                          : "0.00"}
-                      </span>
-                    </div>
-                  </div>
+                    {/* Add Button */}
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={onAddLiquidity}
+                      disabled={!amountA || !amountB || parseFloat(amountA) <= 0 || parseFloat(amountB) <= 0}
+                      fullWidth
+                    >
+                      {!connected ? "Connect wallet" : !amountA || !amountB ? "Enter amounts" : "Add Liquidity"}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {/* Remove Liquidity Interface */}
+                    <div className="mb-6">
+                      <div className="text-muted-foreground mb-2 text-sm">Amount to Remove</div>
+                      <div className="bg-muted/30 rounded-2xl p-4">
+                        <div className="mb-4 flex items-center gap-3">
+                          <img src={tokenA.logo} alt={tokenA.assetName} className="h-8 w-8 rounded-full" />
+                          <span className="text-xl font-bold">{tokenA.assetName}</span>
+                          <span className="text-muted-foreground">/</span>
+                          <img src={tokenB?.logo} alt={tokenB?.assetName} className="h-8 w-8 rounded-full" />
+                          <span className="text-xl font-bold">{tokenB?.assetName}</span>
+                        </div>
 
-                  <Button 
-                    variant="danger" 
-                    size="lg" 
-                    onClick={onRemoveLiquidity} 
-                    disabled={!connected || !poolState || poolState.userLiquidity <= 0 || removePercentage <= 0}
-                    fullWidth
-                  >
-                    {!connected ? "Connect wallet" : !poolState || poolState.userLiquidity <= 0 ? "No liquidity to remove" : removePercentage <= 0 ? "Select amount" : "Remove Liquidity"}
-                  </Button>
-                </>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={removePercentage}
+                          onChange={(e) => setRemovePercentage(Number(e.target.value))}
+                          className="bg-muted accent-primary-40 h-2 w-full cursor-pointer appearance-none rounded-lg"
+                        />
+
+                        <div className="mt-2 flex justify-between">
+                          {["25%", "50%", "75%", "Max"].map((label) => (
+                            <button
+                              key={label}
+                              onClick={() => setRemovePercentage(label === "Max" ? 100 : Number(label.replace("%", "")))}
+                              className="bg-muted/50 hover:bg-muted rounded-lg px-3 py-1 text-sm transition-colors"
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                        
+                        {poolState?.userLiquidity === 0 && (
+                          <div className="text-muted-foreground mt-2 text-center text-sm">
+                            No liquidity position found for this pool
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="bg-muted/30 mb-6 space-y-2 rounded-xl p-4">
+                      <div className="text-muted-foreground mb-2 text-sm">You will receive:</div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">{tokenA.assetName}</span>
+                        <span className="font-bold">
+                          {poolState && poolState.userLiquidity > 0
+                            ? ((poolState.reservedQuAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
+                            : "0.00"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">{tokenB?.assetName}</span>
+                        <span className="font-bold">
+                          {poolState && poolState.userLiquidity > 0
+                            ? ((poolState.reservedAssetAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
+                            : "0.00"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button 
+                      variant="danger" 
+                      size="lg" 
+                      onClick={onRemoveLiquidity} 
+                      disabled={!connected || !poolState || poolState.userLiquidity <= 0 || removePercentage <= 0}
+                      fullWidth
+                    >
+                      {!connected ? "Connect wallet" : !poolState || poolState.userLiquidity <= 0 ? "No liquidity to remove" : removePercentage <= 0 ? "Select amount" : "Remove Liquidity"}
+                    </Button>
+                  </>
+                )
               )}
+              {/* Rewrite ends here */}
 
               {/* Info Footer */}
               <div className="bg-muted/50 mt-4 flex items-start gap-2 rounded-lg p-3">
@@ -456,7 +478,7 @@ const Liquidity: React.FC = () => {
         onClose={() => setIsTokenModalOpen(false)}
         tokens={tokens.filter((t) => t.assetName !== "QUBIC")}
         onSelectToken={handleTokenSelect}
-        selectedToken={tokenB}
+        selectedToken={tokenB ?? undefined}
       />
     </div>
     </>
