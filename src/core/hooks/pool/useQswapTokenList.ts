@@ -9,18 +9,23 @@ export const useQswapTokenList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchTokenList = async () => {
-      setLoading(true);
-      setError(null);
-      const ownedAssets = await fetchAssetsOwnership("NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML");
-      setTokenList([QUBIC_TOKEN, ...ownedAssets.map((asset) => ({
+  const fetchTokenList = async () => {
+    setLoading(true);
+    setError(null);
+    const ownedAssets = await fetchAssetsOwnership("NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML");
+
+    setTokenList([
+      QUBIC_TOKEN,
+      ...ownedAssets.map((asset) => ({
         issuer: asset.issuer,
         assetName: asset.assetName,
         logo: `${LOGO_BASE_URL}/asset_${asset.assetName}-${asset.issuer}_logo_dark.png`,
-      }))]);
-      setLoading(false);
-    }
+      })),
+    ]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchTokenList();
   }, []);
 

@@ -17,17 +17,17 @@ import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
 const Swap: React.FC = () => {
   const { wallet, connected, toggleConnectModal } = useQubicConnect();
   const { handleSwap } = useSwap();
-
+  
   const { tokenList } = useQswapTokenList();
+  const tokenListWithBalance = useMemo(() => tokenList.map((t) => ({ ...t, balance: "0" })), [tokenList]);
+  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenListWithBalance);
 
-  const [tokens, setTokens] = useState<TokenDisplay[]>(
-    tokenList.map((t) => ({ ...t, balance: "0" })),
-  );
+  useEffect(() => {
+    setTokens(tokenListWithBalance);
+  }, [tokenListWithBalance]);
 
   const defaultFrom = useMemo(() => tokens.find(isQubic) ?? tokens[0], [tokens]);
   const defaultTo = useMemo(() => tokens.find(isAsset) ?? tokens[1], [tokens]);
-  
-  console.log({tokens, defaultFrom, defaultTo});
 
   const [fromToken, setFromToken] = useState<TokenDisplay>(defaultFrom);
   const [toToken, setToToken] = useState<TokenDisplay>(defaultTo);
@@ -50,7 +50,7 @@ const Swap: React.FC = () => {
 
     const load = async () => {
       if (!wallet?.publicKey) {
-        setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
+        setTokens(tokenListWithBalance);
         return;
       }
 
@@ -58,7 +58,7 @@ const Swap: React.FC = () => {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
 
-        for (const t of tokenList) {
+        for (const t of tokens) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
@@ -70,7 +70,7 @@ const Swap: React.FC = () => {
         if (!cancelled) setTokens(next);
       } catch (e) {
         console.error(e);
-        if (!cancelled) setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
+        if (!cancelled) setTokens(tokenListWithBalance);
       }
     };
 

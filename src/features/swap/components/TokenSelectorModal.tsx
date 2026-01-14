@@ -127,7 +127,7 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                         </div>
                         <div className="text-left">
                           <div className="font-bold">{token.assetName}</div>
-                          <div className="text-muted-foreground text-sm">{token.issuer}</div>
+                          {token.issuer && <div className="text-muted-foreground text-sm">{token.issuer.slice(0, 6)}...{token.issuer.slice(-6)}</div>}
                         </div>
                       </div>
                       <div className="text-right">

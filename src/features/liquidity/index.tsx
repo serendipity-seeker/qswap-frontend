@@ -20,8 +20,13 @@ const Liquidity: React.FC = () => {
   const [mode, setMode] = useState<"add" | "remove">("add");
   
   const { tokenList } = useQswapTokenList();
-  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenList.map((t) => ({ ...t, balance: "0" })));
-  
+  const tokenListWithBalance = useMemo(() => tokenList.map((t) => ({ ...t, balance: "0" })), [tokenList]);
+  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenListWithBalance);
+
+  useEffect(() => {
+    setTokens(tokenListWithBalance);
+  }, [tokenListWithBalance]);
+
   const assetTokens = useMemo(() => tokens.filter(isAsset), [tokens]);
   const defaultAsset = useMemo(() => assetTokens[0] ?? (tokens[1] as TokenDisplay), [assetTokens, tokens]);
 
