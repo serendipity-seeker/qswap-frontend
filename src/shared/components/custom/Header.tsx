@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     { name: "Home", href: "/" },
     { name: "Swap", href: "/swap" },
     { name: "Liquidity", href: "/liquidity" },
-    { name: "Asset", href: "/asset" },
+    // { name: "Asset", href: "/asset" },
   ];
 
   useEffect(() => {
