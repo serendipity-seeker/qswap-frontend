@@ -9,7 +9,7 @@ import PriceChart from "@/features/stats/components/PriceChart";
 import { Button, SEO } from "@/shared/components/custom";
 import { isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
+import { fetchAssetsOwnership, fetchBalance } from "@/shared/services/rpc.service";
 import { useSwap } from "@/core/hooks";
 import { toast } from "sonner";
 import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
@@ -19,13 +19,7 @@ const Swap: React.FC = () => {
   const { handleSwap } = useSwap();
   
   const { tokenList } = useQswapTokenList();
-  const tokenListWithBalance = useMemo(() => tokenList.map((t) => ({ ...t, balance: "0" })), [tokenList]);
-  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenListWithBalance);
-
-  useEffect(() => {
-    setTokens(tokenListWithBalance);
-  }, [tokenListWithBalance]);
-
+  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenList.map((t) => ({ ...t, balance: "0" })));
   const defaultFrom = useMemo(() => tokens.find(isQubic) ?? tokens[0], [tokens]);
   const defaultTo = useMemo(() => tokens.find(isAsset) ?? tokens[1], [tokens]);
 
@@ -50,7 +44,7 @@ const Swap: React.FC = () => {
 
     const load = async () => {
       if (!wallet?.publicKey) {
-        setTokens(tokenListWithBalance);
+        setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
         return;
       }
 
@@ -58,19 +52,19 @@ const Swap: React.FC = () => {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
 
-        for (const t of tokens) {
+        const assetBal = await fetchAssetsOwnership(wallet.publicKey);
+        for (const t of tokenList) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
-            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.assetName, 1);
-            next.push({ ...t, balance: Number(assetBal || 0).toLocaleString() });
+            next.push({ ...t, balance: Number(assetBal.find((a) => a.assetName === t.assetName)?.amount || 0).toLocaleString() });
           }
         }
 
         if (!cancelled) setTokens(next);
       } catch (e) {
         console.error(e);
-        if (!cancelled) setTokens(tokenListWithBalance);
+        if (!cancelled) setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
       }
     };
 
@@ -78,7 +72,7 @@ const Swap: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [wallet?.publicKey]);
+  }, [wallet?.publicKey, tokenList]);
 
   const handleSwapTokens = () => {
     const temp = fromToken;

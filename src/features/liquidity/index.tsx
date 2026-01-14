@@ -6,7 +6,7 @@ import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { Button, SEO } from "@/shared/components/custom";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
+import { fetchAssetsOwnership, fetchBalance } from "@/shared/services/rpc.service";
 import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/core/hooks";
 import { toast } from "sonner";
 import { type TokenDisplay, isAsset, isQubic, QUBIC_TOKEN } from "@/shared/constants/tokens";
@@ -20,12 +20,7 @@ const Liquidity: React.FC = () => {
   const [mode, setMode] = useState<"add" | "remove">("add");
   
   const { tokenList } = useQswapTokenList();
-  const tokenListWithBalance = useMemo(() => tokenList.map((t) => ({ ...t, balance: "0" })), [tokenList]);
-  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenListWithBalance);
-
-  useEffect(() => {
-    setTokens(tokenListWithBalance);
-  }, [tokenListWithBalance]);
+  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenList.map((t) => ({ ...t, balance: "0" })));
 
   const assetTokens = useMemo(() => tokens.filter(isAsset), [tokens]);
   const defaultAsset = useMemo(() => assetTokens[0] ?? (tokens[1] as TokenDisplay), [assetTokens, tokens]);
@@ -55,19 +50,19 @@ const Liquidity: React.FC = () => {
 
     const load = async () => {
       if (!wallet?.publicKey) {
-        setTokens([]);
+        setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
         return;
       }
 
       try {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
+        const assetBal = await fetchAssetsOwnership(wallet.publicKey);
         for (const t of tokenList) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
-            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.assetName, 1);
-            next.push({ ...t, balance: Number(assetBal || 0).toLocaleString() });
+            next.push({ ...t, balance: Number(assetBal.find((a) => a.assetName === t.assetName)?.amount || 0).toLocaleString() });
           }
         }
         if (!cancelled) setTokens(next);
@@ -81,7 +76,7 @@ const Liquidity: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [wallet?.publicKey]);
+  }, [wallet?.publicKey, tokenList]);
 
   // Refetch pool state when tokenB changes
   useEffect(() => {
