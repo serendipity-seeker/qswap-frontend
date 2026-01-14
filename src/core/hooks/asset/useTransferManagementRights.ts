@@ -5,12 +5,11 @@ import { useAtomValue } from "jotai";
 import { settingsAtom } from "@/shared/store/settings";
 import { transferShareManagementRights } from "@/shared/services/sc.service";
 import { fetchTickInfo, broadcastTx, fetchAssetsBalance } from "@/shared/services/rpc.service";
-import { DEFAULT_TOKENS, isAsset } from "@/shared/constants/tokens";
 import { toast } from "sonner";
 
 export interface TransferManagementRightsParams {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   numberOfShares: number;
   newManagingContractIndex: number;
   fallback?: () => Promise<void>;
@@ -33,15 +32,11 @@ export const useTransferManagementRights = () => {
       }
 
       try {
-        const targetContractCurrentAmount = await fetchAssetsBalance(
-          wallet.publicKey,
-          assetNameStr,
-          contractIndex
-        );
+        const targetContractCurrentAmount = await fetchAssetsBalance(wallet.publicKey, assetNameStr, contractIndex);
 
         const success = targetContractCurrentAmount >= expectedAmount;
         console.log(
-          `Transfer Share Rights checker: targetContract=${contractIndex}, expected=${expectedAmount}, current=${targetContractCurrentAmount}, success=${success}`
+          `Transfer Share Rights checker: targetContract=${contractIndex}, expected=${expectedAmount}, current=${targetContractCurrentAmount}, success=${success}`,
         );
         return success;
       } catch (error) {
@@ -49,7 +44,7 @@ export const useTransferManagementRights = () => {
         return false;
       }
     },
-    [wallet]
+    [wallet],
   );
 
   const handleTransferManagementRights = useCallback(
@@ -66,15 +61,11 @@ export const useTransferManagementRights = () => {
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
 
-        // Find asset symbol for balance checking
-        const assetToken = DEFAULT_TOKENS.filter(isAsset).find((token) => token.assetName === params.assetName);
-        const assetSymbol = assetToken?.symbol || `Asset_${params.assetName}`;
-
         // Get current balance in target contract
         const targetContractOriginAmount = await fetchAssetsBalance(
           wallet.publicKey,
-          assetSymbol,
-          params.newManagingContractIndex
+          params.assetName,
+          params.newManagingContractIndex,
         );
 
         // Create transaction
@@ -114,14 +105,14 @@ export const useTransferManagementRights = () => {
           {
             checker: async () => {
               return await checkTransferShareRights(
-                assetSymbol,
+                params.assetName,
                 params.newManagingContractIndex,
-                expectedAmount
+                expectedAmount,
               );
             },
             onSuccess: async () => {
               toast.success(
-                `Successfully transferred management rights for ${params.numberOfShares} ${assetSymbol} shares to contract ${params.newManagingContractIndex}`
+                `Successfully transferred management rights for ${params.numberOfShares} ${params.assetName} shares to contract ${params.newManagingContractIndex}`,
               );
               // Execute fallback callback if provided (e.g., refresh UI)
               if (params.fallback) {
@@ -134,16 +125,15 @@ export const useTransferManagementRights = () => {
             targetTick: tick,
             txHash: res?.transactionId,
           },
-          "v1"
+          "v1",
         );
       } catch (error) {
         console.error("Transfer management rights error:", error);
         toast.error((error as Error).message || "Failed to transfer management rights");
       }
     },
-    [connected, wallet, settings, getSignedTx, toggleConnectModal, startMonitoring, checkTransferShareRights]
+    [connected, wallet, settings, getSignedTx, toggleConnectModal, startMonitoring, checkTransferShareRights],
   );
 
   return { handleTransferManagementRights, checkTransferShareRights };
 };
-

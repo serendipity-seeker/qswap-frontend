@@ -47,7 +47,7 @@ const PoolPositions: React.FC = () => {
         ) : (
           positions.map((position, index) => (
             <motion.div
-              key={`${position.token.symbol}-QUBIC`}
+              key={`${position.token.assetName}-QUBIC`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -58,19 +58,19 @@ const PoolPositions: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <div className="flex items-center -space-x-2">
                     <img
-                      src={position.token.icon}
-                      alt={position.token.symbol}
+                      src={position.token.logo}
+                      alt={position.token.assetName}
                       className="border-background h-10 w-10 rounded-full border-2"
                     />
                     <img
-                      src={QUBIC_TOKEN.icon}
+                      src={QUBIC_TOKEN.logo}
                       alt="QUBIC"
                       className="border-background h-10 w-10 rounded-full border-2"
                     />
                   </div>
                   <div>
                     <div className="text-lg font-bold">
-                      {position.token.symbol}/QUBIC
+                      {position.token.assetName}/QUBIC
                     </div>
                     <div className="text-muted-foreground text-sm">
                       Pool share: {position.share.toFixed(4)}%
@@ -94,7 +94,7 @@ const PoolPositions: React.FC = () => {
                   <div className="font-bold">{position.quAmount.toFixed(2)}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground mb-1 text-xs">{position.token.symbol} Amount</div>
+                  <div className="text-muted-foreground mb-1 text-xs">{position.token.assetName} Amount</div>
                   <div className="font-bold">{position.assetAmount.toFixed(2)}</div>
                 </div>
               </div>

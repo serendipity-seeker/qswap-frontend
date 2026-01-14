@@ -3,6 +3,7 @@ import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
 
 import { createSCTx } from "./tx.service";
 import { fetchQuerySC } from "./rpc.service";
+import { assetNameConvert } from "../utils";
 
 /**
  * QSWAP SC integration (see `qswap.sc.h`)
@@ -96,10 +97,10 @@ export type PoolBasicState = {
   totalLiquidity: number;
 };
 
-export const getPoolBasicState = async (params: { assetIssuer: string; assetName: bigint }): Promise<PoolBasicState> => {
+export const getPoolBasicState = async (params: { assetIssuer: string; assetName: string }): Promise<PoolBasicState> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
   ]);
 
   const res = await fetchQuerySC({
@@ -122,12 +123,12 @@ export const getPoolBasicState = async (params: { assetIssuer: string; assetName
 
 export const getLiquidityOf = async (params: {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   account: string;
 }): Promise<{ liquidity: number } | null> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: qHelper.getIdentityBytes(params.account), type: "id" },
   ]);
 
@@ -145,12 +146,12 @@ export const getLiquidityOf = async (params: {
 
 export const quoteExactQuInput = async (params: {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   quAmountIn: number;
 }): Promise<{ assetAmountOut: number } | null> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.quAmountIn, type: "int64" },
   ]);
 
@@ -168,12 +169,12 @@ export const quoteExactQuInput = async (params: {
 
 export const quoteExactQuOutput = async (params: {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   quAmountOut: number;
 }): Promise<{ assetAmountIn: number } | null> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.quAmountOut, type: "int64" },
   ]);
 
@@ -191,12 +192,12 @@ export const quoteExactQuOutput = async (params: {
 
 export const quoteExactAssetInput = async (params: {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   assetAmountIn: number;
 }): Promise<{ quAmountOut: number } | null> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountIn, type: "int64" },
   ]);
 
@@ -214,12 +215,12 @@ export const quoteExactAssetInput = async (params: {
 
 export const quoteExactAssetOutput = async (params: {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   assetAmountOut: number;
 }): Promise<{ quAmountIn: number } | null> => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountOut, type: "int64" },
   ]);
 
@@ -254,7 +255,7 @@ export const getInvestRewardsInfo = async (): Promise<{ investRewardsFee: number
 
 export const issueAsset = async (params: {
   sourceID: string;
-  assetName: bigint;
+  assetName: string;
   numberOfShares: number;
   unitOfMeasurement: number;
   numberOfDecimalPlaces: number;
@@ -262,7 +263,7 @@ export const issueAsset = async (params: {
   feeQu?: number;
 }) => {
   const payload = createPayload([
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.numberOfShares, type: "int64" },
     { data: params.unitOfMeasurement, type: "uint64" },
     { data: params.numberOfDecimalPlaces, type: "uint8" },
@@ -274,7 +275,7 @@ export const issueAsset = async (params: {
 export const transferShareOwnershipAndPossession = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   newOwnerAndPossessor: string;
   amount: number;
   tick: number;
@@ -282,7 +283,7 @@ export const transferShareOwnershipAndPossession = async (params: {
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: qHelper.getIdentityBytes(params.newOwnerAndPossessor), type: "id" },
     { data: params.amount, type: "int64" },
   ]);
@@ -293,13 +294,13 @@ export const transferShareOwnershipAndPossession = async (params: {
 export const createPool = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   tick: number;
   feeQu?: number;
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
   ]);
   const feeQu = params.feeQu ?? (await getFees())?.poolCreationFee ?? 0;
   return await createSCTx(params.sourceID, SC_INDEX, 3, payload.getPackageSize(), feeQu, params.tick, payload);
@@ -308,7 +309,7 @@ export const createPool = async (params: {
 export const addLiquidity = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   assetAmountDesired: number;
   quAmountDesired: number;
   quAmountMin: number;
@@ -317,7 +318,7 @@ export const addLiquidity = async (params: {
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountDesired, type: "int64" },
     { data: params.quAmountMin, type: "int64" },
     { data: params.assetAmountMin, type: "int64" },
@@ -329,7 +330,7 @@ export const addLiquidity = async (params: {
 export const removeLiquidity = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   burnLiquidity: number;
   quAmountMin: number;
   assetAmountMin: number;
@@ -337,7 +338,7 @@ export const removeLiquidity = async (params: {
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.burnLiquidity, type: "int64" },
     { data: params.quAmountMin, type: "int64" },
     { data: params.assetAmountMin, type: "int64" },
@@ -348,14 +349,14 @@ export const removeLiquidity = async (params: {
 export const swapExactQuForAsset = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   quAmountIn: number;
   assetAmountOutMin: number;
   tick: number;
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountOutMin, type: "int64" },
   ]);
   return await createSCTx(params.sourceID, SC_INDEX, 6, payload.getPackageSize(), params.quAmountIn, params.tick, payload);
@@ -364,14 +365,14 @@ export const swapExactQuForAsset = async (params: {
 export const swapQuForExactAsset = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   quAmountInMax: number;
   assetAmountOut: number;
   tick: number;
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountOut, type: "int64" },
   ]);
   // quAmountInMax is sent as invocationReward; unused part is refunded by SC
@@ -381,14 +382,14 @@ export const swapQuForExactAsset = async (params: {
 export const swapExactAssetForQu = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   assetAmountIn: number;
   quAmountOutMin: number;
   tick: number;
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountIn, type: "int64" },
     { data: params.quAmountOutMin, type: "int64" },
   ]);
@@ -399,14 +400,14 @@ export const swapExactAssetForQu = async (params: {
 export const swapAssetForExactQu = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   assetAmountInMax: number;
   quAmountOut: number;
   tick: number;
 }) => {
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.assetAmountInMax, type: "int64" },
     { data: params.quAmountOut, type: "int64" },
   ]);
@@ -422,7 +423,7 @@ export const setInvestRewardsInfo = async (params: { sourceID: string; newInvest
 export const transferShareManagementRights = async (params: {
   sourceID: string;
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   numberOfShares: number;
   newManagingContractIndex: number;
   tick: number;
@@ -431,7 +432,7 @@ export const transferShareManagementRights = async (params: {
   // QSWAP expects `Asset asset;` which is 32-byte issuer id + uint64 assetName
   const payload = createPayload([
     { data: qHelper.getIdentityBytes(params.assetIssuer), type: "id" },
-    { data: params.assetName, type: "uint64" },
+    { data: assetNameConvert(params.assetName) as bigint, type: "uint64" },
     { data: params.numberOfShares, type: "int64" },
     { data: params.newManagingContractIndex, type: "uint32" },
   ]);

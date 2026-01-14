@@ -5,7 +5,7 @@ import type { TokenDisplay } from "@/shared/constants/tokens";
 import { fetchQubicPrice } from "@/shared/services/price.service";
 
 interface TokenInputProps {
-  token: TokenDisplay;
+  token: TokenDisplay | undefined;
   amount: string;
   onAmountChange: (value: string) => void;
   onTokenClick: () => void;
@@ -24,7 +24,7 @@ const TokenInput: React.FC<TokenInputProps> = ({ token, amount, onAmountChange, 
   }, []);
 
   const handleMaxClick = () => {
-    onAmountChange(token.balance.replace(/,/g, ""));
+    onAmountChange(token?.balance.replace(/,/g, "") || "0");
   };
 
   return (
@@ -37,8 +37,8 @@ const TokenInput: React.FC<TokenInputProps> = ({ token, amount, onAmountChange, 
           onClick={onTokenClick}
           className="bg-background hover:bg-muted flex flex-shrink-0 items-center gap-1.5 rounded-lg px-2 py-1.5 shadow-sm transition-all duration-200 sm:gap-2 sm:rounded-xl sm:px-3 sm:py-2"
         >
-          <img src={token.icon} alt={token.symbol} className="h-6 w-6 rounded-full sm:h-7 sm:w-7" />
-          <span className="text-base font-bold sm:text-lg">{token.symbol}</span>
+          <img src={token?.logo} alt={token?.assetName} className="h-6 w-6 rounded-full sm:h-7 sm:w-7" />
+          <span className="text-base font-bold sm:text-lg">{token?.assetName}</span>
           <ChevronDown className="text-muted-foreground h-4 w-4 sm:h-5 sm:w-5" />
         </motion.button>
 
@@ -63,7 +63,7 @@ const TokenInput: React.FC<TokenInputProps> = ({ token, amount, onAmountChange, 
       {/* Balance & USD Value */}
       <div className="mt-2 flex items-center justify-between gap-2">
         <div className="text-muted-foreground truncate text-xs sm:text-sm">
-          Balance: {token.balance}
+          Balance: {token?.balance || "0"}
           {!readOnly && (
             <button
               onClick={handleMaxClick}

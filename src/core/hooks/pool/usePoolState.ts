@@ -5,7 +5,7 @@ interface PoolState extends PoolBasicState {
   userLiquidity: number;
 }
 
-export const usePoolState = (assetIssuer: string | undefined, assetName: bigint | undefined, userAccount: string | undefined) => {
+export const usePoolState = (assetIssuer: string | undefined, assetName: string | undefined, userAccount: string | undefined) => {
   const [poolState, setPoolState] = useState<PoolState | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

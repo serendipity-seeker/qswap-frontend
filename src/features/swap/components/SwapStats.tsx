@@ -1,17 +1,11 @@
 import React from "react";
 import { ChevronDown, Info } from "lucide-react";
 import { motion } from "framer-motion";
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: string;
-}
+import { type TokenDisplay } from "@/shared/constants/tokens";
 
 interface SwapStatsProps {
-  fromToken: Token;
-  toToken: Token;
+  fromToken: TokenDisplay;
+  toToken: TokenDisplay;
   fromAmount: string;
   toAmount: string;
   slippage?: number; // percentage, e.g., 0.5 for 0.5%
@@ -49,7 +43,7 @@ const SwapStats: React.FC<SwapStatsProps> = ({
       >
         <div className="flex items-center gap-2">
           <span className="text-muted-foreground text-sm">
-            1 {fromToken.symbol} ≈ {rate.toFixed(6)} {toToken.symbol}
+            1 {fromToken.assetName} ≈ {rate.toFixed(6)} {toToken.assetName}
           </span>
         </div>
         <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -71,7 +65,7 @@ const SwapStats: React.FC<SwapStatsProps> = ({
               <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
-              {toAmount} {toToken.symbol}
+              {toAmount} {toToken.assetName}
             </span>
           </div>
 
@@ -97,7 +91,7 @@ const SwapStats: React.FC<SwapStatsProps> = ({
               <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
-              {minimumReceived} {toToken.symbol}
+              {minimumReceived} {toToken.assetName}
             </span>
           </div>
 
@@ -107,7 +101,7 @@ const SwapStats: React.FC<SwapStatsProps> = ({
               <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
-              {liquidityProviderFee} {fromToken.symbol}
+              {liquidityProviderFee} {fromToken.assetName}
             </span>
           </div>
 
@@ -117,7 +111,7 @@ const SwapStats: React.FC<SwapStatsProps> = ({
               <Info className="h-3 w-3" />
             </div>
             <span className="font-medium">
-              {fromToken.symbol} → {toToken.symbol}
+              {fromToken.assetName} → {toToken.assetName}
             </span>
           </div>
         </motion.div>

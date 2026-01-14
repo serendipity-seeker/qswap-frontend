@@ -4,7 +4,6 @@ import { Coins, Plus, ArrowRightLeft, Info } from "lucide-react";
 import { Button, SEO } from "@/shared/components/custom";
 import { useIssueAsset, useCreatePool, useTransferManagementRights } from "@/core/hooks";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { valueOfAssetName } from "@/shared/utils/base.utils";
 
 const AssetManagement: React.FC = () => {
   const { connected } = useQubicConnect();
@@ -35,14 +34,8 @@ const AssetManagement: React.FC = () => {
       return;
     }
 
-    const assetNameValue = valueOfAssetName(assetName.toUpperCase());
-    if (assetNameValue === 0n) {
-      alert("Invalid asset name. Must be 1-7 uppercase letters.");
-      return;
-    }
-
     await handleIssueAsset({
-      assetName: assetNameValue,
+      assetName: assetName,
       numberOfShares: parseInt(numberOfShares),
       unitOfMeasurement: parseInt(unitOfMeasurement),
       numberOfDecimalPlaces: parseInt(numberOfDecimalPlaces),
@@ -54,15 +47,9 @@ const AssetManagement: React.FC = () => {
       return;
     }
 
-    const assetNameValue = valueOfAssetName(poolAssetName.toUpperCase());
-    if (assetNameValue === 0n) {
-      alert("Invalid asset name. Must be 1-7 uppercase letters.");
-      return;
-    }
-
     await handleCreatePool({
       assetIssuer: poolAssetIssuer,
-      assetName: assetNameValue,
+      assetName: poolAssetName,
     });
   };
 
@@ -71,15 +58,9 @@ const AssetManagement: React.FC = () => {
       return;
     }
 
-    const assetNameValue = valueOfAssetName(transferAssetName.toUpperCase());
-    if (assetNameValue === 0n) {
-      alert("Invalid asset name. Must be 1-7 uppercase letters.");
-      return;
-    }
-
     await handleTransferManagementRights({
       assetIssuer: transferAssetIssuer,
-      assetName: assetNameValue,
+      assetName: transferAssetName,
       numberOfShares: parseInt(transferShares),
       newManagingContractIndex: parseInt(newContractIndex),
       fallback: async () => {

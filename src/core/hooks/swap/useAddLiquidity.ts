@@ -9,7 +9,7 @@ import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface AddLiquidityParams {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   assetAmountDesired: number;
   quAmountDesired: number;
   slippage?: number; // percentage, e.g., 0.5 for 0.5%

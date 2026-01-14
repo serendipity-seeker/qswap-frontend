@@ -5,11 +5,12 @@ import TokenInput from "@/features/swap/components/TokenInput";
 import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { Button, SEO } from "@/shared/components/custom";
-import { DEFAULT_TOKENS, isAsset, isQubic, QUBIC_TOKEN, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
 import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/core/hooks";
 import { toast } from "sonner";
+import { type TokenDisplay, isAsset, isQubic, QUBIC_TOKEN } from "@/shared/constants/tokens";
+import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
 
 const Liquidity: React.FC = () => {
   const { wallet, connected, toggleConnectModal } = useQubicConnect();
@@ -17,14 +18,16 @@ const Liquidity: React.FC = () => {
   const { handleRemoveLiquidity } = useRemoveLiquidity();
 
   const [mode, setMode] = useState<"add" | "remove">("add");
-  const [tokens, setTokens] = useState<TokenDisplay[]>(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
-
+  
+  const { tokenList } = useQswapTokenList();
+  const [tokens, setTokens] = useState<TokenDisplay[]>(tokenList.map((t) => ({ ...t, balance: "0" })));
+  
   const assetTokens = useMemo(() => tokens.filter(isAsset), [tokens]);
   const defaultAsset = useMemo(() => assetTokens[0] ?? (tokens[1] as TokenDisplay), [assetTokens, tokens]);
 
   // QSWAP pools are QU/Asset; keep tokenA fixed to QUBIC
   const tokenA = useMemo<TokenDisplay>(
-    () => (tokens.find((t) => t.symbol === "QUBIC") as TokenDisplay) ?? { ...QUBIC_TOKEN, balance: "0" },
+    () => (tokens.find((t) => t.assetName === "QUBIC") as TokenDisplay) ?? { ...QUBIC_TOKEN, balance: "0" },
     [tokens],
   );
   const [tokenB, setTokenB] = useState<TokenDisplay>(defaultAsset);
@@ -47,25 +50,25 @@ const Liquidity: React.FC = () => {
 
     const load = async () => {
       if (!wallet?.publicKey) {
-        setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+        setTokens([]);
         return;
       }
 
       try {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
-        for (const t of DEFAULT_TOKENS) {
+        for (const t of tokenList) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
-            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.symbol, 1);
+            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.assetName, 1);
             next.push({ ...t, balance: Number(assetBal || 0).toLocaleString() });
           }
         }
         if (!cancelled) setTokens(next);
       } catch (e) {
         console.error(e);
-        if (!cancelled) setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+        if (!cancelled) setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
       }
     };
 
@@ -272,13 +275,13 @@ const Liquidity: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {tokenA.symbol} per {tokenB.symbol}
+                          {tokenA.assetName} per {tokenB.assetName}
                         </span>
                         <span className="font-medium">{(parseFloat(amountA) / parseFloat(amountB)).toFixed(6)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {tokenB.symbol} per {tokenA.symbol}
+                          {tokenB.assetName} per {tokenA.assetName}
                         </span>
                         <span className="font-medium">{(parseFloat(amountB) / parseFloat(amountA)).toFixed(6)}</span>
                       </div>
@@ -313,11 +316,11 @@ const Liquidity: React.FC = () => {
                     <div className="text-muted-foreground mb-2 text-sm">Amount to Remove</div>
                     <div className="bg-muted/30 rounded-2xl p-4">
                       <div className="mb-4 flex items-center gap-3">
-                        <img src={tokenA.icon} alt={tokenA.symbol} className="h-8 w-8 rounded-full" />
-                        <span className="text-xl font-bold">{tokenA.symbol}</span>
+                        <img src={tokenA.logo} alt={tokenA.assetName} className="h-8 w-8 rounded-full" />
+                        <span className="text-xl font-bold">{tokenA.assetName}</span>
                         <span className="text-muted-foreground">/</span>
-                        <img src={tokenB.icon} alt={tokenB.symbol} className="h-8 w-8 rounded-full" />
-                        <span className="text-xl font-bold">{tokenB.symbol}</span>
+                        <img src={tokenB.logo} alt={tokenB.assetName} className="h-8 w-8 rounded-full" />
+                        <span className="text-xl font-bold">{tokenB.assetName}</span>
                       </div>
 
                       <input
@@ -352,7 +355,7 @@ const Liquidity: React.FC = () => {
                   <div className="bg-muted/30 mb-6 space-y-2 rounded-xl p-4">
                     <div className="text-muted-foreground mb-2 text-sm">You will receive:</div>
                     <div className="flex justify-between">
-                      <span className="font-medium">{tokenA.symbol}</span>
+                      <span className="font-medium">{tokenA.assetName}</span>
                       <span className="font-bold">
                         {poolState && poolState.userLiquidity > 0
                           ? ((poolState.reservedQuAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
@@ -360,7 +363,7 @@ const Liquidity: React.FC = () => {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-medium">{tokenB.symbol}</span>
+                      <span className="font-medium">{tokenB.assetName}</span>
                       <span className="font-bold">
                         {poolState && poolState.userLiquidity > 0
                           ? ((poolState.reservedAssetAmount * (poolState.userLiquidity * removePercentage) / 100) / poolState.totalLiquidity).toFixed(6)
@@ -451,7 +454,7 @@ const Liquidity: React.FC = () => {
       <TokenSelectorModal
         isOpen={isTokenModalOpen}
         onClose={() => setIsTokenModalOpen(false)}
-        tokens={tokens.filter((t) => t.symbol !== "QUBIC")}
+        tokens={tokens.filter((t) => t.assetName !== "QUBIC")}
         onSelectToken={handleTokenSelect}
         selectedToken={tokenB}
       />

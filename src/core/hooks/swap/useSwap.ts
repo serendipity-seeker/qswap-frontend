@@ -10,13 +10,11 @@ import { useTxMonitor } from "@/shared/store/txMonitor";
 export interface SwapParams {
   fromToken: {
     issuer: string;
-    assetName: bigint;
-    symbol: string;
+    assetName: string;
   };
   toToken: {
     issuer: string;
-    assetName: bigint;
-    symbol: string;
+    assetName: string;
   };
   amountIn: number;
   slippage?: number; // percentage, e.g., 0.5 for 0.5%
@@ -51,7 +49,7 @@ export const useSwap = () => {
 
         // Determine swap direction: QUBIC -> Asset or Asset -> QUBIC
         // QSWAP pools are always QUBIC/Asset pairs
-        const isQuToAsset = fromToken.symbol === "QUBIC" || fromToken.issuer === "";
+        const isQuToAsset = fromToken.assetName === "QUBIC" || fromToken.issuer === "";
 
         if (isQuToAsset) {
           // Swap QUBIC for Asset
@@ -69,7 +67,7 @@ export const useSwap = () => {
           // Capture initial balance before swap
           const initialAssetBalance = await fetchAssetsBalance(
             wallet.publicKey,
-            toToken.symbol,
+            toToken.assetName,
             1 // QSWAP contract index
           );
 
@@ -96,7 +94,7 @@ export const useSwap = () => {
                   // Check if asset balance increased
                   const currentAssetBalance = await fetchAssetsBalance(
                     wallet.publicKey,
-                    toToken.symbol,
+                    toToken.assetName,
                     1
                   );
                   
@@ -110,7 +108,7 @@ export const useSwap = () => {
                 }
               },
               onSuccess: async () => {
-                toast.success(`Swapped ${amountInFloor} ${fromToken.symbol} for ${toToken.symbol}`);
+                toast.success(`Swapped ${amountInFloor} ${fromToken.assetName} for ${toToken.assetName}`);
               },
               onFailure: async () => {
                 toast.error("Swap failed");
@@ -174,7 +172,7 @@ export const useSwap = () => {
                 }
               },
               onSuccess: async () => {
-                toast.success(`Swapped ${amountInFloor} ${fromToken.symbol} for ${toToken.symbol}`);
+                toast.success(`Swapped ${amountInFloor} ${fromToken.assetName} for ${toToken.assetName}`);
               },
               onFailure: async () => {
                 toast.error("Swap failed");

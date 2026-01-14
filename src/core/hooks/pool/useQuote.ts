@@ -1,17 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { quoteExactQuInput, quoteExactQuOutput, quoteExactAssetInput, quoteExactAssetOutput } from "@/shared/services/sc.service";
+import { type Token } from "@/shared/constants/tokens";
 
 export interface QuoteParams {
-  fromToken: {
-    issuer: string;
-    assetName: bigint;
-    symbol: string;
-  };
-  toToken: {
-    issuer: string;
-    assetName: bigint;
-    symbol: string;
-  };
+  fromToken: Token;
+  toToken: Token;
   amount: number;
   exactInput?: boolean; // true = exact input amount, false = exact output amount
 }
@@ -41,7 +34,7 @@ export const useQuote = (params: QuoteParams | null) => {
       const amountFloor = Math.floor(amount);
 
       // QSWAP pools are always QUBIC/Asset pairs
-      const isQuToAsset = fromToken.symbol === "QUBIC" || fromToken.issuer === "";
+      const isQuToAsset = fromToken.assetName === "QUBIC" || fromToken.issuer === "";
 
       if (isQuToAsset) {
         // QUBIC -> Asset

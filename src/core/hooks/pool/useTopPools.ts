@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { getPoolBasicState, getFees } from "@/shared/services/sc.service";
-import { DEFAULT_TOKENS, isAsset, type Token } from "@/shared/constants/tokens";
 import { fetchQubicPrice } from "@/shared/services/price.service";
+import { useQswapTokenList } from "./useQswapTokenList";
+import { type Token } from "@/shared/constants/tokens";
 
 export interface PoolInfo {
   token: Token;
@@ -10,7 +11,6 @@ export interface PoolInfo {
   reservedAssetAmount: number;
   totalLiquidity: number;
   tvlUSD: number;
-  // Note: volume24h and priceChange require historical data not available yet
 }
 
 export const useTopPools = () => {
@@ -18,6 +18,8 @@ export const useTopPools = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [swapFee, setSwapFee] = useState<number>(0);
+
+  const { tokenList } = useQswapTokenList();
 
   useEffect(() => {
     const fetchPools = async () => {
@@ -31,14 +33,13 @@ export const useTopPools = () => {
           setSwapFee(fees.swapFee / 1000000); // Convert to percentage
         }
 
-        const assetTokens = DEFAULT_TOKENS.filter(isAsset);
         const poolInfos: PoolInfo[] = [];
 
-        for (const token of assetTokens) {
+        for (const asset of tokenList) {
           try {
             const poolState = await getPoolBasicState({
-              assetIssuer: token.issuer,
-              assetName: token.assetName,
+              assetIssuer: asset.issuer,
+              assetName: asset.assetName,
             });
 
             if (!poolState || poolState.poolExists === 0) {
@@ -49,7 +50,7 @@ export const useTopPools = () => {
             const tvlUSD = poolState.reservedQuAmount * qubicPrice;
 
             poolInfos.push({
-              token,
+              token: asset,
               poolExists: poolState.poolExists === 1,
               reservedQuAmount: poolState.reservedQuAmount,
               reservedAssetAmount: poolState.reservedAssetAmount,
@@ -57,7 +58,7 @@ export const useTopPools = () => {
               tvlUSD,
             });
           } catch (err) {
-            console.error(`Error fetching pool for ${token.symbol}:`, err);
+            console.error(`Error fetching pool for ${asset.assetName}:`, err);
             // Continue with other tokens
           }
         }
@@ -75,7 +76,7 @@ export const useTopPools = () => {
     };
 
     fetchPools();
-  }, []);
+  }, [tokenList]);
 
   return { pools, loading, error, swapFee };
 };

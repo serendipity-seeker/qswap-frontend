@@ -33,8 +33,8 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
 
   const filteredTokens = tokens.filter(
     (token) =>
-      token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      token.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      token.assetName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      token.issuer.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -89,12 +89,12 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                 <div className="flex gap-2 overflow-x-auto">
                   {tokens.slice(0, 4).map((token) => (
                     <button
-                      key={token.symbol}
+                      key={token.assetName}
                       onClick={() => onSelectToken(token)}
                       className="bg-muted/50 hover:bg-muted flex items-center gap-2 rounded-full px-3 py-1.5 whitespace-nowrap transition-colors"
                     >
-                      <img src={token.icon} alt={token.symbol} className="h-5 w-5 rounded-full" />
-                      <span className="text-sm font-medium">{token.symbol}</span>
+                      <img src={token.logo} alt={token.assetName} className="h-5 w-5 rounded-full" />
+                      <span className="text-sm font-medium">{token.assetName}</span>
                     </button>
                   ))}
                 </div>
@@ -107,27 +107,27 @@ const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
                 ) : (
                   filteredTokens.map((token, index) => (
                     <motion.button
-                      key={token.symbol}
+                      key={token.assetName}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => onSelectToken(token)}
                       className={`hover:bg-muted/50 flex w-full items-center justify-between p-4 transition-all text-foreground ${
-                        selectedToken.symbol === token.symbol ? "bg-primary-40/10" : ""
+                        selectedToken.assetName === token.assetName ? "bg-primary-40/10" : ""
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="relative">
-                          <img src={token.icon} alt={token.symbol} className="h-10 w-10 rounded-full" />
-                          {selectedToken.symbol === token.symbol && (
+                          <img src={token.logo} alt={token.assetName} className="h-10 w-10 rounded-full" />
+                          {selectedToken.assetName === token.assetName && (
                             <div className="bg-primary-40 absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full">
                               <div className="h-2 w-2 rounded-full bg-white"></div>
                             </div>
                           )}
                         </div>
                         <div className="text-left">
-                          <div className="font-bold">{token.symbol}</div>
-                          <div className="text-muted-foreground text-sm">{token.name}</div>
+                          <div className="font-bold">{token.assetName}</div>
+                          <div className="text-muted-foreground text-sm">{token.issuer}</div>
                         </div>
                       </div>
                       <div className="text-right">

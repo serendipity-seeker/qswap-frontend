@@ -43,7 +43,7 @@ const PoolStats: React.FC = () => {
         <div className="space-y-2 md:space-y-3">
           {pools.map((pool, index) => (
             <motion.div
-              key={`${pool.token.symbol}-QUBIC`}
+              key={`${pool.token.assetName}-QUBIC`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -54,19 +54,19 @@ const PoolStats: React.FC = () => {
                 <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
                   <div className="flex shrink-0 items-center -space-x-2">
                     <img
-                      src={pool.token.icon}
-                      alt={pool.token.symbol}
+                      src={pool.token.logo}
+                      alt={pool.token.assetName}
                       className="border-background h-8 w-8 rounded-full border-2 sm:h-10 sm:w-10"
                     />
                     <img
-                      src={QUBIC_TOKEN.icon}
+                      src={QUBIC_TOKEN.logo}
                       alt="QUBIC"
                       className="border-background h-8 w-8 rounded-full border-2 sm:h-10 sm:w-10"
                     />
                   </div>
                   <div className="min-w-0">
                     <div className="truncate text-base font-bold sm:text-lg">
-                      {pool.token.symbol}/QUBIC
+                      {pool.token.assetName}/QUBIC
                     </div>
                     <div className="text-muted-foreground text-xs sm:text-sm">
                       TVL: ${pool.tvlUSD.toFixed(2)}
@@ -84,7 +84,7 @@ const PoolStats: React.FC = () => {
                   </div>
                   <div className="flex-1 text-left sm:flex-initial sm:text-right">
                     <div className="text-muted-foreground mb-1 text-[10px] sm:text-xs">
-                      {pool.token.symbol} Reserve
+                      {pool.token.assetName} Reserve
                     </div>
                     <div className="text-sm font-medium sm:text-base">
                       {pool.reservedAssetAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}

@@ -7,22 +7,27 @@ import SwapStats from "@/features/swap/components/SwapStats";
 import SwapSettings from "@/features/swap/components/SwapSettings";
 import PriceChart from "@/features/stats/components/PriceChart";
 import { Button, SEO } from "@/shared/components/custom";
-import { DEFAULT_TOKENS, isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
+import { isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { fetchAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
 import { useSwap } from "@/core/hooks";
 import { toast } from "sonner";
+import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
 
 const Swap: React.FC = () => {
   const { wallet, connected, toggleConnectModal } = useQubicConnect();
   const { handleSwap } = useSwap();
 
+  const { tokenList } = useQswapTokenList();
+
   const [tokens, setTokens] = useState<TokenDisplay[]>(
-    DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })),
+    tokenList.map((t) => ({ ...t, balance: "0" })),
   );
 
-  const defaultFrom = useMemo(() => tokens.find((t) => t.symbol === "QUBIC") ?? tokens[0], [tokens]);
-  const defaultTo = useMemo(() => tokens.find((t) => t.symbol !== "QUBIC") ?? tokens[1], [tokens]);
+  const defaultFrom = useMemo(() => tokens.find(isQubic) ?? tokens[0], [tokens]);
+  const defaultTo = useMemo(() => tokens.find(isAsset) ?? tokens[1], [tokens]);
+  
+  console.log({tokens, defaultFrom, defaultTo});
 
   const [fromToken, setFromToken] = useState<TokenDisplay>(defaultFrom);
   const [toToken, setToToken] = useState<TokenDisplay>(defaultTo);
@@ -35,8 +40,8 @@ const Swap: React.FC = () => {
 
   // Keep selected tokens in sync when token list updates (balances refresh)
   useEffect(() => {
-    setFromToken((prev) => tokens.find((t) => t.symbol === prev.symbol) ?? defaultFrom);
-    setToToken((prev) => tokens.find((t) => t.symbol === prev.symbol) ?? defaultTo);
+    setFromToken((prev) => tokens.find((t) => t.assetName === prev.assetName) ?? defaultFrom);
+    setToToken((prev) => tokens.find((t) => t.assetName === prev.assetName) ?? defaultTo);
   }, [tokens, defaultFrom, defaultTo]);
 
   // Load balances when wallet changes
@@ -45,7 +50,7 @@ const Swap: React.FC = () => {
 
     const load = async () => {
       if (!wallet?.publicKey) {
-        setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+        setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
         return;
       }
 
@@ -53,11 +58,11 @@ const Swap: React.FC = () => {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
 
-        for (const t of DEFAULT_TOKENS) {
+        for (const t of tokenList) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
-            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.symbol, 1);
+            const assetBal = await fetchAssetsBalance(wallet.publicKey, t.assetName, 1);
             next.push({ ...t, balance: Number(assetBal || 0).toLocaleString() });
           }
         }
@@ -65,7 +70,7 @@ const Swap: React.FC = () => {
         if (!cancelled) setTokens(next);
       } catch (e) {
         console.error(e);
-        if (!cancelled) setTokens(DEFAULT_TOKENS.map((t) => ({ ...t, balance: "0" })));
+        if (!cancelled) setTokens(tokenList.map((t) => ({ ...t, balance: "0" })));
       }
     };
 
@@ -94,7 +99,7 @@ const Swap: React.FC = () => {
         // From is asset, to must be QUBIC
         setFromToken(token);
         if (!isQubic(toToken)) {
-          const qubicToken = tokens.find((t) => isQubic(t)) ?? defaultFrom;
+          const qubicToken = tokens.find(isQubic) ?? defaultFrom;
           setToToken(qubicToken);
         }
       }
@@ -104,14 +109,14 @@ const Swap: React.FC = () => {
         // To is QUBIC, from must be an asset
         setToToken(token);
         if (!isAsset(fromToken)) {
-          const assetToken = tokens.find((t) => isAsset(t)) ?? defaultTo;
+          const assetToken = tokens.find(isAsset) ?? defaultTo;
           setFromToken(assetToken);
         }
       } else if (isAsset(token)) {
         // To is asset, from must be QUBIC
         setToToken(token);
         if (!isQubic(fromToken)) {
-          const qubicToken = tokens.find((t) => isQubic(t)) ?? defaultFrom;
+          const qubicToken = tokens.find(isQubic) ?? defaultFrom;
           setFromToken(qubicToken);
         }
       }
@@ -189,12 +194,10 @@ const Swap: React.FC = () => {
       fromToken: {
         issuer: fromToken.issuer,
         assetName: fromToken.assetName,
-        symbol: fromToken.symbol,
       },
       toToken: {
         issuer: toToken.issuer,
         assetName: toToken.assetName,
-        symbol: toToken.symbol,
       },
       amountIn: Math.floor(amt),
       slippage: Number(slippage) || 0.5,

@@ -9,7 +9,7 @@ import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface RemoveLiquidityParams {
   assetIssuer: string;
-  assetName: bigint;
+  assetName: string;
   burnLiquidity: number;
   slippage?: number; // percentage, e.g., 0.5 for 0.5%
 }
@@ -53,7 +53,7 @@ export const useRemoveLiquidity = () => {
         // Capture initial liquidity position
         const initialLiquidity = await getLiquidityOf({
           assetIssuer,
-          assetName,
+          assetName: assetName,
           account: wallet.publicKey,
         });
         const initialLiquidityAmount = initialLiquidity?.liquidity || 0;
@@ -66,7 +66,7 @@ export const useRemoveLiquidity = () => {
         const tx = await removeLiquidity({
           sourceID: wallet.publicKey,
           assetIssuer,
-          assetName,
+          assetName: assetName,
           burnLiquidity: burnLiq,
           quAmountMin: Math.max(0, Math.floor(quAmountOut * (1 - slip))),
           assetAmountMin: Math.max(0, Math.floor(assetAmountOut * (1 - slip))),
@@ -86,7 +86,7 @@ export const useRemoveLiquidity = () => {
                 // Check if liquidity position decreased
                 const currentLiquidity = await getLiquidityOf({
                   assetIssuer,
-                  assetName,
+                  assetName: assetName,
                   account: wallet.publicKey,
                 });
                 const currentLiquidityAmount = currentLiquidity?.liquidity || 0;

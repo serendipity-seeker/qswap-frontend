@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { getLiquidityOf, getPoolBasicState } from "@/shared/services/sc.service";
-import { DEFAULT_TOKENS, isAsset, type Token } from "@/shared/constants/tokens";
 import { fetchQubicPrice } from "@/shared/services/price.service";
+import { useQswapTokenList } from "./useQswapTokenList";
+import { type Token } from "@/shared/constants/tokens";
 
 export interface UserPosition {
   token: Token;
@@ -19,6 +20,8 @@ export const useUserPositions = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { tokenList } = useQswapTokenList();
+
   useEffect(() => {
     if (!connected || !wallet?.publicKey) {
       setPositions([]);
@@ -31,10 +34,9 @@ export const useUserPositions = () => {
 
       try {
         const qubicPrice = await fetchQubicPrice();
-        const assetTokens = DEFAULT_TOKENS.filter(isAsset);
         const userPositions: UserPosition[] = [];
 
-        for (const token of assetTokens) {
+        for (const token of tokenList) {
           try {
             // Get user's liquidity in this pool
             const liquidityData = await getLiquidityOf({
@@ -77,7 +79,7 @@ export const useUserPositions = () => {
               valueUSD,
             });
           } catch (err) {
-            console.error(`Error fetching position for ${token.symbol}:`, err);
+            console.error(`Error fetching position for ${token.assetName}:`, err);
             // Continue with other tokens
           }
         }
@@ -92,7 +94,7 @@ export const useUserPositions = () => {
     };
 
     fetchPositions();
-  }, [connected, wallet?.publicKey]);
+  }, [connected, wallet?.publicKey, tokenList]);
 
   return { positions, loading, error };
 };
