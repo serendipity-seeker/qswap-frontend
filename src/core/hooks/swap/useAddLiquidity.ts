@@ -3,7 +3,12 @@ import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { settingsAtom } from "@/shared/store/settings";
-import { fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
+import { 
+  fetchTickInfo, 
+  broadcastTx,
+  fetchAggregatedAssetsBalance,
+  calculateRequiredTransfer,
+} from "@/shared/services/rpc.service";
 import { addLiquidity, getLiquidityOf } from "@/shared/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
@@ -38,7 +43,33 @@ export const useAddLiquidity = () => {
       }
 
       try {
-        toast.loading("Preparing transaction…");
+        // Check if user has enough asset balance under QSwap management
+        const aggregatedBalances = await fetchAggregatedAssetsBalance(wallet.publicKey);
+        const transferInfo = calculateRequiredTransfer(assetName, aggregatedBalances, assetDesired);
+        
+        if (transferInfo.needsTransfer && transferInfo.transferAmount > 0) {
+          // User needs to transfer management rights from QX to QSwap
+          const totalAvailable = transferInfo.qxBalance + transferInfo.qswapBalance;
+          
+          if (totalAvailable < assetDesired) {
+            toast.error(
+              `Insufficient ${assetName} balance. You have ${totalAvailable.toLocaleString()} total ` +
+              `(${transferInfo.qxBalance.toLocaleString()} under QX, ${transferInfo.qswapBalance.toLocaleString()} under QSwap), ` +
+              `but you need ${assetDesired.toLocaleString()}.`
+            );
+            return;
+          }
+          
+          toast.error(
+            `You need to transfer ${transferInfo.transferAmount.toLocaleString()} ${assetName} ` +
+            `from QX management to QSwap management (contract 13) before adding liquidity. ` +
+            `You currently have ${transferInfo.qswapBalance.toLocaleString()} under QSwap and ` +
+            `${transferInfo.qxBalance.toLocaleString()} under QX.`,
+            { duration: 10000 }
+          );
+          return;
+        }
+        
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
 

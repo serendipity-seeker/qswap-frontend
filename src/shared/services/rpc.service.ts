@@ -11,6 +11,9 @@ import type {
   TransactionInfo,
   TxHistory,
   TxStatus,
+  AssetsOwnership,
+  AggregatedAssetBalance,
+  TransferRequirement,
 } from "@/shared/types";
 import { uint8ArrayToBase64 } from "@/shared/utils";
 import axios from "axios";
@@ -98,13 +101,6 @@ export const fetchAssetsBalance = async (publicId: string, assetName: string, co
   return Number(assetBalance.data.numberOfUnits);
 };
 
-interface AssetsOwnership {
-  ownerIdentity: string;
-  managingContractIndex: number;
-  amount: number;
-  assetName: string;
-  issuer: string;
-}
 
 // all assets ownership contract address, assets name, and amount
 export const fetchAssetsOwnership = async (publicId: string): Promise<AssetsOwnership[]> => {
@@ -121,6 +117,98 @@ export const fetchAssetsOwnership = async (publicId: string): Promise<AssetsOwne
     assetName: asset.data.issuedAsset.name,
     issuer: asset.data.issuedAsset.issuerIdentity,
   }));
+};
+
+const QX_CONTRACT_INDEX = 1; // Default token issuer contract
+const QSWAP_CONTRACT_INDEX = 13; // QSwap contract
+
+/**
+ * Fetches aggregated asset balances combining QX (1) and QSwap (13) managing contracts
+ * For QSwap UI purposes, we need to show total balance available (QX + QSwap)
+ */
+export const fetchAggregatedAssetsBalance = async (publicId: string): Promise<AggregatedAssetBalance[]> => {
+  const allAssets = await fetchAssetsOwnership(publicId);
+  
+  // Group by assetName and aggregate balances
+  const assetMap = new Map<string, AggregatedAssetBalance>();
+  
+  for (const asset of allAssets) {
+    const key = asset.assetName;
+    
+    if (!assetMap.has(key)) {
+      assetMap.set(key, {
+        assetName: asset.assetName,
+        issuer: asset.issuer,
+        totalBalance: 0,
+        qxBalance: 0,
+        qswapBalance: 0,
+        otherBalances: [],
+      });
+    }
+    
+    const aggregated = assetMap.get(key)!;
+    aggregated.totalBalance += asset.amount;
+    
+    if (asset.managingContractIndex === QX_CONTRACT_INDEX) {
+      aggregated.qxBalance += asset.amount;
+    } else if (asset.managingContractIndex === QSWAP_CONTRACT_INDEX) {
+      aggregated.qswapBalance += asset.amount;
+    } else {
+      aggregated.otherBalances.push({
+        managingContractIndex: asset.managingContractIndex,
+        amount: asset.amount,
+      });
+    }
+  }
+  
+  return Array.from(assetMap.values());
+};
+
+/**
+ * Calculate how much needs to be transferred from QX to QSwap management
+ * Returns the amount that needs to be transferred (0 if no transfer needed)
+ */
+export const calculateRequiredTransfer = (
+  assetName: string,
+  aggregatedBalances: AggregatedAssetBalance[],
+  requiredAmount: number
+): TransferRequirement => {
+  const asset = aggregatedBalances.find(a => a.assetName === assetName);
+  
+  if (!asset) {
+    return { needsTransfer: false, transferAmount: 0, qxBalance: 0, qswapBalance: 0 };
+  }
+  
+  // Check if we have enough under QSwap management
+  if (asset.qswapBalance >= requiredAmount) {
+    return { 
+      needsTransfer: false, 
+      transferAmount: 0, 
+      qxBalance: asset.qxBalance, 
+      qswapBalance: asset.qswapBalance 
+    };
+  }
+  
+  // Calculate how much more we need
+  const shortfall = requiredAmount - asset.qswapBalance;
+  
+  // Check if we have enough in QX to cover the shortfall
+  if (asset.qxBalance >= shortfall) {
+    return { 
+      needsTransfer: true, 
+      transferAmount: shortfall, 
+      qxBalance: asset.qxBalance, 
+      qswapBalance: asset.qswapBalance 
+    };
+  }
+  
+  // Not enough total balance
+  return { 
+    needsTransfer: true, 
+    transferAmount: asset.qxBalance, // Transfer all we have from QX
+    qxBalance: asset.qxBalance, 
+    qswapBalance: asset.qswapBalance 
+  };
 };
 
 export const broadcastTx = async (tx: Uint8Array) => {

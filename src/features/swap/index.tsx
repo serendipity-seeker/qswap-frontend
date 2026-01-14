@@ -9,7 +9,7 @@ import PriceChart from "@/features/stats/components/PriceChart";
 import { Button, SEO } from "@/shared/components/custom";
 import { isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { fetchAssetsOwnership, fetchBalance } from "@/shared/services/rpc.service";
+import { fetchAggregatedAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
 import { useSwap } from "@/core/hooks";
 import { toast } from "sonner";
 import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
@@ -52,12 +52,17 @@ const Swap: React.FC = () => {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
 
-        const assetBal = await fetchAssetsOwnership(wallet.publicKey);
+        // Fetch aggregated balances (QX + QSwap combined)
+        const aggregatedBal = await fetchAggregatedAssetsBalance(wallet.publicKey);
+        console.log({aggregatedBal});
+        
         for (const t of tokenList) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
-            next.push({ ...t, balance: Number(assetBal.find((a) => a.assetName === t.assetName)?.amount || 0).toLocaleString() });
+            // Show total balance (QX + QSwap) for display purposes
+            const asset = aggregatedBal.find((a) => a.assetName === t.assetName);
+            next.push({ ...t, balance: Number(asset?.totalBalance || 0).toLocaleString() });
           }
         }
 

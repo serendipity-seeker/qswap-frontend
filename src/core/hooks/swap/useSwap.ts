@@ -3,7 +3,14 @@ import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { settingsAtom } from "@/shared/store/settings";
-import { fetchTickInfo, broadcastTx, fetchBalance, fetchAssetsBalance } from "@/shared/services/rpc.service";
+import { 
+  fetchTickInfo, 
+  broadcastTx, 
+  fetchBalance, 
+  fetchAssetsBalance,
+  fetchAggregatedAssetsBalance,
+  calculateRequiredTransfer,
+} from "@/shared/services/rpc.service";
 import { swapExactQuForAsset, swapExactAssetForQu, quoteExactQuInput, quoteExactAssetInput } from "@/shared/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
@@ -43,7 +50,6 @@ export const useSwap = () => {
       const slip = Math.max(0, slippage) / 100;
 
       try {
-        toast.loading("Preparing transaction…");
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
 
@@ -122,6 +128,33 @@ export const useSwap = () => {
           toast.success(`Swap transaction sent: ${res?.transactionId ?? "OK"}`);
         } else {
           // Swap Asset for QUBIC
+          // First, check if user has enough balance under QSwap management
+          const aggregatedBalances = await fetchAggregatedAssetsBalance(wallet.publicKey);
+          const transferInfo = calculateRequiredTransfer(fromToken.assetName, aggregatedBalances, amountInFloor);
+          
+          if (transferInfo.needsTransfer && transferInfo.transferAmount > 0) {
+            // User needs to transfer management rights from QX to QSwap
+            const totalAvailable = transferInfo.qxBalance + transferInfo.qswapBalance;
+            
+            if (totalAvailable < amountInFloor) {
+              toast.error(
+                `Insufficient balance. You have ${totalAvailable.toLocaleString()} ${fromToken.assetName} total ` +
+                `(${transferInfo.qxBalance.toLocaleString()} under QX, ${transferInfo.qswapBalance.toLocaleString()} under QSwap), ` +
+                `but you need ${amountInFloor.toLocaleString()}.`
+              );
+              return;
+            }
+            
+            toast.error(
+              `You need to transfer ${transferInfo.transferAmount.toLocaleString()} ${fromToken.assetName} ` +
+              `from QX management to QSwap management (contract 13) before swapping. ` +
+              `You currently have ${transferInfo.qswapBalance.toLocaleString()} under QSwap and ` +
+              `${transferInfo.qxBalance.toLocaleString()} under QX.`,
+              { duration: 10000 }
+            );
+            return;
+          }
+
           const quote = await quoteExactAssetInput({
             assetIssuer: fromToken.issuer,
             assetName: fromToken.assetName,

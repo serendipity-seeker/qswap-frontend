@@ -134,3 +134,32 @@ export interface TransactionInfo {
     txId: string;
   };
 }
+
+export interface TickEvents {
+  tick: number;
+  events: any[];
+}
+
+export interface AssetsOwnership {
+  ownerIdentity: string;
+  managingContractIndex: number;
+  amount: number;
+  assetName: string;
+  issuer: string;
+}
+
+export interface AggregatedAssetBalance {
+  assetName: string;
+  issuer: string;
+  totalBalance: number;
+  qxBalance: number; // Balance under QX management (index 1)
+  qswapBalance: number; // Balance under QSwap management (index 13)
+  otherBalances: { managingContractIndex: number; amount: number }[];
+}
+
+export interface TransferRequirement {
+  needsTransfer: boolean;
+  transferAmount: number;
+  qxBalance: number;
+  qswapBalance: number;
+}

@@ -46,7 +46,6 @@ export const useRemoveLiquidity = () => {
       }
 
       try {
-        toast.loading("Preparing transaction…");
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;
 

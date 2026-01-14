@@ -55,8 +55,6 @@ export const useTransferManagementRights = () => {
       }
 
       try {
-        toast.info("Preparing transaction...");
-
         // Get current tick
         const tickInfo = await fetchTickInfo();
         const tick = tickInfo.tick + settings.tickOffset;

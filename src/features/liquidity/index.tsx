@@ -6,7 +6,7 @@ import TokenSelectorModal from "@/features/swap/components/TokenSelectorModal";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { Button, SEO } from "@/shared/components/custom";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { fetchAssetsOwnership, fetchBalance } from "@/shared/services/rpc.service";
+import { fetchAggregatedAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
 import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/core/hooks";
 import { toast } from "sonner";
 import { type TokenDisplay, isAsset, isQubic, QUBIC_TOKEN } from "@/shared/constants/tokens";
@@ -57,12 +57,17 @@ const Liquidity: React.FC = () => {
       try {
         const qubicBal = await fetchBalance(wallet.publicKey);
         const next: TokenDisplay[] = [];
-        const assetBal = await fetchAssetsOwnership(wallet.publicKey);
+        
+        // Fetch aggregated balances (QX + QSwap combined)
+        const aggregatedBal = await fetchAggregatedAssetsBalance(wallet.publicKey);
+        
         for (const t of tokenList) {
           if (isQubic(t)) {
             next.push({ ...t, balance: Number(qubicBal.balance || 0).toLocaleString() });
           } else {
-            next.push({ ...t, balance: Number(assetBal.find((a) => a.assetName === t.assetName)?.amount || 0).toLocaleString() });
+            // Show total balance (QX + QSwap) for display purposes
+            const asset = aggregatedBal.find((a) => a.assetName === t.assetName);
+            next.push({ ...t, balance: Number(asset?.totalBalance || 0).toLocaleString() });
           }
         }
         if (!cancelled) setTokens(next);
