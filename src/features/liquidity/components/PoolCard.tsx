@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, Droplets, ArrowRight } from "lucide-react";
 import type { Token } from "@/shared/constants/tokens";
+import { QUBIC_TOKEN } from "@/shared/constants/tokens";
 
 export interface PoolCardData {
   token: Token;
@@ -23,10 +24,6 @@ const PoolCard: React.FC<PoolCardProps> = ({ pool, onSelect, swapFee }) => {
     ? pool.reservedQuAmount / pool.reservedAssetAmount 
     : 0;
 
-  // Calculate 24h APY estimate (simplified - based on 0.3% fee and TVL)
-  // This is a rough estimate assuming constant volume
-  const estimatedAPY = pool.tvlUSD > 0 ? (swapFee * 365 * 100) : 0;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -45,7 +42,7 @@ const PoolCard: React.FC<PoolCardProps> = ({ pool, onSelect, swapFee }) => {
               className="h-10 w-10 rounded-full ring-2 ring-background sm:h-12 sm:w-12"
             />
             <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-40 text-[10px] font-bold text-white">
-              Q
+              <img src={QUBIC_TOKEN.logo} alt="QUBIC" className="h-5 w-5 rounded-full" />
             </div>
           </div>
           <div>
@@ -76,17 +73,17 @@ const PoolCard: React.FC<PoolCardProps> = ({ pool, onSelect, swapFee }) => {
           </div>
         </div>
 
-        {/* APY */}
+        {/* Total Liquidity */}
         <div className="rounded-lg bg-muted/30 p-3">
           <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
             <TrendingUp className="h-3.5 w-3.5" />
-            APY
+            Liquidity
           </div>
           <div className="text-base font-bold text-success-40 sm:text-lg">
-            {estimatedAPY.toFixed(2)}%
+            {pool.totalLiquidity.toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </div>
           <div className="mt-1 text-xs text-muted-foreground">
-            Estimated
+            LP Index
           </div>
         </div>
 

@@ -18,8 +18,13 @@ export const useTopPools = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [swapFee, setSwapFee] = useState<number>(0);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const { tokenList } = useQswapTokenList();
+
+  const refetch = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     const fetchPools = async () => {
@@ -76,8 +81,8 @@ export const useTopPools = () => {
     };
 
     fetchPools();
-  }, [tokenList]);
+  }, [tokenList, refreshTrigger]);
 
-  return { pools, loading, error, swapFee };
+  return { pools, loading, error, swapFee, refetch };
 };
 

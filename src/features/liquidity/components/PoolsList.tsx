@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Loader2, TrendingDown } from "lucide-react";
+import { Search, Loader2, TrendingDown, Plus } from "lucide-react";
 import PoolCard, { type PoolCardData } from "./PoolCard";
+import CreatePoolModal from "./CreatePoolModal";
+import type { Token } from "@/shared/constants/tokens";
+import { Button } from "@/shared/components/custom";
 
 interface PoolsListProps {
   pools: PoolCardData[];
@@ -9,6 +12,8 @@ interface PoolsListProps {
   error: string | null;
   swapFee: number;
   onSelectPool: (pool: PoolCardData) => void;
+  availableTokens: Token[];
+  onPoolCreated?: () => void;
 }
 
 const PoolsList: React.FC<PoolsListProps> = ({
@@ -17,18 +22,19 @@ const PoolsList: React.FC<PoolsListProps> = ({
   error,
   swapFee,
   onSelectPool,
+  availableTokens,
+  onPoolCreated,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const filteredPools = pools.filter((pool) =>
-    pool.token.assetName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPools = pools.filter((pool) => pool.token.assetName.toLowerCase().includes(searchTerm.toLowerCase()));
 
   if (loading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-primary-40" />
+          <Loader2 className="text-primary-40 mx-auto mb-4 h-12 w-12 animate-spin" />
           <p className="text-muted-foreground">Loading pools...</p>
         </div>
       </div>
@@ -39,9 +45,9 @@ const PoolsList: React.FC<PoolsListProps> = ({
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <TrendingDown className="mx-auto mb-4 h-12 w-12 text-destructive" />
-          <p className="text-lg font-semibold text-destructive">Failed to load pools</p>
-          <p className="text-sm text-muted-foreground">{error}</p>
+          <TrendingDown className="text-destructive mx-auto mb-4 h-12 w-12" />
+          <p className="text-destructive text-lg font-semibold">Failed to load pools</p>
+          <p className="text-muted-foreground text-sm">{error}</p>
         </div>
       </div>
     );
@@ -49,36 +55,37 @@ const PoolsList: React.FC<PoolsListProps> = ({
 
   return (
     <div>
-      {/* Search Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
-      >
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+      {/* Search Bar and Create Button */}
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex gap-3">
+        <div className="relative flex-1">
+          <Search className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search pools by token name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="glass-effect w-full rounded-xl py-3 pl-12 pr-4 outline-none transition-all focus:ring-2 focus:ring-primary-40"
+            className="glass-effect focus:ring-primary-40 w-full rounded-xl py-3 pr-4 pl-12 transition-all outline-none focus:ring-2"
           />
         </div>
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => setIsCreateModalOpen(true)}
+          className="m-1 flex flex-row items-center gap-2"
+          icon={<Plus className="h-5 w-5" />}
+        >
+          <span className="hidden md:flex">Create Pool</span>
+        </Button>
       </motion.div>
 
       {/* Pools Grid */}
       {filteredPools.length === 0 ? (
         <div className="flex min-h-[300px] items-center justify-center">
           <div className="text-center">
-            <p className="text-lg font-semibold text-muted-foreground">
+            <p className="text-muted-foreground text-lg font-semibold">
               {searchTerm ? "No pools found" : "No pools available"}
             </p>
-            {searchTerm && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                Try a different search term
-              </p>
-            )}
+            {searchTerm && <p className="text-muted-foreground mt-2 text-sm">Try a different search term</p>}
           </div>
         </div>
       ) : (
@@ -90,11 +97,7 @@ const PoolsList: React.FC<PoolsListProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <PoolCard
-                pool={pool}
-                onSelect={() => onSelectPool(pool)}
-                swapFee={swapFee}
-              />
+              <PoolCard pool={pool} onSelect={() => onSelectPool(pool)} swapFee={swapFee} />
             </motion.div>
           ))}
         </div>
@@ -110,30 +113,41 @@ const PoolsList: React.FC<PoolsListProps> = ({
         >
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-primary-40">
-                {filteredPools.length}
-              </div>
-              <div className="text-sm text-muted-foreground">Total Pools</div>
+              <div className="text-primary-40 text-2xl font-bold">{filteredPools.length}</div>
+              <div className="text-muted-foreground text-sm">Total Pools</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary-40">
-                ${filteredPools
+              <div className="text-primary-40 text-2xl font-bold">
+                $
+                {filteredPools
                   .reduce((sum, pool) => sum + pool.tvlUSD, 0)
                   .toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </div>
-              <div className="text-sm text-muted-foreground">Total TVL</div>
+              <div className="text-muted-foreground text-sm">Total TVL</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary-40">
+              <div className="text-primary-40 text-2xl font-bold">
                 {filteredPools
                   .reduce((sum, pool) => sum + pool.reservedQuAmount, 0)
                   .toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </div>
-              <div className="text-sm text-muted-foreground">Total QU Locked</div>
+              <div className="text-muted-foreground text-sm">Total QU Locked</div>
             </div>
           </div>
         </motion.div>
       )}
+
+      {/* Create Pool Modal */}
+      <CreatePoolModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => {
+          if (onPoolCreated) {
+            onPoolCreated();
+          }
+        }}
+        availableTokens={availableTokens}
+      />
     </div>
   );
 };
