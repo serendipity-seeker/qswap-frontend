@@ -113,11 +113,11 @@ const PoolsList: React.FC<PoolsListProps> = ({
         >
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-primary-40 text-2xl font-bold">{filteredPools.length}</div>
+              <div className="text-primary-40 font-bold md:text-2xl">{filteredPools.length}</div>
               <div className="text-muted-foreground text-sm">Total Pools</div>
             </div>
             <div>
-              <div className="text-primary-40 text-2xl font-bold">
+              <div className="text-primary-40 font-bold md:text-2xl">
                 $
                 {filteredPools
                   .reduce((sum, pool) => sum + pool.tvlUSD, 0)
@@ -126,7 +126,7 @@ const PoolsList: React.FC<PoolsListProps> = ({
               <div className="text-muted-foreground text-sm">Total TVL</div>
             </div>
             <div>
-              <div className="text-primary-40 text-2xl font-bold">
+              <div className="text-primary-40 font-bold md:text-2xl">
                 {filteredPools
                   .reduce((sum, pool) => sum + pool.reservedQuAmount, 0)
                   .toLocaleString(undefined, { maximumFractionDigits: 0 })}
