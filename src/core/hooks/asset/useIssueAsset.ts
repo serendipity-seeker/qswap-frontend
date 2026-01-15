@@ -63,8 +63,6 @@ export const useIssueAsset = () => {
           return;
         }
 
-        toast.success("Transaction broadcasted!");
-
         // Monitor transaction
         const taskId = `issue-asset-${Date.now()}`;
         startMonitoring(

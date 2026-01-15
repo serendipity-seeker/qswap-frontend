@@ -115,7 +115,6 @@ export const useRemoveLiquidity = () => {
           "v1",
         );
 
-        toast.success(`Remove liquidity transaction sent: ${res?.transactionId ?? "OK"}`);
       } catch (e) {
         console.error(e);
         toast.error((e as Error)?.message || "Remove liquidity failed");

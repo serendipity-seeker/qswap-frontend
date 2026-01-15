@@ -132,7 +132,6 @@ export const useAddLiquidity = () => {
           "v1",
         );
 
-        toast.success(`Add liquidity transaction sent: ${res?.transactionId ?? "OK"}`);
       } catch (e) {
         console.error(e);
         toast.error((e as Error)?.message || "Add liquidity failed");

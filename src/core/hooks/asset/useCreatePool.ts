@@ -66,8 +66,6 @@ export const useCreatePool = () => {
           return;
         }
 
-        toast.success("Transaction broadcasted!");
-
         // Monitor transaction
         const taskId = `create-pool-${Date.now()}`;
         startMonitoring(

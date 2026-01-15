@@ -92,8 +92,6 @@ export const useTransferManagementRights = () => {
           return;
         }
 
-        toast.success("Transaction broadcasted!");
-
         // Monitor transaction with balance verification
         const taskId = `transfer-mgmt-${Date.now()}`;
         const expectedAmount = targetContractOriginAmount + params.numberOfShares;

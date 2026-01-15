@@ -11,7 +11,7 @@ import {
   fetchAggregatedAssetsBalance,
   calculateRequiredTransfer,
 } from "@/shared/services/rpc.service";
-import { swapExactQuForAsset, swapExactAssetForQu, quoteExactQuInput, quoteExactAssetInput } from "@/shared/services/sc.service";
+import { swapExactQuForAsset, swapExactAssetForQu, quoteExactQuInput, quoteExactAssetInput, SC_INDEX } from "@/shared/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface SwapParams {
@@ -74,7 +74,7 @@ export const useSwap = () => {
           const initialAssetBalance = await fetchAssetsBalance(
             wallet.publicKey,
             toToken.assetName,
-            1 // QSWAP contract index
+            SC_INDEX // QSWAP contract index
           );
 
           const minOut = Math.max(0, Math.floor(quote.assetAmountOut * (1 - slip)));
@@ -101,7 +101,7 @@ export const useSwap = () => {
                   const currentAssetBalance = await fetchAssetsBalance(
                     wallet.publicKey,
                     toToken.assetName,
-                    1
+                    SC_INDEX
                   );
                   
                   // If balance increased, swap was successful
@@ -125,7 +125,6 @@ export const useSwap = () => {
             "v1",
           );
 
-          toast.success(`Swap transaction sent: ${res?.transactionId ?? "OK"}`);
         } else {
           // Swap Asset for QUBIC
           // First, check if user has enough balance under QSwap management
@@ -216,7 +215,6 @@ export const useSwap = () => {
             "v1",
           );
 
-          toast.success(`Swap transaction sent: ${res?.transactionId ?? "OK"}`);
         }
       } catch (e) {
         console.error(e);

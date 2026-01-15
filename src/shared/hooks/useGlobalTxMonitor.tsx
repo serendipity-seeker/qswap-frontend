@@ -225,6 +225,7 @@ const useGlobalTxMonitor = () => {
     
     const toastId = toast.loading("Monitoring transaction...", {
       position: "bottom-right",
+      description: monitoringTasks[Object.keys(monitoringTasks)[0]]?.txHash ?? "",
     });
     
     return () => {

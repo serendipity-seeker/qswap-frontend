@@ -14,7 +14,14 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
       <WalletConnectProvider>
         <QubicConnectProvider>
           {children}
-          <Toaster position="top-right" richColors closeButton swipeDirections={["right", "left"]} theme="dark" />
+          <Toaster 
+            position="top-right" 
+            richColors 
+            closeButton 
+            expand={true}
+            swipeDirections={["right", "left"]} 
+            theme="dark" 
+          />
         </QubicConnectProvider>
       </WalletConnectProvider>
     </HelmetProvider>

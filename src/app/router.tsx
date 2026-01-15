@@ -8,8 +8,6 @@ import Liquidity from "@/features/liquidity";
 import AssetManagement from "@/features/asset";
 import Showcase from "@/features/showcase";
 
-console.log({ ROUTES });
-
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,

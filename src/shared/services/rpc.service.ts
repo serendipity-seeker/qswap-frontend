@@ -97,7 +97,6 @@ export const fetchAssetsBalance = async (publicId: string, assetName: string, co
   if (!assetBalance) {
     return 0;
   }
-  console.log(assetBalance);
   return Number(assetBalance.data.numberOfUnits);
 };
 

@@ -84,7 +84,6 @@ export const useCreatePool = () => {
           "v1",
         );
 
-        toast.success(`Pool creation transaction sent: ${res?.transactionId ?? "OK"}`);
         return true;
       } catch (e) {
         console.error(e);
