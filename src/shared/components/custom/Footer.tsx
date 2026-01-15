@@ -136,7 +136,7 @@ const Footer: React.FC = () => {
             viewport={{ once: true }}
             className="text-muted-foreground text-center text-sm md:text-left"
           >
-            © 2025 Qubic Portal. All rights reserved.
+            © {new Date().getFullYear()} Qubic Portal. All rights reserved.
           </motion.p>
 
           <motion.div
@@ -156,23 +156,6 @@ const Footer: React.FC = () => {
             </a>
           </motion.div>
         </div>
-
-        {/* Powered by Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-8 flex justify-center"
-        >
-          <div className="bg-primary/10 border-primary/20 rounded-full border px-6 py-3">
-            <p className="text-center text-sm font-medium">
-              <span className="text-muted-foreground">Powered by</span>{" "}
-              <span className="text-primary font-bold">
-                Qubic Network
-              </span>
-            </p>
-          </div>
-        </motion.div>
       </div>
     </footer>
   );
