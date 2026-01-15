@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Minus, ArrowLeft, Info, AlertCircle } from "lucide-react";
+import { Plus, Minus, ArrowLeft, Info } from "lucide-react";
 import TokenInput from "@/features/swap/components/TokenInput";
 import { Button } from "@/shared/components/custom";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";

@@ -135,11 +135,6 @@ export interface TransactionInfo {
   };
 }
 
-export interface TickEvents {
-  tick: number;
-  events: any[];
-}
-
 export interface AssetsOwnership {
   ownerIdentity: string;
   managingContractIndex: number;
