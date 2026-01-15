@@ -11,7 +11,7 @@ export interface TokenDisplay extends Token {
 export const QUBIC_TOKEN = {
   issuer: "",
   assetName: "QUBIC",
-  logo: "/public/assets/qubic-coin.png",
+  logo: "/assets/qubic-coin.png",
 };
 
 export const isAsset = (token: Token) => {
