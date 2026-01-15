@@ -7,11 +7,9 @@ import type { PoolCardData } from "@/features/liquidity/components/PoolCard";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { SEO } from "@/shared/components/custom";
 import { useTopPools } from "@/core/hooks/pool/useTopPools";
-import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
 
 const Liquidity: React.FC = () => {
   const { pools, loading, error, swapFee, refetch } = useTopPools();
-  const { tokenList } = useQswapTokenList();
   const [selectedPool, setSelectedPool] = useState<PoolCardData | null>(null);
 
   const handleSelectPool = (pool: PoolCardData) => {
@@ -74,7 +72,6 @@ const Liquidity: React.FC = () => {
                   error={error}
                   swapFee={swapFee}
                   onSelectPool={handleSelectPool}
-                  availableTokens={tokenList}
                   onPoolCreated={refetch}
                 />
               </motion.div>

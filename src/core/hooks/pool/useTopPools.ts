@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getPoolBasicState, getFees } from "@/shared/services/sc.service";
 import { fetchQubicPrice } from "@/shared/services/price.service";
 import { useQswapTokenList } from "./useQswapTokenList";
-import { type Token } from "@/shared/constants/tokens";
+import { isAsset, type Token } from "@/shared/constants/tokens";
 
 export interface PoolInfo {
   token: Token;
@@ -40,7 +40,7 @@ export const useTopPools = () => {
 
         const poolInfos: PoolInfo[] = [];
 
-        for (const asset of tokenList) {
+        for (const asset of tokenList.filter(isAsset)) {
           try {
             const poolState = await getPoolBasicState({
               assetIssuer: asset.issuer,

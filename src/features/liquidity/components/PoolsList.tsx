@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Search, Loader2, TrendingDown, Plus } from "lucide-react";
 import PoolCard, { type PoolCardData } from "./PoolCard";
 import CreatePoolModal from "./CreatePoolModal";
-import type { Token } from "@/shared/constants/tokens";
 import { Button } from "@/shared/components/custom";
 
 interface PoolsListProps {
@@ -12,7 +11,6 @@ interface PoolsListProps {
   error: string | null;
   swapFee: number;
   onSelectPool: (pool: PoolCardData) => void;
-  availableTokens: Token[];
   onPoolCreated?: () => void;
 }
 
@@ -22,7 +20,6 @@ const PoolsList: React.FC<PoolsListProps> = ({
   error,
   swapFee,
   onSelectPool,
-  availableTokens,
   onPoolCreated,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -146,7 +143,6 @@ const PoolsList: React.FC<PoolsListProps> = ({
             onPoolCreated();
           }
         }}
-        availableTokens={availableTokens}
       />
     </div>
   );
