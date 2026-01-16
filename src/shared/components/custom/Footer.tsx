@@ -23,16 +23,16 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="border-primary-40/10 relative mt-20 overflow-hidden border-t">
+    <footer className="border-primary-40/10 relative mt-6 overflow-hidden border-t">
       {/* Background Decorations */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="bg-primary-40/5 absolute -bottom-48 -left-48 h-96 w-96 rounded-full blur-3xl" />
         <div className="bg-primary-60/5 absolute -right-48 -bottom-48 h-96 w-96 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-4 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link to="/" className="group mb-6 flex w-fit items-center">
@@ -124,7 +124,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Divider with Gradient */}
-        <div className="relative mb-8 h-px">
+        <div className="relative mb-4 h-px">
           <div className="bg-primary/50 absolute inset-0" />
         </div>
 

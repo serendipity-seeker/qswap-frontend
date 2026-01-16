@@ -134,7 +134,7 @@ const Home: React.FC = () => {
 
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="px-4 pt-32 pb-20 md:pt-40 md:pb-24">
+        <section className="px-4 pt-20 pb-10 md:pt-28 md:pb-14">
           <div className="mx-auto max-w-6xl text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
               <h1 className="mb-8 text-4xl leading-tight font-black md:text-5xl lg:text-6xl uppercase">
@@ -144,11 +144,11 @@ const Home: React.FC = () => {
                 <br />
                 <span className="text-foreground">Like Never Before</span>
               </h1>
-              <p className="text-muted-foreground mx-auto mb-12 max-w-3xl text-lg md:text-xl">
+              <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-base md:text-lg">
                 Experience the future of decentralized trading on Qubic. Fast, secure, and with the best rates in DeFi.
               </p>
 
-              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link to="/swap">
                   <Button variant="primary" size="lg" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                     Start Trading
@@ -167,7 +167,7 @@ const Home: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mt-20 grid grid-cols-2 gap-4 md:grid-cols-4 md:mt-24"
+              className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:mt-12"
             >
               {stats.map((stat, index) => (
                 <motion.div
@@ -175,14 +175,14 @@ const Home: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="glass-effect hover:bg-muted/50 rounded-xl p-4 transition-all"
+                  className="glass-effect hover:bg-muted/50 rounded-xl p-3 transition-all"
                 >
-                  <div className="mb-2 flex items-center justify-between gap-3">
-                    <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <div className="bg-primary/10 text-primary flex h-7 w-7 items-center justify-center rounded-lg">
                       <stat.icon className="h-4 w-4" />
                     </div>
                   </div>
-                  <div className="text-primary mb-1 text-2xl font-bold md:text-3xl">
+                  <div className="text-primary mb-0.5 text-xl font-bold md:text-2xl">
                     {stat.value}
                   </div>
                   <div className="text-muted-foreground text-xs">{stat.label}</div>
@@ -193,28 +193,28 @@ const Home: React.FC = () => {
         </section>
 
         {/* Features Section */}
-        <section className="px-4 py-12">
+        <section className="px-4 py-7">
           <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="mb-16 text-center"
+              className="mb-8 text-center"
             >
-              <h2 className="mb-3 text-3xl font-bold md:text-4xl">
+              <h2 className="mb-2 text-2xl font-bold md:text-3xl">
                 Why Choose{" "}
                 <span className="text-primary">
                   Qubic Portal
                 </span>
                 ?
               </h2>
-              <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
+              <p className="text-muted-foreground mx-auto max-w-2xl text-xs">
                 Built on cutting-edge technology to provide the best trading experience
               </p>
             </motion.div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
@@ -225,15 +225,15 @@ const Home: React.FC = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.02, y: -5 }}
-                    className="glass-effect hover:bg-muted/50 group rounded-xl p-6 transition-all"
+                    className="glass-effect hover:bg-muted/50 group rounded-xl p-4 transition-all"
                   >
                     <div
-                      className="bg-primary/10 h-12 w-12 rounded-lg mb-3 flex items-center justify-center transition-transform group-hover:scale-110"
+                      className="bg-primary/10 h-9 w-9 rounded-lg mb-2 flex items-center justify-center transition-transform group-hover:scale-110"
                     >
-                      <Icon className="text-primary h-6 w-6" />
+                      <Icon className="text-primary h-5 w-5" />
                     </div>
-                    <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <h3 className="mb-1 text-lg font-bold">{feature.title}</h3>
+                    <p className="text-muted-foreground text-sm">{feature.description}</p>
                   </motion.div>
                 );
               })}
@@ -242,22 +242,22 @@ const Home: React.FC = () => {
         </section>
 
         {/* How it works */}
-        <section className="px-4 py-12 md:py-16">
+        <section className="px-4 py-7 md:py-10">
           <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="mb-12 text-center"
+              className="mb-6 text-center"
             >
-              <h2 className="mb-3 text-3xl font-bold md:text-4xl">How it works</h2>
-              <p className="text-muted-foreground mx-auto max-w-2xl text-sm">
+              <h2 className="mb-2 text-2xl font-bold md:text-3xl">How it works</h2>
+              <p className="text-muted-foreground mx-auto max-w-2xl text-xs">
                 A simple flow designed to keep you in control at every step.
               </p>
             </motion.div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-2">
               {steps.map((step, idx) => {
                 const Icon = step.icon;
                 return (
@@ -267,18 +267,18 @@ const Home: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: idx * 0.05 }}
                     viewport={{ once: true }}
-                    className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
+                    className="glass-effect hover:bg-muted/50 rounded-xl p-3 transition-all"
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                        <Icon className="h-5 w-5" />
+                    <div className="flex items-start gap-2">
+                      <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-xl">
+                        <Icon className="h-4 w-4" />
                       </div>
                       <div>
-                        <div className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                        <div className="text-muted-foreground text-[10px] font-semibold tracking-wide uppercase">
                           Step {idx + 1}
                         </div>
-                        <h3 className="mt-1 text-lg font-bold">{step.title}</h3>
-                        <p className="text-muted-foreground mt-1.5 text-sm">{step.description}</p>
+                        <h3 className="mt-1 text-base font-bold">{step.title}</h3>
+                        <p className="text-muted-foreground mt-1 text-xs">{step.description}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -289,25 +289,25 @@ const Home: React.FC = () => {
         </section>
 
         {/* Security / Trust */}
-        <section className="px-4 py-16 md:py-20">
+        <section className="px-4 py-9 md:py-11">
           <div className="mx-auto max-w-6xl">
-            <div className="grid items-start gap-8 md:grid-cols-2">
+            <div className="grid items-start gap-4 md:grid-cols-2">
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-3xl font-bold md:text-4xl">Built for trust</h2>
-                <p className="text-muted-foreground mt-4 text-lg">
+                <h2 className="text-2xl font-bold md:text-3xl">Built for trust</h2>
+                <p className="text-muted-foreground mt-2 text-base">
                   Clear confirmations, transparent settings, and a UX designed to reduce surprises.
                 </p>
-                <div className="text-muted-foreground mt-6 text-sm">
+                <div className="text-muted-foreground mt-3 text-xs">
                   Tip: Always verify token addresses and transaction details in your wallet before confirming.
                 </div>
               </motion.div>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {trustPoints.map((p, idx) => {
                   const Icon = p.icon;
                   return (
@@ -317,15 +317,15 @@ const Home: React.FC = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: idx * 0.05 }}
                       viewport={{ once: true }}
-                      className="glass-effect hover:bg-muted/50 rounded-xl p-5 transition-all"
+                      className="glass-effect hover:bg-muted/50 rounded-xl p-3 transition-all"
                     >
-                      <div className="flex items-start gap-3">
-                        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                          <Icon className="h-5 w-5" />
+                      <div className="flex items-start gap-2">
+                        <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-xl">
+                          <Icon className="h-4 w-4" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold">{p.title}</h3>
-                          <p className="text-muted-foreground mt-1.5 text-sm">{p.description}</p>
+                          <h3 className="text-base font-bold">{p.title}</h3>
+                          <p className="text-muted-foreground mt-1 text-xs">{p.description}</p>
                         </div>
                       </div>
                     </motion.div>
@@ -337,32 +337,32 @@ const Home: React.FC = () => {
         </section>
 
         {/* FAQ */}
-        <section className="px-4 py-12 md:py-16">
+        <section className="px-4 py-7 md:py-10">
           <div className="mx-auto max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="mb-10 text-center"
+              className="mb-5 text-center"
             >
-              <h2 className="text-4xl font-bold md:text-5xl">FAQ</h2>
-              <p className="text-muted-foreground mx-auto mt-2 max-w-2xl text-sm">Quick answers to common questions.</p>
+              <h2 className="text-3xl font-bold md:text-4xl">FAQ</h2>
+              <p className="text-muted-foreground mx-auto mt-1 max-w-2xl text-xs">Quick answers to common questions.</p>
             </motion.div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {faqs.map((item) => (
                 <details
                   key={item.q}
-                  className="glass-effect hover:bg-muted/50 group rounded-xl p-4 transition-all"
+                  className="glass-effect hover:bg-muted/50 group rounded-xl p-3 transition-all"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
-                    <span className="text-base font-bold">{item.q}</span>
-                    <span className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg transition-transform group-open:rotate-45">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-2">
+                    <span className="text-sm font-bold">{item.q}</span>
+                    <span className="bg-primary/10 text-primary flex h-7 w-7 items-center justify-center rounded-lg transition-transform group-open:rotate-45">
                       <PlusIcon />
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-2.5 text-sm leading-relaxed">{item.a}</p>
+                  <p className="text-muted-foreground mt-2 text-xs leading-relaxed">{item.a}</p>
                 </details>
               ))}
             </div>
@@ -370,18 +370,18 @@ const Home: React.FC = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="px-4 py-16">
+        <section className="px-4 py-9">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="glass-effect relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-8 md:p-10 text-center"
+            className="glass-effect relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-5 md:p-7 text-center"
           >
             <div className="bg-primary/5 absolute inset-0"></div>
             <div className="relative z-10">
-              <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to Start Trading?</h2>
-              <p className="text-muted-foreground mb-6 text-base">Join thousands of users already trading on Qubic Portal</p>
+              <h2 className="mb-2 text-2xl font-bold md:text-3xl">Ready to Start Trading?</h2>
+              <p className="text-muted-foreground mb-4 text-sm">Join thousands of users already trading on Qubic Portal</p>
               <Link to="/swap">
                 <Button variant="primary" size="lg" icon={<ArrowRight className="h-4 w-4" />} iconPosition="right">
                   Launch App
