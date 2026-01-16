@@ -71,18 +71,18 @@ const TokenBalanceCard: React.FC<TokenBalanceCardProps> = ({ asset, logo }) => {
 
         {/* Token Info */}
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-bold">{asset.assetName}</div>
-          <div className="text-muted-foreground truncate font-mono text-[10px] leading-tight">
+          <div className="truncate text-base font-bold sm:text-lg">{asset.assetName}</div>
+          <div className="text-muted-foreground truncate font-mono text-xs leading-tight">
             {shortIssuer(asset.issuer)}
           </div>
         </div>
 
         {/* Total Balance */}
         <div className="text-right">
-          <div className="text-primary text-sm font-bold tabular-nums">
+          <div className="text-primary text-base font-bold tabular-nums sm:text-lg">
             {asset.totalBalance.toLocaleString()}
           </div>
-          <div className="text-muted-foreground text-[10px]">
+          <div className="text-muted-foreground text-xs">
             {allBalances.length} contract{allBalances.length !== 1 ? "s" : ""}
           </div>
         </div>
@@ -112,9 +112,9 @@ const TokenBalanceCard: React.FC<TokenBalanceCardProps> = ({ asset, logo }) => {
                   className="bg-muted/30 flex items-center justify-between rounded-lg px-3 py-2"
                 >
                   <div>
-                    <span className="text-sm font-medium">{getContractName(bal.contractIndex)}</span>
+                    <span className="text-base font-medium">{getContractName(bal.contractIndex)}</span>
                   </div>
-                  <div className="text-sm font-semibold tabular-nums">
+                  <div className="text-base font-semibold tabular-nums">
                     {bal.amount.toLocaleString()}
                   </div>
                 </div>

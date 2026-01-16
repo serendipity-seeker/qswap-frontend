@@ -82,7 +82,7 @@ const WalletHeader: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm font-medium">
+              <span className="font-mono text-base font-medium">
                 {shortAddress(wallet.publicKey)}
               </span>
               <button
@@ -115,10 +115,10 @@ const WalletHeader: React.FC = () => {
             <div className="bg-muted h-6 w-24 animate-pulse rounded" />
           ) : (
             <div className="text-right">
-              <div className="text-primary text-xl font-bold">
-                {balance.toLocaleString()} <span className="text-muted-foreground text-sm font-normal">QUBIC</span>
+              <div className="text-primary text-xl font-bold sm:text-2xl">
+                {balance.toLocaleString()} <span className="text-muted-foreground text-base font-normal">QUBIC</span>
               </div>
-              <div className="text-muted-foreground text-xs">
+              <div className="text-muted-foreground text-sm">
                 ${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
               </div>
             </div>

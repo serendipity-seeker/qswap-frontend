@@ -110,28 +110,28 @@ const TransactionHistory: React.FC = () => {
       className="glass-effect rounded-2xl p-4"
     >
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-bold">Transaction History</h2>
+        <h2 className="text-xl font-bold sm:text-2xl">Transaction History</h2>
         {loading && <Loader2 className="text-primary h-4 w-4 animate-spin" />}
       </div>
 
       {error ? (
         <div className="py-6 text-center">
-          <p className="text-error-40 text-sm">{error}</p>
+          <p className="text-error-40 text-base">{error}</p>
         </div>
       ) : loading ? (
         <div className="py-8 text-center">
           <Loader2 className="text-primary mx-auto mb-2 h-6 w-6 animate-spin" />
-          <p className="text-muted-foreground text-sm">Loading...</p>
+          <p className="text-muted-foreground text-base">Loading...</p>
         </div>
       ) : transactions.length === 0 ? (
         <div className="py-8 text-center">
           <History className="text-muted-foreground mx-auto mb-2 h-8 w-8" />
-          <p className="text-muted-foreground text-sm">No transactions found</p>
+          <p className="text-muted-foreground text-base">No transactions found</p>
         </div>
       ) : (
         <>
           {/* Table Header */}
-          <div className="text-muted-foreground mb-2 grid grid-cols-12 gap-2 px-2 text-xs">
+          <div className="text-muted-foreground mb-2 grid grid-cols-12 gap-2 px-2 text-sm">
             <div className="col-span-1"></div>
             <div className="col-span-2">Tick</div>
             <div className="col-span-4">Address</div>
@@ -144,46 +144,46 @@ const TransactionHistory: React.FC = () => {
             {paginatedTxs.map((tx) => (
               <div
                 key={tx.txId}
-                className="bg-muted/30 hover:bg-muted/50 grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-2 text-sm transition-all"
+                className="bg-muted/30 hover:bg-muted/50 grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-2.5 text-base transition-all"
               >
                 {/* Direction Icon */}
                 <div className="col-span-1">
                   <div
-                    className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${
                       tx.isOutgoing ? "bg-error-40/20" : "bg-success-40/20"
                     }`}
                   >
                     {tx.isOutgoing ? (
-                      <ArrowUpRight className="text-error-40 h-3.5 w-3.5" />
+                      <ArrowUpRight className="text-error-40 h-4 w-4" />
                     ) : (
-                      <ArrowDownLeft className="text-success-40 h-3.5 w-3.5" />
+                      <ArrowDownLeft className="text-success-40 h-4 w-4" />
                     )}
                   </div>
                 </div>
 
                 {/* Tick */}
                 <div className="col-span-2">
-                  <span className="text-muted-foreground text-xs">#{tx.tickNumber.toLocaleString()}</span>
+                  <span className="text-muted-foreground text-sm">#{tx.tickNumber.toLocaleString()}</span>
                   {tx.moneyFlew ? (
-                    <span className="bg-success-40/20 text-success-40 ml-1 rounded px-1 py-0.5 text-[10px]">OK</span>
+                    <span className="bg-success-40/20 text-success-40 ml-1 rounded px-1 py-0.5 text-xs">OK</span>
                   ) : (
-                    <span className="bg-warning-40/20 text-warning-40 ml-1 rounded px-1 py-0.5 text-[10px]">...</span>
+                    <span className="bg-warning-40/20 text-warning-40 ml-1 rounded px-1 py-0.5 text-xs">...</span>
                   )}
                 </div>
 
                 {/* Address */}
-                <div className="col-span-4 truncate font-mono text-xs">
+                <div className="col-span-4 truncate font-mono text-sm">
                   <span className="text-muted-foreground">{tx.isOutgoing ? "To: " : "From: "}</span>
                   {shortAddress(tx.isOutgoing ? tx.destId : tx.sourceId)}
                 </div>
 
                 {/* Date */}
-                <div className="text-muted-foreground col-span-2 text-xs">
+                <div className="text-muted-foreground col-span-2 text-sm">
                   {formatDate(tx.timestamp)}
                 </div>
 
                 {/* Amount */}
-                <div className={`col-span-2 text-right font-bold ${tx.isOutgoing ? "text-error-40" : "text-success-40"}`}>
+                <div className={`col-span-2 text-right text-base font-bold ${tx.isOutgoing ? "text-error-40" : "text-success-40"}`}>
                   {tx.isOutgoing ? "-" : "+"}
                   {formatAmount(tx.amount)}
                 </div>
@@ -206,13 +206,13 @@ const TransactionHistory: React.FC = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-3 flex items-center justify-between text-xs">
+            <div className="mt-3 flex items-center justify-between text-sm">
               <button
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={page === 0}
                 className="hover:bg-muted flex items-center gap-1 rounded px-2 py-1 transition-colors disabled:opacity-50"
               >
-                <ChevronLeft className="h-3 w-3" />
+                <ChevronLeft className="h-4 w-4" />
                 Prev
               </button>
               <span className="text-muted-foreground">
@@ -224,7 +224,7 @@ const TransactionHistory: React.FC = () => {
                 className="hover:bg-muted flex items-center gap-1 rounded px-2 py-1 transition-colors disabled:opacity-50"
               >
                 Next
-                <ChevronRight className="h-3 w-3" />
+                <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           )}

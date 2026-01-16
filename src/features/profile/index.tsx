@@ -93,7 +93,7 @@ const Profile: React.FC = () => {
                   className="glass-effect rounded-2xl p-4"
                 >
                   <div className="mb-3 flex items-center justify-between">
-                    <h2 className="text-lg font-bold">Token Balances</h2>
+                    <h2 className="text-xl font-bold sm:text-2xl">Token Balances</h2>
                     <div className="flex items-center gap-2">
                       {loadingTokens && <Loader2 className="text-primary h-4 w-4 animate-spin" />}
                       <Button
@@ -114,7 +114,7 @@ const Profile: React.FC = () => {
                       return (
                         <div className="py-8 text-center">
                           <Loader2 className="text-primary mx-auto mb-2 h-6 w-6 animate-spin" />
-                          <p className="text-muted-foreground text-sm">Loading...</p>
+                          <p className="text-muted-foreground text-base">Loading...</p>
                         </div>
                       );
                     }
@@ -123,7 +123,7 @@ const Profile: React.FC = () => {
                       return (
                         <div className="py-8 text-center">
                           <Coins className="text-muted-foreground mx-auto mb-2 h-8 w-8" />
-                          <p className="text-muted-foreground text-sm">No tokens found</p>
+                          <p className="text-muted-foreground text-base">No tokens found</p>
                         </div>
                       );
                     }
@@ -141,7 +141,7 @@ const Profile: React.FC = () => {
                     );
                   })()}
 
-                  <p className="text-muted-foreground mt-3 text-xs">
+                  <p className="text-muted-foreground mt-3 text-sm">
                     Click a token to see contract breakdown
                   </p>
                 </motion.div>
@@ -154,11 +154,11 @@ const Profile: React.FC = () => {
                   className="glass-effect rounded-2xl p-4"
                 >
                   <div className="mb-3 flex items-center justify-between">
-                    <h2 className="text-lg font-bold">QSWAP Positions</h2>
+                    <h2 className="text-xl font-bold sm:text-2xl">QSWAP Positions</h2>
                     {positionsLoading ? (
                       <Loader2 className="text-primary h-4 w-4 animate-spin" />
                     ) : (
-                      <span className="bg-success-40/20 text-success-40 rounded-full px-2 py-0.5 text-xs font-medium">
+                      <span className="bg-success-40/20 text-success-40 rounded-full px-2.5 py-1 text-sm font-medium">
                         {positions.length} Active
                       </span>
                     )}
@@ -167,12 +167,12 @@ const Profile: React.FC = () => {
                   {positionsLoading ? (
                     <div className="py-8 text-center">
                       <Loader2 className="text-primary mx-auto mb-2 h-6 w-6 animate-spin" />
-                      <p className="text-muted-foreground text-sm">Loading...</p>
+                      <p className="text-muted-foreground text-base">Loading...</p>
                     </div>
                   ) : positions.length === 0 ? (
                     <div className="py-8 text-center">
                       <TrendingUp className="text-muted-foreground mx-auto mb-2 h-8 w-8" />
-                      <p className="text-muted-foreground text-sm">No liquidity positions</p>
+                      <p className="text-muted-foreground text-base">No liquidity positions</p>
                     </div>
                   ) : (
                     <div className="space-y-2">
@@ -229,7 +229,7 @@ const Profile: React.FC = () => {
                       ))}
 
                       {/* Summary */}
-                      <div className="border-border flex justify-between border-t pt-2 text-sm">
+                      <div className="border-border flex justify-between border-t pt-2 text-base">
                         <span className="text-muted-foreground">Total Value</span>
                         <span className="text-primary font-bold">
                           ${positions.reduce((sum, pos) => sum + pos.valueUSD, 0).toFixed(2)}
