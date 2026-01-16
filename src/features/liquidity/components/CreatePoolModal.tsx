@@ -130,6 +130,12 @@ const CreatePoolModal: React.FC<CreatePoolModalProps> = ({
     await handleCreatePool({
       assetIssuer: selectedToken.issuer,
       assetName: selectedToken.assetName,
+      onSuccess: () => {
+        onClose();
+        if (onSuccess) {
+          setTimeout(() => onSuccess(), 2000); // Wait for pool to be indexed
+        }
+      },
     });
   };
 

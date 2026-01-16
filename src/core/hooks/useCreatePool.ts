@@ -10,6 +10,7 @@ import { toast } from "sonner";
 export interface CreatePoolParams {
   assetIssuer: string;
   assetName: string;
+  onSuccess?: () => void;
 }
 
 export const useCreatePool = () => {
@@ -84,6 +85,7 @@ export const useCreatePool = () => {
             },
             onSuccess: async () => {
               toast.success("Pool created successfully! You can now add liquidity.");
+              params.onSuccess?.();
             },
             onFailure: async () => {
               toast.error("Pool creation failed");
