@@ -32,9 +32,9 @@ const Footer: React.FC = () => {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="mb-4 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-4 space-y-8 md:grid md:grid-cols-4 md:gap-8 md:space-y-0 lg:gap-10">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
+          <div className="md:col-span-2">
             <Link to="/" className="group mb-6 flex w-fit items-center">
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} className="relative">
                 <img src="/logo-text.svg" alt="Qubic Portal" className="relative z-10 h-12 sm:h-14" />
@@ -67,58 +67,61 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-primary mb-4 text-lg font-bold">
-              Quick Links
-            </h3>
-            <ul className="space-y-3">
-              {quickLinks.map((link, index) => (
-                <motion.li
-                  key={link.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-primary-40 group flex w-fit items-center gap-2 transition-colors"
-                  >
-                    <span>{link.name}</span>
-                    <ArrowUpRight className="h-4 w-4 -translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100" />
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Community */}
-          <div>
-            <h3 className="text-primary mb-4 text-lg font-bold">
-              Community
-            </h3>
-            <div className="space-y-4">
-              {socialLinks.map((social, index) => {
-                const Icon = social.icon;
-                return (
-                  <motion.a
-                    key={social.name}
-                    href={social.href}
+          {/* Quick Links and Community wrapper - Side by side on mobile, separate columns on desktop */}
+          <div className="grid grid-cols-2 gap-6 md:contents">
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-primary mb-4 text-lg font-bold">
+                Quick Links
+              </h3>
+              <ul className="space-y-3">
+                {quickLinks.map((link, index) => (
+                  <motion.li
+                    key={link.name}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    whileHover={{ x: 5 }}
-                    className={`text-muted-foreground flex items-center gap-3 transition-colors ${social.color} group`}
                   >
-                    <div className="bg-muted/50 group-hover:bg-muted rounded-lg p-2 transition-colors">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="font-medium">{social.name}</span>
-                  </motion.a>
-                );
-              })}
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-primary-40 group flex w-fit items-center gap-2 transition-colors"
+                    >
+                      <span>{link.name}</span>
+                      <ArrowUpRight className="h-4 w-4 -translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100" />
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Community */}
+            <div>
+              <h3 className="text-primary mb-4 text-lg font-bold">
+                Community
+              </h3>
+              <div className="space-y-4">
+                {socialLinks.map((social, index) => {
+                  const Icon = social.icon;
+                  return (
+                    <motion.a
+                      key={social.name}
+                      href={social.href}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ x: 5 }}
+                      className={`text-muted-foreground flex items-center gap-3 transition-colors ${social.color} group`}
+                    >
+                      <div className="bg-muted/50 group-hover:bg-muted rounded-lg p-2 transition-colors">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <span className="font-medium">{social.name}</span>
+                    </motion.a>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
