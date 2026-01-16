@@ -29,16 +29,7 @@ const Liquidity: React.FC = () => {
         canonical="https://qubicportal.org/liquidity"
       />
       <div className="min-h-screen px-4 pt-32 pb-12">
-        {/* Background decorations */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
-          <div
-            className="bg-primary-60/20 animate-float absolute -right-48 bottom-1/4 h-96 w-96 rounded-full blur-[120px]"
-            style={{ animationDelay: "1s" }}
-          ></div>
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-[1400px]">
           {/* Header */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }} 

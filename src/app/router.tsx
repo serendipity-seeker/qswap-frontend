@@ -5,7 +5,7 @@ import { ROUTES } from "@/core/constants";
 import Home from "@/features/home";
 import Swap from "@/features/swap";
 import Liquidity from "@/features/liquidity";
-import AssetManagement from "@/features/asset";
+import Profile from "@/features/profile";
 import Showcase from "@/features/showcase";
 
 export const router = createBrowserRouter([
@@ -27,8 +27,8 @@ export const router = createBrowserRouter([
         element: <Liquidity />,
       },
       {
-        path: ROUTES.ASSET,
-        element: <AssetManagement />,
+        path: ROUTES.PROFILE,
+        element: <Profile />,
       },
       {
         path: ROUTES.SHOWCASE,

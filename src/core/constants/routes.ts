@@ -3,7 +3,7 @@ export const ROUTES = {
   HOME: "/",
   SWAP: "/swap",
   LIQUIDITY: "/liquidity",
-  ASSET: "/asset",
+  PROFILE: "/profile",
   SHOWCASE: "/showcase",
 } as const;
 

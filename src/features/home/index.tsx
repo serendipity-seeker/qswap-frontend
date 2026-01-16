@@ -119,20 +119,7 @@ const Home: React.FC = () => {
       <StructuredData type="WebSite" />
       <StructuredData type="Organization" />
       <div className="min-h-screen">
-        {/* Background decorations */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="bg-primary-40/20 animate-float absolute top-1/4 -left-48 h-96 w-96 rounded-full blur-[120px]"></div>
-        <div
-          className="bg-primary-60/20 animate-float absolute top-1/2 -right-48 h-96 w-96 rounded-full blur-[120px]"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="bg-primary-50/10 animate-float absolute bottom-1/4 left-1/3 h-96 w-96 rounded-full blur-[120px]"
-          style={{ animationDelay: "2s" }}
-        ></div>
-      </div>
-
-      <div className="relative z-10">
+      <div>
         {/* Hero Section */}
         <section className="px-4 pt-20 pb-10 md:pt-28 md:pb-14">
           <div className="mx-auto max-w-6xl text-center">

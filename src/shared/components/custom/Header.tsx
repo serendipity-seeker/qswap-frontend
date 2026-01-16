@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Wallet, Sun, Moon } from "lucide-react";
 import Button from "./Button";
@@ -7,13 +7,23 @@ import { useAtom } from "jotai";
 import { settingsAtom } from "@/shared/store/settings";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import ConnectModal from "@/shared/lib/wallet-connect/ConnectModal";
+import { ROUTES } from "@/core/constants";
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const [settings, setSettings] = useAtom(settingsAtom);
   const { connected, wallet, showConnectModal, toggleConnectModal } = useQubicConnect();
+
+  const handleWalletClick = () => {
+    if (connected) {
+      navigate(ROUTES.PROFILE);
+    } else {
+      toggleConnectModal();
+    }
+  };
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -137,7 +147,7 @@ const Header: React.FC = () => {
                 variant={connected ? "outline" : "primary"}
                 size="md"
                 icon={<Wallet className="h-5 w-5" />}
-                onClick={toggleConnectModal}
+                onClick={handleWalletClick}
               >
                 {connected ? wallet?.alias || shortId(wallet?.publicKey) || "Connected" : "Connect Wallet"}
               </Button>
@@ -255,7 +265,7 @@ const Header: React.FC = () => {
                     fullWidth
                     icon={<Wallet className="h-5 w-5" />}
                     onClick={() => {
-                      toggleConnectModal();
+                      handleWalletClick();
                       setMobileMenuOpen(false);
                     }}
                   >

@@ -48,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         focus:ring-secondary
       `,
       outline: `
-        bg-transparent border-2 border-primary text-primary
+        bg-transparent border-1 border-primary text-primary
         hover:bg-primary/10
         focus:ring-primary
       `,
@@ -68,9 +68,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizes: Record<ButtonSize, string> = {
-      sm: "px-3 py-1.5 text-sm rounded-lg",
-      md: "px-4 py-2 text-base rounded-xl",
-      lg: "px-6 py-3 text-base rounded-xl",
+      sm: "px-3 py-1.5 text-sm rounded-sm",
+      md: "px-4 py-2 text-base rounded-md",
+      lg: "px-6 py-3 text-base rounded-lg",
       xl: "px-8 py-3 text-lg rounded-xl",
     };
 
