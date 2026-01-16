@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, TrendingUp } from "lucide-react";
-import type { TokenDisplay } from "@/shared/constants/tokens";
+import type { TokenDisplay } from "@/core/constants/tokens";
 import { fetchQubicPrice } from "@/shared/services/price.service";
-import { isQubic } from "@/shared/constants/tokens";
+import { isQubic } from "@/core/constants/tokens";
 
 interface TokenSelectorModalProps {
   isOpen: boolean;

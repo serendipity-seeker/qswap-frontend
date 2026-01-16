@@ -1,9 +1,9 @@
 import { base64ToUint8Array, createPayload, uint8ArrayToBase64 } from "@/shared/utils";
 import { QubicHelper } from "@qubic-lib/qubic-ts-library/dist/qubicHelper";
 
-import { createSCTx } from "./tx.service";
-import { fetchQuerySC } from "./rpc.service";
-import { assetNameConvert } from "../utils";
+import { createSCTx } from "@/shared/services/tx.service";
+import { fetchQuerySC } from "@/shared/services/rpc.service";
+import { assetNameConvert } from "@/shared/utils";
 
 /**
  * QSWAP SC integration (see `qswap.sc.h`)

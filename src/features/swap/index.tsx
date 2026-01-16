@@ -7,12 +7,12 @@ import SwapStats from "@/features/swap/components/SwapStats";
 import SwapSettings from "@/features/swap/components/SwapSettings";
 import PriceChart from "@/features/stats/components/PriceChart";
 import { Button, SEO } from "@/shared/components/custom";
-import { isAsset, isQubic, type TokenDisplay } from "@/shared/constants/tokens";
+import { isAsset, isQubic, type TokenDisplay } from "@/core/constants/tokens";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { fetchAggregatedAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
 import { useSwap } from "@/core/hooks";
 import { toast } from "sonner";
-import { useQswapTokenList } from "@/core/hooks/pool/useQswapTokenList";
+import { useQswapTokenList } from "@/core/hooks/useQswapTokenList";
 
 const Swap: React.FC = () => {
   const { wallet, connected, toggleConnectModal } = useQubicConnect();
@@ -135,7 +135,7 @@ const Swap: React.FC = () => {
 
       try {
         // Import quote functions for inline use
-        const { quoteExactQuInput, quoteExactAssetInput } = await import("@/shared/services/sc.service");
+        const { quoteExactQuInput, quoteExactAssetInput } = await import("@/core/services/sc.service");
         
         if (isQubic(fromToken) && isAsset(toToken)) {
           const q = await quoteExactQuInput({

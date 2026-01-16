@@ -1,4 +1,4 @@
-import { QUBIC_TOKEN, type Token } from "@/shared/constants/tokens";
+import { QUBIC_TOKEN, type Token } from "@/core/constants/tokens";
 import { fetchAssetsOwnership } from "@/shared/services/rpc.service";
 import { useEffect, useState } from "react";
 

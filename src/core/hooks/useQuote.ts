@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { quoteExactQuInput, quoteExactQuOutput, quoteExactAssetInput, quoteExactAssetOutput } from "@/shared/services/sc.service";
-import { type Token } from "@/shared/constants/tokens";
+import { quoteExactQuInput, quoteExactQuOutput, quoteExactAssetInput, quoteExactAssetOutput } from "@/core/services/sc.service";
+import { type Token } from "@/core/constants/tokens";
 
 export interface QuoteParams {
   fromToken: Token;

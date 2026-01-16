@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
-import type { TokenDisplay } from "@/shared/constants/tokens";
+import type { TokenDisplay } from "@/core/constants/tokens";
 import { fetchQubicPrice } from "@/shared/services/price.service";
 
 interface TokenInputProps {

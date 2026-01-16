@@ -3,7 +3,7 @@ import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext
 import { useTxMonitor } from "@/shared/store/txMonitor";
 import { useAtomValue } from "jotai";
 import { settingsAtom } from "@/shared/store/settings";
-import { issueAsset } from "@/shared/services/sc.service";
+import { issueAsset } from "@/core/services/sc.service";
 import { fetchTickInfo, broadcastTx, fetchAssetsOwnership } from "@/shared/services/rpc.service";
 import { toast } from "sonner";
 

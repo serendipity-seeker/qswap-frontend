@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, AlertCircle, Loader2, Wallet } from "lucide-react";
 import { Button } from "@/shared/components/custom";
-import { useCreatePool } from "@/core/hooks/pool/useCreatePool";
+import { useCreatePool } from "@/core/hooks";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { toast } from "sonner";
-import { getPoolBasicState } from "@/shared/services/sc.service";
+import { getPoolBasicState } from "@/core/services/sc.service";
 import { fetchAggregatedAssetsBalance } from "@/shared/services/rpc.service";
 
 interface TokenWithBalance {
@@ -127,17 +127,10 @@ const CreatePoolModal: React.FC<CreatePoolModalProps> = ({
       return;
     }
 
-    const success = await handleCreatePool({
+    await handleCreatePool({
       assetIssuer: selectedToken.issuer,
       assetName: selectedToken.assetName,
     });
-
-    if (success) {
-      onClose();
-      if (onSuccess) {
-        setTimeout(() => onSuccess(), 2000); // Wait for pool to be indexed
-      }
-    }
   };
 
   return (

@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
 import { settingsAtom } from "@/shared/store/settings";
 import { fetchTickInfo, broadcastTx } from "@/shared/services/rpc.service";
-import { removeLiquidity, getLiquidityOf } from "@/shared/services/sc.service";
+import { removeLiquidity, getLiquidityOf } from "@/core/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface RemoveLiquidityParams {

@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, Droplets, ArrowRight } from "lucide-react";
-import type { Token } from "@/shared/constants/tokens";
-import { QUBIC_TOKEN } from "@/shared/constants/tokens";
+import type { Token } from "@/core/constants/tokens";
+import { QUBIC_TOKEN } from "@/core/constants/tokens";
 
 export interface PoolCardData {
   token: Token;

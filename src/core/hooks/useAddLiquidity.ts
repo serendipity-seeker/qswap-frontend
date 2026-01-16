@@ -9,7 +9,7 @@ import {
   fetchAggregatedAssetsBalance,
   calculateRequiredTransfer,
 } from "@/shared/services/rpc.service";
-import { addLiquidity, getLiquidityOf } from "@/shared/services/sc.service";
+import { addLiquidity, getLiquidityOf } from "@/core/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface AddLiquidityParams {

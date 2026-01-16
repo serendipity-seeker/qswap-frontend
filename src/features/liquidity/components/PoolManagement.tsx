@@ -7,7 +7,7 @@ import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext
 import { fetchAggregatedAssetsBalance, fetchBalance } from "@/shared/services/rpc.service";
 import { useAddLiquidity, useRemoveLiquidity, usePoolState } from "@/core/hooks";
 import { toast } from "sonner";
-import { type TokenDisplay, QUBIC_TOKEN } from "@/shared/constants/tokens";
+import { type TokenDisplay, QUBIC_TOKEN } from "@/core/constants/tokens";
 import type { PoolCardData } from "./PoolCard";
 
 interface PoolManagementProps {

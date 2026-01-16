@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { getPoolBasicState, getFees } from "@/shared/services/sc.service";
+import { getPoolBasicState, getFees } from "@/core/services/sc.service";
 import { fetchQubicPrice } from "@/shared/services/price.service";
 import { useQswapTokenList } from "./useQswapTokenList";
-import { isAsset, type Token } from "@/shared/constants/tokens";
+import { isAsset, type Token } from "@/core/constants/tokens";
 
 export interface PoolInfo {
   token: Token;

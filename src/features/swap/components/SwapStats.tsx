@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronDown, Info } from "lucide-react";
 import { motion } from "framer-motion";
-import { type TokenDisplay } from "@/shared/constants/tokens";
+import { type TokenDisplay } from "@/core/constants/tokens";
 
 interface SwapStatsProps {
   fromToken: TokenDisplay;

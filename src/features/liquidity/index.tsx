@@ -6,7 +6,7 @@ import PoolManagement from "@/features/liquidity/components/PoolManagement";
 import type { PoolCardData } from "@/features/liquidity/components/PoolCard";
 import PoolPositions from "@/features/liquidity/components/PoolPositions";
 import { SEO } from "@/shared/components/custom";
-import { useTopPools } from "@/core/hooks/pool/useTopPools";
+import { useTopPools } from "@/core/hooks/useTopPools";
 
 const Liquidity: React.FC = () => {
   const { pools, loading, error, swapFee, refetch } = useTopPools();

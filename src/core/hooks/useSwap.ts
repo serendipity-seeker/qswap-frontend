@@ -11,7 +11,7 @@ import {
   fetchAggregatedAssetsBalance,
   calculateRequiredTransfer,
 } from "@/shared/services/rpc.service";
-import { swapExactQuForAsset, swapExactAssetForQu, quoteExactQuInput, quoteExactAssetInput, SC_INDEX } from "@/shared/services/sc.service";
+import { swapExactQuForAsset, swapExactAssetForQu, quoteExactQuInput, quoteExactAssetInput, SC_INDEX } from "@/core/services/sc.service";
 import { useTxMonitor } from "@/shared/store/txMonitor";
 
 export interface SwapParams {

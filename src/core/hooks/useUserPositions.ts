@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useQubicConnect } from "@/shared/lib/wallet-connect/QubicConnectContext";
-import { getLiquidityOf, getPoolBasicState } from "@/shared/services/sc.service";
+import { getLiquidityOf, getPoolBasicState } from "@/core/services/sc.service";
 import { fetchQubicPrice } from "@/shared/services/price.service";
 import { useQswapTokenList } from "./useQswapTokenList";
-import { isAsset, type Token } from "@/shared/constants/tokens";
+import { isAsset, type Token } from "@/core/constants/tokens";
 
 export interface UserPosition {
   token: Token;
